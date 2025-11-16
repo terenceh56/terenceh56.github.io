@@ -1,28 +1,25 @@
 ---
-import BlogPost from '@/layouts/BlogPost.astro'
+import NotePost from '@/layouts/NotePost.astro'
+import {donate} from '@/consts';
 import PostTitle from "@/components/PostTitle.astro";
 import BlogFooter from '@/components/BlogFooter.astro'
 import {getCollectionByName} from "@/utils/getCollectionByName";
 import {sortPostsByDate} from "@/utils/sortPostsByDate";
 import Donate from '@/components/Donate.astro'
-import {donate} from "@/consts";
 import getUrl from "@/utils/getUrl";
 
 export async function getStaticPaths() {
-  const blogEntries = await getCollectionByName("blog");
-  return blogEntries.map(entry => ({
-    params: {slug: entry.slug}, props: {entry,},
-  }));
+  const entries = await getCollectionByName("notes");
+  return entries.map(entry => ({ params: { slug: entry.slug }, props: { entry } }));
 }
 
 const {entry} = Astro.props;
 const {Content, headings, remarkPluginFrontmatter} = await entry.render();
 
-
 const lastModified = remarkPluginFrontmatter.lastModified
 const readingTime = remarkPluginFrontmatter.readingTime
 
-const posts = await getCollectionByName("blog");
+const posts = await getCollectionByName("notes");
 const sortPosts = sortPostsByDate(posts);
 
 const currentPostIndex = sortPosts.findIndex(
@@ -36,7 +33,7 @@ if (sortPosts[currentPostIndex + 1]) {
   nextPost = sortPosts[currentPostIndex + 1];
 }
 ---
-<BlogPost frontmatter={entry.data} headings={headings}>
+<NotePost frontmatter={entry.data} headings={headings}>
   <div>
     <PostTitle {...entry.data} lastModified={lastModified} readingTime={readingTime}></PostTitle>
     <div class="divider-horizontal"></div>
@@ -44,6 +41,21 @@ if (sortPosts[currentPostIndex + 1]) {
       <Content/>
     </article>
     <div class="divider-horizontal"></div>
+
+    {
+      entry.data.pdf ? (
+        <div class="mt-6 p-4 border rounded bg-skin-card">
+          <div class="flex items-center justify-between">
+            <div class="font-semibold">Download / View PDF</div>
+            <a class="text-sm underline" href={getUrl('/') + entry.collection + '/' + entry.data.pdf} target="_blank" rel="noreferrer">Open in new tab</a>
+          </div>
+          <div class="mt-4">
+            <iframe src={getUrl('/') + entry.collection + '/' + entry.data.pdf} class="w-full h-96 border" title="PDF preview"></iframe>
+          </div>
+        </div>
+      ) : ''
+    }
+
     <div class="h-8 text-skin-base">
       {
         prevPost ? (
@@ -79,4 +91,4 @@ if (sortPosts[currentPostIndex + 1]) {
     }
   </div>
 
-</BlogPost>
+</NotePost>

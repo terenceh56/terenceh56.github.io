@@ -1,0 +1,39 @@
+---
+---
+
+<!-- Loads KaTeX and auto-render on the client for faster rendering than MathJax -->
+<script client:load>
+  (function () {
+    const katexCss = document.createElement('link');
+    katexCss.rel = 'stylesheet';
+    katexCss.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css';
+    document.head.appendChild(katexCss);
+
+    const katexScript = document.createElement('script');
+    katexScript.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js';
+    katexScript.defer = true;
+    katexScript.onload = () => {
+      const ar = document.createElement('script');
+      ar.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js';
+      ar.defer = true;
+      ar.onload = () => {
+        try {
+          if (window.renderMathInElement) {
+            window.renderMathInElement(document.querySelector('.markdown-body') || document.body, {
+              delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '\\[', right: '\\]', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false }
+              ]
+            });
+          }
+        } catch (e) {
+          console.error('KaTeX render failed', e);
+        }
+      };
+      document.head.appendChild(ar);
+    };
+    document.head.appendChild(katexScript);
+  })();
+</script>

@@ -5,7 +5,36 @@ import getUrl from "@/utils/getUrl";
 
 <div class="shadow-lg rounded-lg h-64 w-auto flex flex-col items-center justify-center bg-skin-card p-2">
   <img class="avatar mb-4" src={getUrl(site.avatar)} alt="avatar"/>
-  <div class="mb-2 text-center">{site.motto}</div>
+  {
+    (() => {
+      const raw = (site.motto || '').trim();
+      const clean = raw.replace(/^"|"$/g, '').trim();
+      let text = clean;
+      let author = '';
+      const seps = ['--', '—', ' - ', ' – ', ' — '];
+      for (const sep of seps) {
+        if (clean.includes(sep)) {
+          const parts = clean.split(sep).map(p => p.trim()).filter(Boolean);
+          text = parts[0] || '';
+          author = parts.slice(1).join(' ').replace(/^[-–—]+\s*/, '') || '';
+          break;
+        }
+      }
+      if (!author) {
+        const idx = Math.max(clean.lastIndexOf(' - '), clean.lastIndexOf('-'));
+        if (idx > 0) {
+          text = clean.slice(0, idx).trim();
+          author = clean.slice(idx).replace(/^[-\s]+/, '').trim();
+        }
+      }
+      return (
+        <div class="mb-2 text-center">
+          <div>{text}</div>
+          {author && <div class="text-sm mt-1">- {author}</div>}
+        </div>
+      )
+    })()
+  }
   <div class="flex items-center justify-center flex-wrap">
     {
       infoLinks.map((infoItem) => (

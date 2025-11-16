@@ -84,8 +84,13 @@ menu {
     @apply underline underline-offset-4 decoration-wavy decoration-skin-active;
   }
 
-  .header-link-hover {
+  /* Apply hover underline via pseudo-class */
+  .header-link:hover {
     @apply underline underline-offset-4 decoration-wavy decoration-skin-base;
+  }
+  .header-link:focus {
+    text-decoration: none;
+    outline: none;
   }
 
   .header-btn {
@@ -203,11 +208,6 @@ menu {
   list-style: decimal;
 }
 
-.markdown-body img {
-  /* 修改图片居中 */
-  /* margin: 0 auto; */
-}
-
 /* 修改滚动条样式 */
 
 ::-webkit-scrollbar {
@@ -270,4 +270,75 @@ menu {
 
 .MathJax svg {
   display: inline;
+}
+
+/* Page exit: when navigating from intro, fade/scale out intro container */
+.page-exit .intro-container {
+  transform: translateY(12px) scale(0.98);
+  opacity: 0;
+  transition: transform 320ms ease, opacity 320ms ease;
+}
+
+/* Header drop animation only when explicitly triggered */
+header.header--drop {
+  transform: translateY(-12px);
+  opacity: 0;
+  animation: headerDrop 360ms ease forwards 80ms;
+}
+
+@keyframes headerDrop {
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* After header has dropped once, mark it as dropped so no animation runs again */
+header.header--dropped {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  /* no transitions/animations on this state - it's the stable final state */
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Header "up" state used when navigating to homepage */
+header.header--up {
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 280ms ease, opacity 280ms ease;
+}
+
+/* Page content fade-in (does not affect header) */
+main#app {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: contentFadeIn 420ms ease 140ms forwards;
+}
+
+@keyframes contentFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slight hover emphasis for category buttons on intro */
+.category-btn {
+  will-change: transform, opacity;
+}
+.category-btn:active {
+  transform: translateY(1px) scale(.995);
+}
+
+/* Reduce header flashing: don't re-run the drop animation if header already has been dropped
+   (this CSS ensures the header is visible by default and the drop animation only plays
+   when the class is explicitly added by script). */
+/* Header base styles: make header visible by default to avoid initial flash on navigation */
+header {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  will-change: transform, opacity;
+}
+
+/* small transition for header-up movements only (when class added) */
+header.header--up {
+  transition: transform 280ms ease, opacity 280ms ease;
 }

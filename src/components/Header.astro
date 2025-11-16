@@ -10,35 +10,54 @@ import AsideIcon from "./SidebarIcon.astro";
 import {t} from "@/i18n/utils";
 import getCountByTagName from "@/utils/getCountByTagName";
 import getUrl from "@/utils/getUrl";
-const blogs = await getCollectionByName('blog')
-let tagArr = getUniqueTags(blogs);
-let categoryCount = getCountByCategory(blogs);
-let tagCount = getCountByTagName(blogs);
+// aggregate posts from multiple collections so counts still work after removing the "blog" category
+let posts = [];
+const collectionsToTry = ['blog', 'notes', 'thoughts', 'papers', 'feed'];
+for (const col of collectionsToTry) {
+  try {
+    const c = await getCollectionByName(col);
+    if (c && c.length) posts = posts.concat(c);
+  } catch (err) {
+    // ignore missing collections
+  }
+}
+let tagArr = getUniqueTags(posts);
+let categoryCount = getCountByCategory(posts);
+let tagCount = getCountByTagName(posts);
+const { hideNav = false } = Astro.props;
 ---
 
-<header class="fixed top-0 z-10 w-full bg-skin-fill text-skin-base">
+<header data-home={getUrl('/')} class="fixed top-0 z-10 w-full bg-skin-fill text-skin-base">
   <div class="container flex items-center justify-between">
     <div class="block xl:hidden">
       <MenuIcon></MenuIcon>
     </div>
-    <a class="p-4 text-2xl" href={getUrl("/")}>{site.title}</a>
+    <a class="p-4 text-2xl flex items-center" href={getUrl("/")}>
+      <img src={getUrl(site.favicon)} alt={site.title} class="h-8 w-auto mr-3" />
+      <span class="hidden sm:inline">{site.title}</span>
+    </a>
     <div class="flex items-center">
-      <div class="hidden xl:block">
-        <div class="flex items-center pr-4 space-x-5">
-          {
-            categories.map(category => (
-              <HeaderLink href={category.href} icon={category.iconClass} target={category.target ? category.target : '_self'} children={category.children ? category.children : []}>{category.name}</HeaderLink>
-            ))
-          }
+      { !hideNav && (
+        <div class="hidden xl:block">
+          <div class="flex items-center pr-4 space-x-5">
+            {
+              categories.map(category => (
+                <HeaderLink href={category.href} icon={category.iconClass} target={category.target ? category.target : '_self'} children={category.children ? category.children : []}>{category.name}</HeaderLink>
+              ))
+            }
+          </div>
         </div>
-      </div>
+      )}
       <ThemeIcon></ThemeIcon>
-      <div class="block xl:hidden">
-        <AsideIcon></AsideIcon>
-      </div>
+      { !hideNav && (
+        <div class="block xl:hidden">
+          <AsideIcon></AsideIcon>
+        </div>
+      )}
     </div>
   </div>
-  <div id="mobile-menu" class="hidden pb-8 overflow-y-auto text-center" style="height: calc(100vh - 64px)">
+  { !hideNav && (
+    <div id="mobile-menu" class="hidden pb-8 overflow-y-auto text-center" style="height: calc(100vh - 64px)">
     {
       categories.map((category) => (
         <div class="py-2">
@@ -65,8 +84,10 @@ let tagCount = getCountByTagName(blogs);
         </div>
       ))
     }
-  </div>
-  <div id="personal-info" class="hidden pb-8 overflow-y-auto break-all" style="height: calc(100vh - 64px)">
+    </div>
+  )}
+  { !hideNav && (
+    <div id="personal-info" class="hidden pb-8 overflow-y-auto break-all" style="height: calc(100vh - 64px)">
     <img class="mx-auto my-4 avatar" src={getUrl(site.avatar)} alt="avatar"/>
     <div class="mb-2 text-center">{site.motto}</div>
     <div class="flex flex-wrap items-center justify-center">
@@ -116,5 +137,54 @@ let tagCount = getCountByTagName(blogs);
       }
     </div>
 
-  </div>
+    </div>
+  )}
 </header>
+<script is:inline>
+  (function(){
+    try {
+      const header = document.querySelector('header');
+      const homepage = header && header.dataset ? header.dataset.home || '/' : '/';
+      
+      // If we navigated here from the homepage, perform drop animation once
+      const fromHomepage = sessionStorage.getItem('fromHomepage');
+      if (fromHomepage && header) {
+        // only trigger drop if header hasn't already been dropped
+        if (!header.classList.contains('header--drop') && !header.classList.contains('header--dropped')) {
+          header.classList.add('header--drop');
+          // after the CSS animation finishes, replace with a stable class so it won't re-run on later navigations
+          const ANIM_DURATION = 360 + 80; // animation duration + delay in ms (matches CSS)
+          setTimeout(() => {
+            header.classList.remove('header--drop');
+            header.classList.add('header--dropped');
+          }, ANIM_DURATION + 40);
+        }
+        sessionStorage.removeItem('fromHomepage');
+      } else if (header) {
+        // if NOT coming from homepage, ensure header is clean (no animation classes)
+        header.classList.remove('header--drop');
+        header.classList.remove('header--up');
+        // keep it visible by default
+        header.classList.add('header--dropped');
+      }
+
+      // Intercept clicks to homepage to animate header up before navigating
+      document.addEventListener('click', function(e){
+        const a = e.target.closest && e.target.closest('a');
+        if(!a) return;
+        const href = a.getAttribute('href');
+        if(!href) return;
+        // If the clicked link points to homepage, animate header up (slide away)
+        if (href === '/' || href === '' || href === homepage) {
+          e.preventDefault();
+          if (header && !header.classList.contains('header--up')) {
+            // animate header up (slide away) before navigating
+            header.classList.add('header--up');
+            header.classList.remove('header--dropped');
+          }
+          setTimeout(function(){ window.location.href = href; }, 280);
+        }
+      });
+    } catch (err) { console.error(err); }
+  })();
+</script>

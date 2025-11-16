@@ -30,7 +30,7 @@ export const site = {
   avatar: '/avatar.png', // required
   url: 'https://github.com/terenceh56', // required
   baseUrl: '/terenceh56.github.io', // When using GitHubPages, you must enter the repository name startWith '/'. e.g. '/astro-blog'
-  motto: "Don't think of what you want to be, think of what you want to do. -- Richard P. Feynman",
+  motto: `"Don't think of what you want to be, think of what you want to do." -Richard P. Feynman`,
   recentBlogSize: 5,
   archivePageSize: 25,
   postPageSize: 10,
@@ -39,7 +39,7 @@ export const site = {
   asideTagsMaxSize: 0,
 }
 
-/**
+/** 
  * busuanzi {boolean} link: https://busuanzi.ibruce.info/
  * lang {string} Default website language
  * codeFoldingStartLines {number}
@@ -48,6 +48,7 @@ export const site = {
  * memosUsername {string} memos login name
  * memosPageSize {number} 10
  */
+
 export const config = {
   lang: 'en', // en | zh-cn | zh-Hant | cs
   codeFoldingStartLines: 16, // Need to re-run the project to take effect
@@ -59,6 +60,17 @@ export const config = {
 }
 
 /**
+ * Donate configuration
+ */
+export const donate = {
+  enable: false,
+  tip: "Thanks for the coffee !!!☕",
+  wechatQRCode: "/WeChatQR.png",
+  alipayQRCode: "/AliPayQR.png",
+  paypalUrl: "",
+}
+
+/**
  * Navigator
  * name {string}
  * iconClass {string} icon style
@@ -66,16 +78,7 @@ export const config = {
  * target {string} optional "_self|_blank" open in current window / open in new window
  */
 export const categories = [
-  {
-    name: "Blog",
-    iconClass: "ri-draft-line",
-    href: "/blog/1",
-  },
-  {
-    name: "Feed",
-    iconClass: "ri-lightbulb-flash-line",
-    href: "/feed/1",
-  },
+  
   // {
   //   name: "Memos",
   //   iconClass: "ri-quill-pen-line",
@@ -84,23 +87,19 @@ export const categories = [
   {
     name: "Notes",
     iconClass: "ri-draft-line",
-    href: "/blog/1",
+    href: "/notes/1",
   },
   {
     name: "Thoughts",
     iconClass: "ri-draft-line",
-    href: "/blog/1",
+    href: "/thoughts/1",
   },
   {
     name: "Papers",
     iconClass: "ri-draft-line",
-    href: "/blog/1",
+    href: "/papers/1",
   },
-  {
-    name: "Archive",
-    iconClass: "ri-archive-line",
-    href: "/archive/1",
-  },
+  
   {
     name: "Message",
     iconClass: "ri-chat-1-line",
@@ -111,49 +110,38 @@ export const categories = [
     iconClass: "ri-search-line",
     href: "/search",
   },
+
   {
-    name: "More",
-    iconClass: "ri-more-fill",
-    href: "javascript:void(0);",
-    children: [
-      {
-        name: 'About',
-        iconClass: 'ri-information-line',
-        href: '/about',
-      },
-      {
-        name: 'Friends',
-        iconClass: 'ri-user-5-line',
-        href: '/friends',
-        target: '_self',
-      },
-    ]
-  }
+    name: 'About',
+    iconClass: 'ri-information-line',
+    href: '/about',
+  },
+  
 ]
 
 /**
  * Personal link address
  */
 export const infoLinks = [
-  {
-    icon: 'ri-telegram-fill',
-    name: 'telegram',
-    outlink: '',
-  },
-  {
-    icon: 'ri-twitter-fill',
-    name: 'twitter',
-    outlink: '',
-  },
+  //{
+  //  icon: 'ri-telegram-fill',
+  //  name: 'telegram',
+  //  outlink: '',
+  //},
+  //{
+  //  icon: 'ri-twitter-fill',
+  //  name: 'twitter',
+  //  outlink: '',
+  //},
   {
     icon: 'ri-instagram-fill',
     name: 'instagram',
-    outlink: '',
+    outlink: 't_hsu5.6',
   },
   {
     icon: 'ri-github-fill',
     name: 'github',
-    outlink: 'https://github.com/cirry/astro-yi',
+    outlink: 'https://github.com/terenceh56',
   },
   {
     icon: 'ri-rss-fill',
@@ -162,38 +150,7 @@ export const infoLinks = [
   }
 ]
 
-/**
- * donate
- * enable {boolean}
- * tip {string}
- * wechatQRCode: Image addresses should be placed in the public directory.
- * alipayQRCode: Image addresses should be placed in the public directory.
- * paypalUrl {string}
- */
-export const donate = {
-  enable: false,
-  tip: "Thanks for the coffee !!!☕",
-  wechatQRCode: "/WeChatQR.png",
-  alipayQRCode: "/AliPayQR.png",
-  paypalUrl: "https://paypal.me/xxxxxxxxxx",
-}
-
-/**
- * Friendship Links Page
- * name {string}
- * url {string}
- * avatar {string}
- * description {string}
- */
-export const friendshipLinks =
-  [
-    // {
-    //   name: "Cirry's Blog",
-    //   url: 'https://cirry.cn',
-    //   avatar: "https://cirry.cn/avatar.png",
-    //   description: '前端开发的日常'
-    // },
-  ]
+// Friendship links removed per user request
 
 /**
  * Comment Feature
@@ -221,7 +178,7 @@ export const comment = {
     pageview: true,
     reaction: true,
     requiredMeta: ["nick", "mail"],
-    whiteList: ['/message/', '/friends/'],
+    whiteList: ['/message/'],
   },
 
   // giscus config

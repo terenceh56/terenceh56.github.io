@@ -9,29 +9,34 @@ import Donate from '@/components/Donate.astro'
 import {donate, comment, config} from "@/consts";
 
 const {frontmatter = {comment: false, donate: false}, hideAside = false} = Astro.props
+const gridClass = hideAside ? 'grid grid-cols-1' : 'grid grid-cols-1 xl:grid-cols-4 gap-8'
 ---
 
 <html lang={config.lang}>
 <BaseHead title={Astro.props.title} />
 
 <body class="bg-skin-secondary relative">
-<Header/>
+{ !hideAside ? <Header/> : null }
 <main class="container p-4 pt-20 text-skin-base pb-32 min-h-full relative" id="app">
-  <div class="grid grid-cols-4 gap-8">
-    <div class="col-span-4 xl:col-span-3">
-      <slot></slot>
+  <div class={gridClass}>
+    <!-- Content column: spans 3 columns on xl and starts at column 1 -->
+    <div class={hideAside ? 'col-span-1 mx-auto max-w-3xl' : 'col-span-1 xl:col-span-3 xl:col-start-1'}>
+      <div class={hideAside ? 'mx-auto' : ''}>
+        <slot></slot>
       {
-        donate.enable && frontmatter.donate &&
+        donate?.enable && frontmatter.donate &&
         <Donate></Donate>
       }
       {
-        comment.enable && frontmatter.comment &&
+        comment?.enable && frontmatter.comment &&
         <Comment></Comment>
       }
     </div>
+
+    <!-- Sidebar column: explicitly placed at column 4 on xl to ensure right-side placement -->
     { !hideAside && (
-      <div>
-        <div class="hidden xl:block space-y-6">
+      <div class="col-span-1 xl:col-start-4">
+        <div class="space-y-6 sticky top-20">
           <Profile></Profile>
           <BlogAside></BlogAside>
         </div>
