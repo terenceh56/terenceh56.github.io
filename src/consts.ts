@@ -23,14 +23,14 @@ import type {AnalyticsConfig} from "./types/analyticsTypes"
  *    All tags will be displayed in single page "/tags".
  */
 export const site = {
-  title: 'Astro Theme Yi', // required
+  title: 'Terence', // required
   favicon: '/favicon.svg', // required
-  description: 'Welcome to my independent blog website! ',
-  author: "Astro-Yi", // required
+  description: 'Welcome to my page! ',
+  author: "Terence", // required
   avatar: '/avatar.png', // required
-  url: 'https://astro-yi-nu.vercel.app', // required
-  baseUrl: '', // When using GitHubPages, you must enter the repository name startWith '/'. e.g. '/astro-blog'
-  motto: 'Actions speak louder than words.',
+  url: 'https://terenceh56.github.io', // required
+  baseUrl: '/terence.github.io', // When using GitHubPages, you must enter the repository name startWith '/'. e.g. '/astro-blog'
+  motto: "Don't think of what you want to be, think of what you want to do. -- Richard P. Feynman",
   recentBlogSize: 5,
   archivePageSize: 25,
   postPageSize: 10,
@@ -81,6 +81,21 @@ export const categories = [
   //   iconClass: "ri-quill-pen-line",
   //   href: "/memos",
   // },
+  {
+    name: "Notes",
+    iconClass: "ri-draft-line",
+    href: "/blog/1",
+  },
+  {
+    name: "Thoughts",
+    iconClass: "ri-draft-line",
+    href: "/blog/1",
+  },
+  {
+    name: "Papers",
+    iconClass: "ri-draft-line",
+    href: "/blog/1",
+  },
   {
     name: "Archive",
     iconClass: "ri-archive-line",
