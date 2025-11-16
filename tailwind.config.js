@@ -74,8 +74,8 @@ export default {
       ],
       serif: [
         'SF Pro Display',
-        Georgia,
-        serif,
+        'Georgia',
+        'serif',
       ],
       mono: [
         '"JetBrains Mono"',

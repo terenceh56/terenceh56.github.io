@@ -1,6 +1,11 @@
 ---
 import {site, infoLinks} from "@/consts";
 import getUrl from "@/utils/getUrl";
+import { getCollectionByName } from "@/utils/getCollectionByName";
+import getUniqueCategory from "@/utils/getUniqeCategory";
+
+let _posts = await getCollectionByName('blog');
+let categories = getUniqueCategory(_posts) || [];
 ---
 
 <div class="intro-container flex flex-col items-center justify-center min-h-screen text-center">
@@ -23,6 +28,21 @@ import getUrl from "@/utils/getUrl";
       {site.description}
     </p>
     
+    <!-- Categories (top) -->
+    <div class="flex items-center justify-center flex-wrap gap-3 mb-6">
+      {
+        categories.map(cat => (
+          <a
+            href={getUrl(`/category/${cat}`)}
+            class="px-3 py-1 text-sm rounded border border-skin-base hover:bg-skin-card hover:text-skin-active transition-colors"
+            title={`Category: ${cat}`}
+          >
+            {cat}
+          </a>
+        ))
+      }
+    </div>
+
     <!-- Social Links -->
     <div class="flex items-center justify-center flex-wrap gap-4 mb-12">
       {
@@ -41,15 +61,15 @@ import getUrl from "@/utils/getUrl";
       }
     </div>
     
-    <!-- CTA Buttons -->
-    <div class="flex flex-wrap justify-center gap-4">
-      <a 
+    <!-- CTA Buttons (optional: keep if desired) -->
+    <div class="flex flex-wrap justify-center gap-4 mt-6">
+      <a
         href="/blog/1"
         class="px-6 py-3 rounded-lg bg-skin-fill hover:bg-skin-card text-skin-base hover:text-skin-active transition-all duration-200 border border-skin-base"
       >
         Read My Blog
       </a>
-      <a 
+      <a
         href="/feed/1"
         class="px-6 py-3 rounded-lg bg-skin-card hover:bg-skin-fill text-skin-base hover:text-skin-active transition-all duration-200 border border-skin-base"
       >
