@@ -1,4 +1,9 @@
 ---
+export const getStaticPaths = async () => {
+  return [
+    { params: { page: "1" } }
+  ];
+};
 ---
 
 <html>
