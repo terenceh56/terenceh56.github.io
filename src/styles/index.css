@@ -10,6 +10,33 @@
   src: url('./JetBrainsMono-Regular.ttf');
 }
 
+/* Optional: load SF Pro fonts if you provide them in `src/styles/fonts/` or `public/fonts/`.
+   SF Pro is a proprietary Apple font — you must supply the files yourself.
+   Put WOFF2 or WOFF files at `src/styles/fonts/SFProDisplay-Regular.woff2`,
+   `src/styles/fonts/SFProText-Regular.woff2` (or in `public/fonts/`) and they will be used.
+   
+   These font-face declarations have been disabled as the font files are not included.
+   The system will fall back to the fonts defined in the font-family stack.
+*/
+/* Disabled - files not found
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('./fonts/SFProDisplay-Regular.woff2') format('woff2'),
+       url('./fonts/SFProDisplay-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('./fonts/SFProText-Regular.woff2') format('woff2'),
+       url('./fonts/SFProText-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
 /**
 覆写tailwindcss 默认样式
  */

@@ -101,7 +101,7 @@ import {t} from '@/i18n/utils'
 
   function generateSearchList(results, searchTerm) {
     return results.map(r => {
-      const {title, description, date, slug, category, tags} = r.item
+      const {title, description, date, slug, category, tags, collection} = r.item
       const reg = new RegExp(searchTerm, 'gi')
       let titleStr = title.replace(reg, (match) => {
         return `<span class="text-skin-active font-bold">${match}</span>`
@@ -120,7 +120,7 @@ import {t} from '@/i18n/utils'
         <div class="my-5">
             <a
               class="text-xl underline-offset-4 decoration-skin-base decoration-wavy hover:underline hover:decoration-sky-500 font-bold"
-              href=${getUrl("/blog/") + slug}>${titleStr}
+              href=${getUrl("/") + collection + "/" + slug}>${titleStr}
             </a>
             <div class="flex items-center my-2">
               <div class="flex items-center mr-2"><i class="ri-calendar-2-fill mr-1"></i>${formatDate(date)}</div>

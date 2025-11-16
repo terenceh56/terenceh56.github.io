@@ -43,6 +43,24 @@ const gridClass = hideAside ? 'grid grid-cols-1' : 'grid grid-cols-1 xl:grid-col
       </div>
     ) }
   </div>
+
+  <script>
+    // If the Profile component (or HTML snippet) is accidentally rendered inside
+    // the article content (e.g. due to markdown/html embed), relocate it into
+    // the right-hand sidebar container so it appears at the yellow place.
+    (function(){
+      try {
+        const sidebarContainer = document.querySelector('.space-y-6.sticky.top-20');
+        if (!sidebarContainer) return;
+        // find any profile nodes inside markdown content
+        const inContentProfiles = document.querySelectorAll('.markdown-body .site-profile');
+        inContentProfiles.forEach(node => {
+          // move node to the top of sidebar container
+          sidebarContainer.insertBefore(node, sidebarContainer.firstChild);
+        });
+      } catch (err) { console.error(err); }
+    })();
+  </script>
   <Footer/>
 </main>
 </body>

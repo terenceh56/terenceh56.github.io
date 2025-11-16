@@ -126,4 +126,22 @@ const categories = flattenCategories(headerCategories || []);
       window.location.href = href;
     }, delay);
   }
+
+  // Also set `fromHomepage` for other internal link clicks from the intro section
+  (function(){
+    try {
+      document.addEventListener('click', function(e){
+        const a = e.target.closest && e.target.closest('a');
+        if(!a) return;
+        const href = a.getAttribute('href');
+        if(!href) return;
+        // ignore external and hash links
+        if (href.startsWith('http') || href.startsWith('#') || href === 'javascript:void(0);') return;
+        // mark leaving homepage so the header can drop on arrival
+        try { sessionStorage.setItem('fromHomepage', '1'); } catch (err) {}
+        // add exit class so intro animates away when navigating
+        document.documentElement.classList.add('page-exit');
+      }, { capture: true });
+    } catch (err) { /* ignore */ }
+  })();
 </script>

@@ -44,15 +44,21 @@ if (sortPosts[currentPostIndex + 1]) {
 
     {
       entry.data.pdf ? (
-        <div class="mt-6 p-4 border rounded bg-skin-card">
-          <div class="flex items-center justify-between">
-            <div class="font-semibold">Download / View PDF</div>
-            <a class="text-sm underline" href={getUrl('/') + entry.collection + '/' + entry.data.pdf} target="_blank" rel="noreferrer">Open in new tab</a>
-          </div>
-          <div class="mt-4">
-            <iframe src={getUrl('/') + entry.collection + '/' + entry.data.pdf} class="w-full h-96 border" title="PDF preview"></iframe>
-          </div>
-        </div>
+        (() => {
+          const pdfPath = (entry.data.pdf && entry.data.pdf.includes('/')) ? entry.data.pdf : (entry.slug + '/' + entry.data.pdf);
+          const fullUrl = getUrl('/') + entry.collection + '/' + pdfPath;
+          return (
+            <div class="mt-6 p-4 border rounded bg-skin-card">
+              <div class="flex items-center justify-between">
+                <div class="font-semibold">Download / View PDF</div>
+                <a class="text-sm underline" href={fullUrl} target="_blank" rel="noreferrer">Open in new tab</a>
+              </div>
+              <div class="mt-4">
+                <iframe src={fullUrl} class="w-full h-96 border" title="PDF preview"></iframe>
+              </div>
+            </div>
+          )
+        })()
       ) : ''
     }
 

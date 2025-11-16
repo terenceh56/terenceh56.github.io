@@ -37,23 +37,7 @@ const {
       class="container relative min-h-full p-4 pt-20 pb-32 text-skin-base"
       id="app"
     >
-      <div class="grid grid-cols-4 gap-8">
-        <div class="col-span-4 space-y-4 xl:col-span-3 xl:col-start-1 first:space-y-2">
-          <button
-            class="flex items-center outline-none cursor-pointer text-md hover:text-skin-active"
-            style="background-color: inherit;"
-            onclick="history.back()"
-          >
-            <i class="mr-2 ri-arrow-left-line"></i>
-            <span>{t('home.goBack')}</span>
-          </button>
-          <slot />
-          {frontmatter.comment && comment.enable && <Comment />}
-        </div>
-        <div class="relative hidden col-span-1 xl:block xl:col-start-4">
-          <Profile />
-          {frontmatter.toc && <Toc headings={headings} />}
-        </div>
+      <div class="grid grid-cols-4 gap-8"> <div class="col-span-4 space-y-4 xl:col-span-3 xl:col-start-1 first:space-y-2"> <button class="flex items-center outline-none cursor-pointer text-md hover:text-skin-active" style="background-color: inherit;" onclick="history.back()" > <i class="mr-2 ri-arrow-left-line"></i> <span>{t('home.goBack')}</span> </button> <slot /> {frontmatter.comment && comment.enable && <Comment />} </div> <div class="relative hidden col-span-1 xl:block xl:col-start-4"> <Profile /> {frontmatter.toc && <Toc headings={headings} />} </div> <ScrollToTop /> </div>
         <ScrollToTop />
       </div>
       <Footer />
