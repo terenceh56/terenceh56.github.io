@@ -142,11 +142,6 @@ export const infoLinks = [
     icon: 'ri-github-fill',
     name: 'github',
     outlink: 'https://github.com/terenceh56',
-  },
-  {
-    icon: 'ri-rss-fill',
-    name: 'rss',
-    outlink: '',
   }
 ]
 
