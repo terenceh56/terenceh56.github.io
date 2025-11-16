@@ -28,7 +28,7 @@ export const site = {
   description: 'Welcome to my page! ',
   author: "Terence", // required
   avatar: '/avatar.png', // required
-  url: 'https://github.com/terenceh56', // required
+  url: 'https://terenceh56.github.io', // required
   baseUrl: '', // When using GitHubPages, you must enter the repository name startWith '/'. e.g. '/astro-blog'
   motto: ` 'Don't think of what you want to be, think of what you want to do.' -Richard P. Feynman`,
   recentBlogSize: 5,
