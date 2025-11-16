@@ -21,6 +21,33 @@ export default defineConfig({
   site: site.url,
   base: import.meta.env.PROD ? site.baseUrl : '',
   trailingSlash: "never",
+  output: 'static',
+  compressHTML: true,
+  vite: {
+    build: {
+      minify: 'terser',
+      cssCodeSplit: true,
+      terserOptions: {
+        compress: {
+          drop_console: true,
+        },
+      },
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            if (id.includes('node_modules')) {
+              if (id.includes('expressive-code')) {
+                return 'expressive-code';
+              }
+              if (id.includes('tailwind')) {
+                return 'tailwind';
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   integrations: [sitemap(), tailwind(), expressiveCode({
     plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
     themes: ["github-dark", "github-light"],
