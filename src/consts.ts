@@ -136,7 +136,7 @@ export const infoLinks = [
   {
     icon: 'ri-instagram-fill',
     name: 'instagram',
-    outlink: 't_hsu5.6',
+    outlink: 'https://instagram.com/t_hsu5.6',
   },
   {
     icon: 'ri-github-fill',
