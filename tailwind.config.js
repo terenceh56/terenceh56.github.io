@@ -61,6 +61,28 @@ export default {
         dodge: withOpacity('--color-text-dodge'),
       },
     },
+    fontFamily: {
+      sans: [
+        'SF Pro Display',
+        'SF Pro Text',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+      ],
+      serif: [
+        'SF Pro Display',
+        Georgia,
+        serif,
+      ],
+      mono: [
+        '"JetBrains Mono"',
+        '"Source Code Pro"',
+        'monospace',
+      ],
+    },
     extend: {
       colors: {
         custom: {
