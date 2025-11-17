@@ -9,6 +9,7 @@ import Donate from '@/components/Donate.astro'
 import {donate, comment, config} from "@/consts";
 
 const {frontmatter = {comment: false, donate: false}, hideAside = false} = Astro.props
+// 保持原有的響應式網格設定
 const gridClass = hideAside ? 'grid grid-cols-1' : 'grid grid-cols-1 lg:grid-cols-4 gap-8'
 ---
 
@@ -19,8 +20,12 @@ const gridClass = hideAside ? 'grid grid-cols-1' : 'grid grid-cols-1 lg:grid-col
 { !hideAside ? <Header/> : null }
 <main class="container p-4 pt-20 text-skin-base pb-32 min-h-full relative" id="app">
   <div class={gridClass}>
-    <!-- Content column: spans 3 columns on lg and starts at column 1 -->
-    <div class={hideAside ? 'col-span-1 mx-auto max-w-3xl' : 'col-span-1 lg:col-span-3 lg:col-start-1'}>
+    <!-- 
+      主內容欄 (貼文列表):
+      - order-2: 在小螢幕上排在第二位 (在側邊欄 Profile 之後)。
+      - lg:order-1: 在大螢幕上排在第一位 (最左側)。
+    -->
+    <div class={hideAside ? 'col-span-1 mx-auto max-w-3xl' : 'col-span-1 lg:col-span-3 lg:col-start-1 order-2 lg:order-1'}>
       <div class={hideAside ? 'mx-auto' : ''}>
         <slot></slot>
       {
@@ -32,10 +37,15 @@ const gridClass = hideAside ? 'grid grid-cols-1' : 'grid grid-cols-1 lg:grid-col
         <Comment></Comment>
       }
     </div>
+  </div>
 
-    <!-- Sidebar column: explicitly placed at column 4 on lg to ensure right-side placement -->
+    <!-- 
+      側邊欄 (Profile + BlogAside):
+      - order-1: 在小螢幕上排在第一位 (在貼文列表之前)，解決您看到 Profile 在底部的問題。
+      - lg:order-4: 在大螢幕上確保它在最右側 (第四欄)。
+    -->
     { !hideAside && (
-      <div class="col-span-1 lg:col-start-4">
+      <div class="col-span-1 lg:col-start-4 order-1 lg:order-4">
         <div class="space-y-6">
           <div class="sticky top-20">
             <Profile></Profile>
@@ -52,7 +62,8 @@ const gridClass = hideAside ? 'grid grid-cols-1' : 'grid grid-cols-1 lg:grid-col
     // the right-hand sidebar container so it appears at the yellow place.
     (function(){
       try {
-        const sidebarContainer = document.querySelector('.space-y-6.sticky.top-20');
+        // Updated selector for robustness
+        const sidebarContainer = document.querySelector('.space-y-6'); 
         if (!sidebarContainer) return;
         // find any profile nodes inside markdown content
         const inContentProfiles = document.querySelectorAll('.markdown-body .site-profile');
@@ -63,8 +74,9 @@ const gridClass = hideAside ? 'grid grid-cols-1' : 'grid grid-cols-1 lg:grid-col
       } catch (err) { console.error(err); }
     })();
   </script>
-  <Footer/>
+  
 </main>
+<Footer/>
 </body>
 <script>
   document.body.querySelectorAll("a").forEach(item => {
