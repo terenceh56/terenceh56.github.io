@@ -10,56 +10,75 @@ import ScrollToTop from '@/components/ScrollToTop.astro';
 import { t } from '@/i18n/utils';
 
 const {
-  frontmatter = {
-    comment: false,
-    donate: false,
-    toc: false,
-    mathjax: false,
-    mermaid: false,
-  },
-  headings,
+  frontmatter = {
+    comment: false,
+    donate: false,
+    toc: false,
+    mathjax: false,
+    mermaid: false,
+  },
+  headings,
 } = Astro.props;
 ---
 
 <html lang={config.lang}>
-  <BaseHead
-    title={frontmatter.title}
-    description={frontmatter.description}
-    mathjax={false}
-    mermaid={frontmatter.mermaid}
-    ogImage={frontmatter.ogImage}
-  />
+  <BaseHead
+    title={frontmatter.title}
+    description={frontmatter.description}
+    mathjax={false}
+    mermaid={frontmatter.mermaid}
+    ogImage={frontmatter.ogImage}
+  />
 
-  <body class="bg-skin-secondary">
-    <Header />
-    <main
-      class="container relative min-h-full p-4 pt-20 pb-32 text-skin-base"
-      id="app"
-    >
-      <div class="grid grid-cols-4 gap-8">
-        <div class="col-span-4 space-y-4 xl:col-span-3 xl:col-start-1 first:space-y-2">
-          <button
-            class="flex items-center outline-none cursor-pointer text-md hover:text-skin-active"
-            style="background-color: inherit;"
-            onclick="history.back()"
-          >
-            <i class="mr-2 ri-arrow-left-line"></i>
-            <span>{t('home.goBack')}</span>
-          </button>
-          <slot />
-          {frontmatter.comment && comment.enable && <Comment />}
-        </div>
-        <div class="relative hidden col-span-1 lg:block lg:col-start-4">
-          <Profile />
-          {frontmatter.toc && <Toc headings={headings} />}
-        </div>
-        <ScrollToTop />
-      </div>
-      <Footer />
-    </main>
-  </body>
+  <body class="bg-skin-secondary">
+    <Header />
+    <main
+      class="container relative min-h-full p-4 pt-20 pb-32 text-skin-base"
+      id="app"
+    >
+      <div class="grid grid-cols-4 gap-8">
+        <div class="col-span-4 space-y-4 xl:col-span-3 xl:col-start-1 first:space-y-2">
+          <button
+            class="flex items-center outline-none cursor-pointer text-md hover:text-skin-active"
+            style="background-color: inherit;"
+            onclick="history.back()"
+          >
+            <i class="mr-2 ri-arrow-left-line"></i>
+            <span>{t('home.goBack')}</span>
+          </button>
+          <slot />
+          {frontmatter.comment && comment.enable && <Comment />}
+        </div>
+        <div class="relative hidden col-span-1 lg:block lg:col-start-4">
+          <Profile />
+          {frontmatter.toc && <Toc headings={headings} />}
+        </div>
+        <ScrollToTop />
+      </div>
+      <Footer />
+    </main>
+  </body>
 </html>
 
 <script>
-  // minimal client enhancements kept same as BlogPost
+  // minimal client enhancements kept same as BlogPost
 </script>
+
+<!-- Custom style to add a white border to all images in the Markdown content -->
+<style>
+/* Targeting images specifically inside the article to increase specificity */
+main .markdown-body img {
+    /* White border */
+    border: 2px solid white; 
+    border-radius: 0.5rem; /* Rounded corners for modern look */
+    padding: 0.25rem; /* Small space between border and image */
+    /* Subtle shadow to lift the image */
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1); 
+}
+
+/* Ensure images remain responsive */
+main .markdown-body img {
+    max-width: 100%;
+    height: auto;
+}
+</style>

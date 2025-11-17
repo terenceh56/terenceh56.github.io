@@ -77,4 +77,20 @@ if (sortPosts[currentPostIndex + 1]) {
     }
   </div>
 
+  <style>
+/* Target all images inside the .markdown-body class (which wraps your <Content/>) */
+.markdown-body img {
+    border: 2px solid #e5e7eb; /* A light gray border */
+    border-radius: 0.5rem; /* Rounded corners for modern look */
+    padding: 0.25rem; /* Small space between border and image */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); /* Very subtle shadow */
+}
+
+/* Ensure images remain responsive */
+.markdown-body img {
+    max-width: 100%;
+    height: auto;
+}
+</style>
+
 </ThoughtPost>

@@ -10,6 +10,11 @@ import getUrl from "@/utils/getUrl";
 export async function getStaticPaths({paginate}) {
   let posts = await getCollectionByName("notes");
   let sortedPosts = orderBySticky(posts);
+  sortedPosts.sort((a, b) => {
+        const dateA = new Date(a.data.pubDate);
+        const dateB = new Date(b.data.pubDate);
+        return dateB.getTime() - dateA.getTime(); 
+    });
   return paginate(sortedPosts, {pageSize: site.postPageSize});
 }
 // 所有分页数据都将传递给 "page" 参数

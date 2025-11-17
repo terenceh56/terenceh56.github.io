@@ -59,6 +59,8 @@ export default defineConfig({
   }), mdx()],
   markdown: {
     remarkPlugins: [remarkModifiedTime, resetRemark, remarkDirective, remarkAsides({}), remarkCollapse({}), remarkGithubCard(), remarkButton(), remarkHtml()],
-    rehypePlugins: [lazyLoadImage],
+    rehypePlugins: [
+      // lazyLoadImage //
+    ],
   }
 });

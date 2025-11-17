@@ -17,3 +17,5 @@ $$
 $$
 
 You can upload a PDF file to `public/notes/2025-11-16-sample-note/sample_note.pdf` and set the `pdf` frontmatter to the filename to enable the download/view box at the bottom of the page.
+
+[Download the PDF version of the notes](/notes/2025-11-16-sample-note/sample_note.pdf)
