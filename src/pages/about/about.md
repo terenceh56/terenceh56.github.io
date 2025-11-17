@@ -8,3 +8,6 @@ This is a personal blog for myself. As I wish to join a major airline in Taiwan 
 
 ## About Me
 I am originally from Taiwan and am currently pursuing a Bachelor's degree in Electronic Science and Technology at Zhejiang University, China.
+
+## Contact Info
+Email: terencehsu56@gmail.com

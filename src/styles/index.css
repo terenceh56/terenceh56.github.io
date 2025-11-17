@@ -301,7 +301,7 @@ menu {
 
 /* Page exit: when navigating from intro, fade/scale out intro container */
 .page-exit .intro-container {
-  transform: translateY(12px) scale(0.98);
+  transform: scale(0.98);
   opacity: 0;
   transition: transform 320ms ease, opacity 320ms ease;
 }

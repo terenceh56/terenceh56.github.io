@@ -101,9 +101,9 @@ export const categories = [
   },
   
   {
-    name: "Message",
+    name: "Comments",
     iconClass: "ri-chat-1-line",
-    href: "/message",
+    href: "/comments/1",
   },
   {
     name: "Search",
@@ -142,7 +142,7 @@ export const infoLinks = [
     icon: 'ri-github-fill',
     name: 'github',
     outlink: 'https://github.com/terenceh56',
-  }
+  },
 ]
 
 // Friendship links removed per user request
@@ -162,18 +162,18 @@ export const infoLinks = [
  * walineConfig.whiteList {string[]} set some pages not to display reaction
  */
 export const comment = {
-  enable: false,
-  type: 'giscus', // waline | giscus,
+  enable: true,
+  type: 'waline', // waline | giscus,
   walineConfig: {
-    serverUrl: "",
+    serverUrl: "https://yopn9m93.api.lncldglobal.com",
     lang: 'en',
     pageSize: 20,
     wordLimit: '',
     count: 5,
     pageview: true,
-    reaction: true,
+    reaction: false,
     requiredMeta: ["nick", "mail"],
-    whiteList: ['/message/'],
+    whiteList: ['/comments/'],
   },
 
   // giscus config

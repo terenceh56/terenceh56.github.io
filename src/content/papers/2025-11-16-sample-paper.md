@@ -7,6 +7,7 @@ year: 2025
 doi: "10.1000/example-doi"
 tags: ["example","paper"]
 pdf: "paper_sample.pdf"
+comment: true
 ---
 
 A short summary of the paper and a place for your notes or highlights.

@@ -1,147 +1,293 @@
 ---
+
 import {site, infoLinks, categories as headerCategories} from "@/consts";
+
 import getUrl from "@/utils/getUrl";
 
+
+
 // Build a flat list of category buttons from header categories + their children
+
 const flattenCategories = (cats) => {
+
   const res = [];
+
   cats.forEach(c => {
+
     // push top-level category
+
     res.push({ name: c.name, href: c.href, target: c.target ?? '_self' });
+
     // push children (if any)
+
     if (c.children && c.children.length) {
+
       c.children.forEach(ch => res.push({ name: ch.name, href: ch.href, target: ch.target ?? '_self' }));
+
     }
+
   });
+
   return res;
+
 }
 
+
+
 const categories = flattenCategories(headerCategories || []);
+
 ---
 
+
+
 <div class="intro-container flex flex-col items-center justify-center min-h-screen text-center">
+
   <div class="max-w-2xl">
+
     <!-- Avatar -->
+
     <img class="avatar mb-8 mx-auto" src={getUrl(site.avatar)} alt="avatar"/>
-    
+
+   
+
     <!-- Main Title -->
+
     <h1 class="text-4xl md:text-5xl font-bold mb-4 text-skin-base">
+
       {site.author}
+
     </h1>
-    
+
+   
+
     <!-- Motto/Description -->
+
     {
+
       (() => {
+
         const raw = (site.motto || '').trim();
+
         const clean = raw.replace(/^"|"$/g, '').trim();
+
         let text = clean;
+
         let author = '';
+
         // try common separators: double-hyphen, em-dash, spaced hyphen
+
         const seps = ['--', '—', ' - ', ' – ', ' — '];
+
         for (const sep of seps) {
+
           if (clean.includes(sep)) {
+
             const parts = clean.split(sep).map(p => p.trim()).filter(Boolean);
+
             text = parts[0] || '';
+
             author = parts.slice(1).join(' ').replace(/^[-–—]+\s*/, '') || '';
+
             break;
+
           }
+
         }
+
         // fallback: split at last hyphen
+
         if (!author) {
+
           const idx = Math.max(clean.lastIndexOf(' - '), clean.lastIndexOf('-'));
+
           if (idx > 0) {
+
             text = clean.slice(0, idx).trim();
+
             author = clean.slice(idx).replace(/^[-\s]+/, '').trim();
+
           }
+
         }
+
         return (
+
           <div class="text-lg md:text-xl mb-8 text-skin-dodge leading-relaxed">
+
             <div>{text}</div>
+
             {author && <div class="mt-2">- {author}</div>}
+
           </div>
+
         )
+
       })()
+
     }
-    
+
+   
+
     <!-- Description -->
+
     <p class="text-base md:text-lg mb-12 text-skin-base max-w-xl mx-auto leading-relaxed">
+
       {site.description}
+
     </p>
-    
+
+   
+
     <!-- Categories (top) rendered from header categories -->
+
     <div class="flex items-center justify-center flex-wrap gap-3 mb-6">
+
       {
+
           categories.map(cat => (
+
             <a
+
               href={cat.href === 'javascript:void(0);' ? '#' : getUrl(cat.href)}
+
               target={cat.target}
+
               class="px-4 py-2 text-sm rounded-lg border border-skin-base hover:bg-skin-card hover:text-skin-active transition-colors category-btn"
+
               title={cat.name}
+
               onClick={(e) => {
+
                 e.preventDefault();
+
                       const href = (cat.href === 'javascript:void(0);') ? '#' : getUrl(cat.href);
+
                       // mark that we are navigating from the homepage so the header can drop on the next page
+
                       try { sessionStorage.setItem('fromHomepage', '1'); } catch (err) {}
+
                       handleCategoryClick(href);
+
               }}
+
             >
+
               {cat.name}
+
             </a>
+
           ))
+
         }
+
     </div>
 
+
+
     <!-- (Removed social links and CTA buttons) -->
+
   </div>
+
 </div>
 
+
+
 <style>
+
   .intro-container {
+
     animation: fadeIn 0.8s ease-in-out;
+
   }
-  
+
+ 
+
   @keyframes fadeIn {
+
     from {
+
       opacity: 0;
+
       transform: translateY(20px);
+
     }
+
     to {
+
       opacity: 1;
+
       transform: translateY(0);
+
     }
+
   }
+
 </style>
 
+
+
 <script is:inline>
+
   function handleCategoryClick(href) {
+
     // mark that we are leaving the homepage so header can animate down on arrival
+
     try { sessionStorage.setItem('fromHomepage', '1'); } catch (err) {}
+
     // add exit class to trigger CSS transition
+
     document.documentElement.classList.add('page-exit');
+
     // small delay to allow animation to play before navigation
+
     const delay = 350;
+
     setTimeout(() => {
+
       if (!href || href === '#' || href === 'javascript:void(0);') return;
+
       // navigate
+
       window.location.href = href;
+
     }, delay);
+
   }
 
+
+
   // Also set `fromHomepage` for other internal link clicks from the intro section
+
   (function(){
+
     try {
+
       document.addEventListener('click', function(e){
+
         const a = e.target.closest && e.target.closest('a');
+
         if(!a) return;
+
         const href = a.getAttribute('href');
+
         if(!href) return;
+
         // ignore external and hash links
+
         if (href.startsWith('http') || href.startsWith('#') || href === 'javascript:void(0);') return;
+
         // mark leaving homepage so the header can drop on arrival
+
         try { sessionStorage.setItem('fromHomepage', '1'); } catch (err) {}
+
         // add exit class so intro animates away when navigating
+
         document.documentElement.classList.add('page-exit');
+
       }, { capture: true });
+
     } catch (err) { /* ignore */ }
+
   })();
+
 </script>

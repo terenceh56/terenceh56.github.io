@@ -1,0 +1,23 @@
+---
+import IndexPage from '@/layouts/IndexPage.astro'
+import Comment from '@/components/Comment.astro'
+import {comment} from "@/consts";
+import getUrl from "@/utils/getUrl";
+
+export async function getStaticPaths({paginate}) {
+  // Since comments are handled by Waline and not a content collection,
+  // we'll create a single "page" for the comments section.
+  // If you want actual pagination for comments, you would need to
+  // integrate with Waline's API or a custom comment system.
+  return paginate([{ page: 1 }], { pageSize: 1 });
+}
+
+const {page} = Astro.props;
+---
+
+<IndexPage frontmatter={{comment:true}}>
+  {
+    comment?.enable &&
+    <Comment></Comment>
+  }
+</IndexPage>

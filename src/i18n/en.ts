@@ -24,7 +24,7 @@ export  const en = {
   'home.readMore': 'Read more',
   'home.sticky': 'Sticky',
   'message.welcome': 'Welcome',
-  'message.welcomeTips': 'Leave a footprint!',
+  'message.welcomeTips': 'Feel free to leave a message and share your thoughts!',
   'memos.loadMore': 'Load more',
   'pagination.total':'Total',
   'pagination.unit': 'Pages',
