@@ -8,15 +8,20 @@ import {sortPostsByDate} from "@/utils/sortPostsByDate";
 import {site} from '@/consts'
 import {t} from '@/i18n/utils'
 import getUrl from "@/utils/getUrl";
-const blogs = await getCollectionByName('blog')
-let tagArr = getUniqueTags(blogs);
+const blogs = await getCollectionByName('blog');
+const notes = await getCollectionByName('notes');
+const thoughts = await getCollectionByName('thoughts');
+const papers = await getCollectionByName('papers');
+const allPosts = [...blogs, ...notes, ...thoughts, ...papers];
+let tagArr = getUniqueTags(allPosts);
 if(site.asideTagsMaxSize > 0)
   tagArr = tagArr.slice(0, site.asideTagsMaxSize)
 let categoryCount = getCountByCategory(blogs);
-let sortPosts = await sortPostsByDate(blogs);
+let sortPosts = await sortPostsByDate(allPosts);
 let resultPosts = sortPosts.splice(0, site.recentBlogSize);
 ---
 
+<!--
 <div>
   {
     Object.keys(categoryCount).length > 0 && (
@@ -37,6 +42,7 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
     ))
   }
 </div>
+-->
 <div>
   {
     tagArr.length > 0 && (

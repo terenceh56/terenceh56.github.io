@@ -4,9 +4,22 @@ date: 2025-11-16
 tags: ["example"]
 mathjax: true
 pdf: "sample_note.pdf"
+toc: true
 ---
 
 This is a sample note to verify the new `notes` collection.
+
+## Section 1
+
+This is the first section.
+
+### Subsection 1.1
+
+This is a subsection.
+
+## Section 2
+
+This is the second section.
 
 Inline math should render: $e^{i\pi} + 1 = 0$.
 

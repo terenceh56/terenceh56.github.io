@@ -4,7 +4,10 @@ date: 2025-11-17
 tags: ["aviation"]
 mathjax: true
 pdf: "Jeppesen-Private-Pilot-Textbook-Notes/Notes.pdf"
+toc: true
 ---
+
+## Reference
 
 This note is made based on "Jeppesen Private Pilot Textbook".
 
