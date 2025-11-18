@@ -163,7 +163,7 @@ export const infoLinks = [
  */
 export const comment = {
   enable: true,
-  type: 'waline', // waline | giscus,
+  type: 'disqus', // waline | giscus | disqus,
   walineConfig: {
     serverUrl: "https://vercel-3vq9ankvu-terenceh56s-projects.vercel.app",
     lang: 'en',
@@ -194,6 +194,8 @@ export const comment = {
 
   //
 }
+
+export const DISQUS_SHORTNAME = "terenceh56";
 
 /**
  * Analytics Feature Configuration
