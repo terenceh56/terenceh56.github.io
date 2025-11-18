@@ -165,7 +165,7 @@ export const comment = {
   enable: true,
   type: 'waline', // waline | giscus,
   walineConfig: {
-    serverUrl: "https://yopn9m93.api.lncldglobal.com",
+    serverUrl: "https://vercel-jk20tlitq-terenceh56s-projects.vercel.app/",
     lang: 'en',
     pageSize: 20,
     wordLimit: '',
