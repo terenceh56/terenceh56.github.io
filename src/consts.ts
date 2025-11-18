@@ -172,7 +172,7 @@ export const comment = {
     count: 5,
     pageview: true,
     reaction: false,
-    requiredMeta: ["nick", "mail"],
+    requiredMeta: ["nick"],
     whiteList: ['/comments/'],
   },
 
