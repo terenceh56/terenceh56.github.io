@@ -3,7 +3,7 @@ import {formatDate} from "@/utils/formatDate";
 import {dealLabel} from "@/utils/dealLabel";
 import {t} from '@/i18n/utils'
 import getUrl from "@/utils/getUrl";
-const {title, date, slug, category, tags, sticky = false, draft = false} = Astro.props
+const {title, date, slug, category, tags, sticky = false, draft = false, venue} = Astro.props
 ---
 
 <div class="text-skin-base">
@@ -45,6 +45,12 @@ const {title, date, slug, category, tags, sticky = false, draft = false} = Astro
         <a href={getUrl("/tags/") + tagName} class="text-wrap break-all hover:text-skin-active mr-2">
           <i class="ri-hashtag"/>{tagName}</a>
       )
+    }
+
+    <!-- venue -->
+    {
+      venue &&
+      <div class="mr-2"><i class="ri-building-line mr-1"/>{venue}</div>
     }
   </div>
 </div>

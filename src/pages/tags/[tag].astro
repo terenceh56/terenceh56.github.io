@@ -13,13 +13,11 @@ export async function getStaticPaths() {
   const thoughts = await getCollectionByName("thoughts");
   const papers = await getCollectionByName("papers");
   const allPosts = [...posts, ...notes, ...thoughts, ...papers];
-  //   过滤没有分类的文章，todo 后期可能会强制需要文章分类
-  const tags = getUniqueTags(allPosts).filter((tag) => tag);
-  return tags.map((tag) => {
-    return {params: {tag,}, props: {tag,},};
-  });
+  return getUniqueTags(allPosts).map((tag) => ({
+    params: { tag },
+  }));
 }
-const {tag} = Astro.props;
+const { tag } = Astro.params;
 let posts = await getCollectionByName("blog");
 const notes = await getCollectionByName("notes");
 const thoughts = await getCollectionByName("thoughts");

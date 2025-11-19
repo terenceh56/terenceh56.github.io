@@ -2,12 +2,11 @@
 title: "Sample Paper Summary"
 date: 2025-11-16
 authors: ["Doe, J."]
-venue: "Example Conference"
+venue: "ACM/IEEE Design Automation Conference (DAC)"
 year: 2025
-doi: "10.1000/example-doi"
+doi: "10.1109/DAC63849.2025.11132601"
 tags: ["example","paper"]
 pdf: "paper_sample.pdf"
-comment: true
 ---
 
 A short summary of the paper and a place for your notes or highlights.

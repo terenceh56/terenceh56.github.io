@@ -61,7 +61,7 @@ export const config = {
 
 /**
  * Donate configuration
- */
+
 export const donate = {
   enable: false,
   tip: "Thanks for the coffee !!!☕",
@@ -69,6 +69,8 @@ export const donate = {
   alipayQRCode: "/AliPayQR.png",
   paypalUrl: "",
 }
+
+*/
 
 /**
  * Navigator
@@ -165,7 +167,7 @@ export const comment = {
   enable: true,
   type: 'disqus', // waline | giscus | disqus,
   walineConfig: {
-    serverUrl: "https://vercel-3vq9ankvu-terenceh56s-projects.vercel.app",
+    serverUrl: "",
     lang: 'en',
     pageSize: 20,
     wordLimit: '',

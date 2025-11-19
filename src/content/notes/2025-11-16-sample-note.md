@@ -5,7 +5,6 @@ tags: ["example"]
 mathjax: true
 pdf: "sample_note.pdf"
 toc: true
-comment: true
 ---
 
 This is a sample note to verify the new `notes` collection.
