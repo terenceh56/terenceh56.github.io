@@ -1,11 +1,9 @@
 ---
 import NotePost from '@/layouts/NotePost.astro'
-import {donate} from '@/consts';
 import PostTitle from "@/components/PostTitle.astro";
 import BlogFooter from '@/components/BlogFooter.astro'
 import {getCollectionByName} from "@/utils/getCollectionByName";
 import {sortPostsByDate} from "@/utils/sortPostsByDate";
-import Donate from '@/components/Donate.astro'
 import getUrl from "@/utils/getUrl";
 
 export async function getStaticPaths() {
@@ -91,12 +89,5 @@ if (sortPosts[currentPostIndex + 1]) {
           <div/>
         )
       }
-    </div>
-    <BlogFooter title={entry.data.title} url={getUrl('/') + entry.collection + '/' + entry.slug} date={entry.data.date}></BlogFooter>
-    {
-      donate?.enable && entry.data.donate &&
-      <Donate></Donate>
-    }
-  </div>
 
 </NotePost>

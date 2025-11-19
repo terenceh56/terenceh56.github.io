@@ -59,9 +59,6 @@ export const config = {
   memosPageSize: 10, // number
 }
 
-/**
- * Donate configuration
-
 export const donate = {
   enable: false,
   tip: "Thanks for the coffee !!!☕",
@@ -69,8 +66,6 @@ export const donate = {
   alipayQRCode: "/AliPayQR.png",
   paypalUrl: "",
 }
-
-*/
 
 /**
  * Navigator
