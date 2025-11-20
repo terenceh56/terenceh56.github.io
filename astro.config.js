@@ -36,9 +36,6 @@ export default defineConfig({
         output: {
           manualChunks: (id) => {
             if (id.includes('node_modules')) {
-              if (id.includes('expressive-code')) {
-                return 'expressive-code';
-              }
               if (id.includes('tailwind')) {
                 return 'tailwind';
               }
@@ -48,7 +45,7 @@ export default defineConfig({
       }
     }
   },
-  integrations: [sitemap(), tailwind(), expressiveCode({
+  integrations: [sitemap(), tailwind(), /* expressiveCode({
     plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
     themes: ["github-dark", "github-light"],
     styleOverrides: {
@@ -56,7 +53,7 @@ export default defineConfig({
       uiFontFamily: "jetbrains-mono",
     },
     themeCssSelector: (theme) => `[data-theme="${theme.type}"]`
-  }), mdx()],
+  }), */ mdx()],
   markdown: {
     remarkPlugins: [remarkModifiedTime, resetRemark, remarkDirective, remarkAsides({}), remarkCollapse({}), remarkGithubCard(), remarkButton(), remarkHtml()],
     rehypePlugins: [
