@@ -1,10 +1,10 @@
 ---
-import IndexPage from '@/layouts/IndexPage.astro'
+import IndexPage from '@/layouts/IndexPage.astro';
 import DisqusComment from '@/components/DisqusComment.astro';
-import { comment } from "@/consts";
-import getUrl from "@/utils/getUrl";
+import { comment } from '@/consts';
+import getUrl from '@/utils/getUrl';
 
-export async function getStaticPaths({paginate}) {
+export async function getStaticPaths({ paginate }) {
   // Since comments are handled by Disqus and not a content collection,
   // we'll create a single "page" for the comments section.
   return paginate([{ page: 1 }], { pageSize: 1 });
@@ -13,12 +13,11 @@ export async function getStaticPaths({paginate}) {
 const { page } = Astro.props;
 const url = getUrl(Astro.url.pathname);
 const id = Astro.url.pathname;
-const title = "Comments";
+const title = 'Comments';
 ---
 
-<IndexPage frontmatter={{comment:true}}>
-  {
-    comment?.enable &&
-    <DisqusComment url={url} id={id} title={title} />
-  }
+<IndexPage frontmatter={{ comment: true }}>
+  {comment?.enable && <DisqusComment url={url} id={id} title={title} />}
+  <script id="dsq-count-scr" src="//terenceh56.disqus.com/count.js" async
+  ></script>
 </IndexPage>

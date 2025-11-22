@@ -1,8 +1,10 @@
 ---
-import { comment } from "@/consts";
-import GiscusComment from "./GiscusComment.astro";
-import WalineComment from "./WalineComment.astro";
+import { comment } from '@/consts';
+import GiscusComment from './GiscusComment.astro';
+import WalineComment from './WalineComment.astro';
+import DisqusComment from './DisqusComment.astro';
 ---
 
-{comment.enable && comment.type === "waline" && <WalineComment />}
-{comment.enable && comment.type === "giscus" && <GiscusComment />}
+{comment.enable && comment.type === 'waline' && <WalineComment />}
+{comment.enable && comment.type === 'giscus' && <GiscusComment />}
+{comment.enable && comment.type === 'disqus' && <DisqusComment />}
