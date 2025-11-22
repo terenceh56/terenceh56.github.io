@@ -48,13 +48,18 @@ function init() {
 }
 
 
-window.onload = () => {
-  init()
-};
+
+document.addEventListener('astro:page-load', () => {
+  init();
+});
+
+document.addEventListener('astro:after-swap', () => {
+  reflectPreference();
+});
 
 // sync with system changes
 window.matchMedia("(prefers-color-scheme: dark)")
-  .addEventListener("change", ({matches: isDark}) => {
+  .addEventListener("change", ({ matches: isDark }) => {
     themeValue = isDark ? "dark" : "light";
     setPreference();
   });

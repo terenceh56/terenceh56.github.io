@@ -1,5 +1,6 @@
 ---
 import BaseHead from '@/components/BaseHead.astro';
+import { ClientRouter } from 'astro:transitions';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import Profile from '@/components/Profile.astro';
@@ -17,7 +18,10 @@ const gridClass = hideAside
 ---
 
 <html lang={config.lang}>
-  <BaseHead title={Astro.props.title} />
+  <head>
+    <BaseHead title={Astro.props.title} />
+    <ClientRouter />
+  </head>
 
   <body class="bg-skin-secondary relative">
     {!hideAside ? <Header /> : null}

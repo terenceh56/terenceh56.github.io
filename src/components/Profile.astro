@@ -1,10 +1,12 @@
 ---
-import {site, infoLinks} from "@/consts";
-import getUrl from "@/utils/getUrl";
+import { site, infoLinks } from '@/consts';
+import getUrl from '@/utils/getUrl';
 ---
 
-<div class="site-profile shadow-lg rounded-lg h-64 w-auto flex flex-col items-center justify-center bg-skin-card p-2">
-  <img class="avatar mb-4" src={getUrl(site.avatar)} alt="avatar"/>
+<div
+  class="site-profile glass rounded-lg h-64 w-auto flex flex-col items-center justify-center p-2"
+>
+  <img class="avatar mb-4" src={getUrl(site.avatar)} alt="avatar" />
   {
     (() => {
       const raw = (site.motto || '').trim();
@@ -14,9 +16,16 @@ import getUrl from "@/utils/getUrl";
       const seps = ['--', '—', ' - ', ' – ', ' — '];
       for (const sep of seps) {
         if (clean.includes(sep)) {
-          const parts = clean.split(sep).map(p => p.trim()).filter(Boolean);
+          const parts = clean
+            .split(sep)
+            .map((p) => p.trim())
+            .filter(Boolean);
           text = parts[0] || '';
-          author = parts.slice(1).join(' ').replace(/^[-–—]+\s*/, '') || '';
+          author =
+            parts
+              .slice(1)
+              .join(' ')
+              .replace(/^[-–—]+\s*/, '') || '';
           break;
         }
       }
@@ -24,7 +33,10 @@ import getUrl from "@/utils/getUrl";
         const idx = Math.max(clean.lastIndexOf(' - '), clean.lastIndexOf('-'));
         if (idx > 0) {
           text = clean.slice(0, idx).trim();
-          author = clean.slice(idx).replace(/^[-\s]+/, '').trim();
+          author = clean
+            .slice(idx)
+            .replace(/^[-\s]+/, '')
+            .trim();
         }
       }
       return (
@@ -32,14 +44,14 @@ import getUrl from "@/utils/getUrl";
           <div>{text}</div>
           {author && <div class="text-sm mt-1">- {author}</div>}
         </div>
-      )
+      );
     })()
   }
   <div class="flex items-center justify-center flex-wrap">
     {
       infoLinks.map((infoItem) => (
         <a title={infoItem.name} href={infoItem.outlink} target="_blank">
-          <i class={infoItem.icon + " text-2xl mr-2 cursor-pointer"}/>
+          <i class={infoItem.icon + ' text-2xl mr-2 cursor-pointer'} />
         </a>
       ))
     }
