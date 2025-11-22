@@ -2,117 +2,106 @@
 import BaseHead from '@/components/BaseHead.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
-import Profile from '@/components/Profile.astro'
-import BlogAside from '@/components/BlogAside.astro'
-import Comment from '@/components/Comment.astro'
-import Donate from '@/components/Donate.astro'
-import {donate, comment, config} from "@/consts";
+import Profile from '@/components/Profile.astro';
+import BlogAside from '@/components/BlogAside.astro';
+import Comment from '@/components/Comment.astro';
+import Donate from '@/components/Donate.astro';
+import { donate, comment, config } from '@/consts';
 
-const {frontmatter = {comment: false, donate: false}, hideAside = false} = Astro.props
+const { frontmatter = { comment: false, donate: false }, hideAside = false } =
+  Astro.props;
 // 保持原有的響應式網格設定
-const gridClass = hideAside ? 'grid grid-cols-1' : 'grid grid-cols-1 lg:grid-cols-4 gap-8'
+const gridClass = hideAside
+  ? 'grid grid-cols-1'
+  : 'grid grid-cols-1 lg:grid-cols-4 gap-8';
 ---
 
 <html lang={config.lang}>
-<BaseHead title={Astro.props.title} />
+  <BaseHead title={Astro.props.title} />
 
-<body class="bg-skin-secondary relative">
-{ !hideAside ? <Header/> : null }
-<main class:list={[
-    "container",
-    "p-4",
-    "pb-32",
-    "min-h-full",
-    "relative",
-    "text-skin-base",
-    hideAside ? "pt-4" : "pt-20"
-  ]} id="app">
-  <div class={gridClass}>
-    <!-- 
-      主內容欄 (貼文列表):
-      - order-2: 在小螢幕上排在第二位 (在側邊欄 Profile 之後)。
-      - lg:order-1: 在大螢幕上排在第一位 (最左側)。
-    -->
-    <div class={hideAside ? 'col-span-1 mx-auto max-w-3xl' : 'col-span-1 lg:col-span-3 lg:col-start-1 order-2 lg:order-1'}>
-      <div class={hideAside ? 'mx-auto' : ''}>
-        {Astro.url.pathname === '/notes/1' && (
-          <div class="mb-8 p-4 bg-skin-card rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-2">The Notes Section</h2>
-            <p class="text-skin-base">Here you'll find a collection of my personal notes, summaries, and learning resources mainly on aviation related topics. Please feel free to explore and comment.</p>
-          </div>
-        )}
-        {Astro.url.pathname === '/thoughts/1' && (
-          <div class="mb-8 p-4 bg-skin-card rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-2">My Thoughts</h2>
-            <p class="text-skin-base">This section is mainly about my random thoughts, personal opinions, and reflections on different subjects, which might appear to be some more random, less structured thoughts, like quick posts on social media. If you got different thoughts than me, feel free to leave a comment or discuss me via emails.</p>
-          </div>
-        )}
-        {Astro.url.pathname === '/papers/1' && (
-          <div class="mb-8 p-4 bg-skin-card rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-2">Research Papers and Articles</h2>
-            <p class="text-skin-base">This section will mainly documentary my insights from the papers I've read while working on my graduation project.</p>
-          </div>
-        )}
-        {Astro.url.pathname === '/comments/1' && (
-          <div class="mb-8 p-4 bg-skin-card rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-2">Comments</h2>
-            <p class="text-skin-base">This is the comment section of the entire site. Feel free to share your thoughts, ask questions, or engage in conversations here.</p>
-          </div>
-        )}
-        <slot></slot>
-      {
-        donate?.enable && frontmatter.donate &&
-        <Donate></Donate>
-      }
-      {
-        comment?.enable && frontmatter.comment &&
-        <Comment></Comment>
-      }
-    </div>
-  </div>
-
-    <!-- 
-      側邊欄 (Profile + BlogAside):
-      - order-1: 在小螢幕上排在第一位 (在貼文列表之前)，解決您看到 Profile 在底部的問題。
-      - lg:order-4: 在大螢幕上確保它在最右側 (第四欄)。
-    -->
-    { !hideAside && (
-      <div class="col-span-1 lg:col-start-4 order-1 lg:order-4">
-        <div class="space-y-6">
-          <div class="sticky top-20">
-            <Profile></Profile>
-          </div>
-          <BlogAside></BlogAside>
+  <body class="bg-skin-secondary relative">
+    {!hideAside ? <Header /> : null}
+    <main
+      class:list={[
+        'container',
+        'p-4',
+        'pb-32',
+        'min-h-full',
+        'relative',
+        'text-skin-base',
+        hideAside ? 'pt-4' : 'pt-20',
+      ]}
+      id="app"
+    >
+      <div class={gridClass}>
+        <!-- Main Content -->
+        <div
+          class={hideAside
+            ? 'col-span-1'
+            : 'col-span-1 lg:col-span-3 order-2 lg:order-1'}
+        >
+          {
+            Astro.url.pathname === '/thoughts/1' && (
+              <div class="mb-8 p-4 bg-skin-card rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-2">My Thoughts</h2>
+                <p class="text-skin-base">
+                  This section is mainly about my random thoughts, personal
+                  opinions, and reflections on different subjects, which might
+                  appear to be some more random, less structured thoughts, like
+                  quick posts on social media. If you got different thoughts
+                  than me, feel free to leave a comment or discuss me via
+                  emails.
+                </p>
+              </div>
+            )
+          }
+          {
+            Astro.url.pathname === '/papers/1' && (
+              <div class="mb-8 p-4 bg-skin-card rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-2">
+                  Research Papers and Articles
+                </h2>
+                <p class="text-skin-base">
+                  This section will mainly documentary my insights from the
+                  papers I've read while working on my graduation project.
+                </p>
+              </div>
+            )
+          }
+          {
+            Astro.url.pathname === '/comments/1' && (
+              <div class="mb-8 p-4 bg-skin-card rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-2">Comments</h2>
+                <p class="text-skin-base">
+                  This is the comment section of the entire site. Feel free to
+                  share your thoughts, ask questions, or engage in conversations
+                  here.
+                </p>
+              </div>
+            )
+          }
+          <slot />
+          {donate?.enable && frontmatter.donate && <Donate />}
+          {comment?.enable && frontmatter.comment && <Comment />}
         </div>
-      </div>
-    ) }
-  </div>
 
-  <script>
-    // If the Profile component (or HTML snippet) is accidentally rendered inside
-    // the article content (e.g. due to markdown/html embed), relocate it into
-    // the right-hand sidebar container so it appears at the yellow place.
-    (function(){
-      try {
-        // Updated selector for robustness
-        const sidebarContainer = document.querySelector('.space-y-6'); 
-        if (!sidebarContainer) return;
-        // find any profile nodes inside markdown content
-        const inContentProfiles = document.querySelectorAll('.markdown-body .site-profile');
-        inContentProfiles.forEach(node => {
-          // move node to the top of sidebar container
-          sidebarContainer.insertBefore(node, sidebarContainer.firstChild);
-        });
-      } catch (err) { console.error(err); }
-    })();
+        <!-- Sidebar -->
+        {
+          !hideAside && (
+            <div class="col-span-1 lg:col-span-1 order-1 lg:order-2">
+              <div class="sticky top-20">
+                <Profile />
+                <BlogAside />
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </main>
+    <Footer />
+  </body><script>
+    document.body.querySelectorAll('a').forEach((item) => {
+      item.setAttribute('rel', 'nofollow noreferrer');
+    });
   </script>
-  
-</main>
-<Footer/>
-</body>
-<script>
-  document.body.querySelectorAll("a").forEach(item => {
-    item.setAttribute("rel", "nofollow noreferrer");
-  });
-</script>
 </html>

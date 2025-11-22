@@ -1,7 +1,7 @@
 // Place any global data in this file.
 // You can import this data from anywhere in your site by using the `import` keyword.
 
-import type {AnalyticsConfig} from "./types/analyticsTypes"
+import type { AnalyticsConfig } from "./types/analyticsTypes"
 
 /**
  * title {string} website title
@@ -30,7 +30,7 @@ export const site = {
   avatar: '/avatar.png', // required
   url: 'https://terenceh56.github.io', // required
   baseUrl: '', // When using GitHubPages, you must enter the repository name startWith '/'. e.g. '/astro-blog'
-  motto: ` 'Don't think of what you want to be, think of what you want to do.' -Richard P. Feynman`,
+  motto: ` 'Don't think about what you want to be, but what you want to do.' -Richard P. Feynman`,
   recentBlogSize: 5,
   archivePageSize: 25,
   postPageSize: 10,
@@ -75,7 +75,7 @@ export const donate = {
  * target {string} optional "_self|_blank" open in current window / open in new window
  */
 export const categories = [
-  
+
   // {
   //   name: "Memos",
   //   iconClass: "ri-quill-pen-line",
@@ -96,7 +96,7 @@ export const categories = [
     iconClass: "ri-draft-line",
     href: "/papers/1",
   },
-  
+
   {
     name: "Comments",
     iconClass: "ri-chat-1-line",
@@ -113,7 +113,7 @@ export const categories = [
     iconClass: 'ri-information-line',
     href: '/about',
   },
-  
+
 ]
 
 /**
