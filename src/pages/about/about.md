@@ -3,11 +3,28 @@ donate: false
 comment: false
 ---
 
-## About Website
+# About Website
+
 This is a personal blog for myself. As I wish to join a major airline in Taiwan as a cadet pilot upon graduation, this personal site will mainly feature my ongoing aviation studies aimed at a cadet pilot career. But also featuring some of the notes I've made throughout my Bachelor's degree. Besides these contents, there are also some scattered thoughts randomly on the "Thoughts" section.
 
-## About Me
+## Disclaimer
+
+The information provided on this website is for personal and educational purposes only. While every effort has been made to ensure the accuracy of the content, no guarantee is given regarding its completeness or reliability.
+
+The author does not assume responsibility for any consequences arising from the use of the information presented here. Users should verify details independently before relying on them.
+
+This website is non-commercial, and no copyrighted content (such as full text or images from publications) is reproduced. If any content is believed to infringe rights, please contact me, and it will be removed or adjusted promptly.
+
+## Acknowledgments
+
+Special thanks to *zwt* for inspiring the creation of this site.
+
+Thanks also to everyone who provided feedback and technical input throughout its development. Your support has significantly improved the website’s structure and usability.
+
+# About Me
+
 I am originally from Taiwan and am currently pursuing a Bachelor's degree in Electronic Science and Technology at Zhejiang University, China.
 
-## Contact Info
-Email: terencehsu56@gmail.com
+# Contact Info
+
+Email: <terencehsu56@gmail.com>
