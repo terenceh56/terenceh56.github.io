@@ -32,9 +32,9 @@ const { hideNav = false } = Astro.props;
     <div class="block xl:hidden">
       <MenuIcon></MenuIcon>
     </div>
-    <a class="p-4 text-2xl flex items-center" href={getUrl("/")}>
+    <a class="p-4 text-2xl flex items-center absolute left-1/2 transform -translate-x-1/2 xl:static xl:transform-none xl:left-auto" href={getUrl("/")}>
       <img src={getUrl(site.favicon)} alt={site.title} class="h-8 w-auto mr-3" />
-      <span class="hidden sm:inline">{site.title}</span>
+      <span class="font-bold">{site.title}</span>
     </a>
     <div class="flex items-center">
       { !hideNav && (
