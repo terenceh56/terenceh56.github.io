@@ -1,5 +1,17 @@
-<div id="disqus_thread"></div>
-<script>
+---
+interface Props {
+  url?: string;
+  id?: string;
+  title?: string;
+}
+
+const { url, id, title } = Astro.props;
+---
+
+<div class="my-8">
+  <div id="disqus_thread"></div>
+</div>
+<script is:inline>
   /**
    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
@@ -14,7 +26,7 @@
     var d = document,
       s = d.createElement('script');
     s.src = 'https://terenceh56.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
+    s.setAttribute('data-timestamp', String(+new Date()));
     (d.head || d.body).appendChild(s);
   })();
 </script>
