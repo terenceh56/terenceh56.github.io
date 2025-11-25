@@ -114,13 +114,19 @@ menu {
 @layer components {
 
   /* 导航栏的按钮样式 */
-  .header-link-active {
-    @apply underline underline-offset-4 decoration-wavy decoration-skin-active;
+  .header-link {
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
   }
 
-  /* Apply hover underline via pseudo-class */
+  .header-link-active {
+    background: rgba(var(--color-text), 0.15);
+  }
+
+  /* Apply hover effect without underline */
   .header-link:hover {
-    @apply underline underline-offset-4 decoration-wavy decoration-skin-base;
+    background: rgba(var(--color-text), 0.08);
   }
 
   .header-link:focus {
