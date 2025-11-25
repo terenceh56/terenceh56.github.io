@@ -17,7 +17,7 @@ This website is non-commercial, and no copyrighted content (such as full text or
 
 ### Acknowledgments
 
-Special thanks to *zwt* for inspiring the creation of this site.
+Special thanks to *zwt* for inspiring and helping on the creation of this site.
 
 Thanks also to everyone who provided feedback and technical input throughout its development. Your support has significantly improved the website’s structure and usability.
 
