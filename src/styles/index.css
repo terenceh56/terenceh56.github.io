@@ -179,6 +179,26 @@ menu {
     scroll-behavior: smooth;
   }
 
+  /* iOS-style glassmorphic navigation bar effect */
+  .glass {
+    background: rgba(var(--color-fill), 0);
+    backdrop-filter: blur(3px) saturate(100%);
+    -webkit-backdrop-filter: blur(3px) saturate(180%);
+    border-bottom: 1px solid rgba(var(--color-text), 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    will-change: backdrop-filter, background-color, box-shadow;
+    transition: backdrop-filter 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  /* Enhanced blur when scrolling (content underneath) */
+  .glass--active {
+    background: rgba(var(--color-fill), 0);
+    backdrop-filter: blur(3px) saturate(100%);
+    -webkit-backdrop-filter: blur(3px) saturate(180%);
+    border-bottom: 1px solid rgba(var(--color-text), 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
   /* 分割线 */
   .divider-vertical {
     height: .9em;

@@ -191,6 +191,40 @@ const { hideNav = false } = Astro.props;
           sessionStorage.setItem('fromHomepage', 'true');
         }
       });
+
+      // Glassmorphic blur effect on scroll (only on non-homepage pages)
+      const currentPath = window.location.pathname;
+      const isHomepage = currentPath === '/' || currentPath === homepage;
+      
+      if (!isHomepage && header) {
+        let ticking = false;
+        const SCROLL_THRESHOLD = 50; // Activate blur after scrolling 50px
+
+        function updateGlassEffect() {
+          const scrollY = window.scrollY || window.pageYOffset;
+          
+          if (scrollY > SCROLL_THRESHOLD) {
+            header.classList.add('glass--active');
+          } else {
+            header.classList.remove('glass--active');
+          }
+          
+          ticking = false;
+        }
+
+        function onScroll() {
+          if (!ticking) {
+            window.requestAnimationFrame(updateGlassEffect);
+            ticking = true;
+          }
+        }
+
+        // Initial check in case page loads scrolled down
+        updateGlassEffect();
+
+        // Listen for scroll events
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
     } catch (err) { console.error(err); }
   })();
 </script>
