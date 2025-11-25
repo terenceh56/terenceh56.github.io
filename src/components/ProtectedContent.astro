@@ -1,0 +1,311 @@
+---
+import { passcodeProtection } from '@/consts';
+
+interface Props {
+  tags?: string[];
+}
+
+const { tags = [] } = Astro.props;
+
+// Check if any of the post's tags are in the protected tags list
+const isProtected =
+  passcodeProtection.enable &&
+  tags.some((tag) => passcodeProtection.protectedTags.includes(tag));
+---
+
+{
+  isProtected ? (
+    <div class="protected-content-wrapper">
+      <div id="passcode-overlay" class="passcode-overlay">
+        <div class="passcode-card">
+          <div class="lock-icon">
+            <i class="ri-lock-password-line" />
+          </div>
+          <h2>Protected Content</h2>
+          <p>This post is protected. Please enter the passcode to view.</p>
+          <form id="passcode-form">
+            <input
+              type="password"
+              id="passcode-input"
+              placeholder="Enter passcode"
+              autocomplete="off"
+              autofocus
+            />
+            <button type="submit">Unlock</button>
+          </form>
+          <div id="error-message" class="error-message" />
+        </div>
+      </div>
+      <div id="protected-content" class="protected-content hidden">
+        <slot />
+      </div>
+    </div>
+  ) : (
+    <slot />
+  )
+}
+
+<script define:vars={{ passcodeProtection, isProtected }}>
+  if (isProtected) {
+    const storageKey = passcodeProtection.storageKey;
+    const correctPasscode = passcodeProtection.passcode;
+
+    // Check if user is already authenticated
+    const isAuthenticated =
+      localStorage.getItem(storageKey) === 'authenticated';
+
+    if (isAuthenticated) {
+      // User is already authenticated, show content immediately
+      unlockContent();
+    }
+
+    // Handle form submission
+    const form = document.getElementById('passcode-form');
+    const input = document.getElementById('passcode-input');
+    const errorMessage = document.getElementById('error-message');
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const enteredPasscode = input?.value;
+
+      if (enteredPasscode === correctPasscode) {
+        // Correct passcode
+        localStorage.setItem(storageKey, 'authenticated');
+        unlockContent();
+      } else {
+        // Incorrect passcode
+        errorMessage.textContent = 'Incorrect passcode. Please try again.';
+        errorMessage.style.display = 'block';
+        input.value = '';
+        input.focus();
+
+        // Shake animation
+        const card = document.querySelector('.passcode-card');
+        card?.classList.add('shake');
+        setTimeout(() => card?.classList.remove('shake'), 500);
+      }
+    });
+
+    function unlockContent() {
+      const overlay = document.getElementById('passcode-overlay');
+      const content = document.getElementById('protected-content');
+
+      overlay?.classList.add('fade-out');
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        content?.classList.remove('hidden');
+        content?.classList.add('fade-in');
+      }, 300);
+    }
+  }
+</script>
+
+<style>
+  .protected-content-wrapper {
+    position: relative;
+  }
+
+  .passcode-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .passcode-card {
+    background: var(--bg-color, #ffffff);
+    border-radius: 1rem;
+    padding: 2.5rem;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    animation: slideUp 0.4s ease-out;
+  }
+
+  .lock-icon {
+    font-size: 3rem;
+    color: var(--text-color, #333);
+    margin-bottom: 1rem;
+  }
+
+  .lock-icon i {
+    display: inline-block;
+    animation: lockPulse 2s ease-in-out infinite;
+  }
+
+  .passcode-card h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color, #333);
+    font-size: 1.5rem;
+  }
+
+  .passcode-card p {
+    margin: 0 0 1.5rem 0;
+    color: var(--text-muted, #666);
+    font-size: 0.95rem;
+  }
+
+  #passcode-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  #passcode-input {
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--border-color, #e5e7eb);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: var(--input-bg, #f9fafb);
+    color: var(--text-color, #333);
+  }
+
+  #passcode-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  #passcode-form button {
+    padding: 0.875rem 1rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  #passcode-form button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  }
+
+  #passcode-form button:active {
+    transform: translateY(0);
+  }
+
+  .error-message {
+    display: none;
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    animation: shake 0.3s ease-in-out;
+  }
+
+  .protected-content.hidden {
+    display: none;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes lockPulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .fade-out {
+    animation: fadeOut 0.3s ease-in-out forwards;
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .fade-in {
+    animation: contentFadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes contentFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-10px);
+    }
+    75% {
+      transform: translateX(10px);
+    }
+  }
+
+  /* Dark mode support */
+  [data-theme='dark'] .passcode-card {
+    --bg-color: #1f2937;
+    --text-color: #f9fafb;
+    --text-muted: #9ca3af;
+    --border-color: #374151;
+    --input-bg: #111827;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 640px) {
+    .passcode-card {
+      padding: 2rem 1.5rem;
+    }
+
+    .lock-icon {
+      font-size: 2.5rem;
+    }
+
+    .passcode-card h2 {
+      font-size: 1.25rem;
+    }
+  }
+</style>

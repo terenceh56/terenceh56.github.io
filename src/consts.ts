@@ -28,7 +28,7 @@ export const site = {
   description: 'Welcome to my page! ',
   author: "Terence", // required
   avatar: '/avatar.png', // required
-  url: 'https://terenceh56.github.io', // required
+  url: 'https://terenceh56-github-io.vercel.app', // required
   baseUrl: '', // When using GitHubPages, you must enter the repository name startWith '/'. e.g. '/astro-blog'
   motto: ` 'Don't think about what you want to be, but what you want to do.' -Richard P. Feynman`,
   recentBlogSize: 5,
@@ -212,4 +212,19 @@ export const analytics: AnalyticsConfig = {
     id: ""
   },
   busuanzi: false,
+};
+
+/**
+ * Passcode Protection Configuration
+ * 
+ * enable {boolean} Enable/disable passcode protection
+ * protectedTags {string[]} Posts with these tags will require passcode
+ * passcode {string} The passcode required to unlock protected posts
+ * storageKey {string} localStorage key for authentication state
+ */
+export const passcodeProtection = {
+  enable: false,
+  protectedTags: ['mood'], // Add or remove tags as needed
+  passcode: 'th56', // CHANGE THIS to your desired passcode
+  storageKey: 'blog-auth-token',
 };
