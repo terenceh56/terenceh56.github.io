@@ -3,6 +3,7 @@ import { formatDate } from '@/utils/formatDate';
 import { dealLabel } from '@/utils/dealLabel';
 import { t } from '@/i18n/utils';
 import getUrl from '@/utils/getUrl';
+
 const {
   title,
   date,
@@ -24,15 +25,12 @@ const {
       )
     }
     <a
-      class="flex text-xl underline-offset-4 cursor-pointer decoration-skin-base decoration-wavy hover:underline hover:decoration-sky-500 font-bold"
-      href={slug}
+      class="flex text-xl underline-offset-4 cursor-pointer font-bold hover:opacity-80"
+      href={slug}>{title}</a
     >
-      {title}
-    </a>
   </div>
-
   <div class="flex flex-wrap items-center my-2 text-skin-dodge">
-    <!--date -->
+    <!-- date -->
     {
       date && (
         <div class="mr-2">
@@ -41,7 +39,6 @@ const {
         </div>
       )
     }
-
     <!-- draft -->
     {
       draft && (
@@ -51,7 +48,6 @@ const {
         </div>
       )
     }
-
     <!-- category -->
     {
       category &&
@@ -67,7 +63,6 @@ const {
             </a>
           ))
     }
-
     <!-- tag -->
     {
       tags &&
@@ -81,7 +76,6 @@ const {
           </a>
         ))
     }
-
     <!-- venue -->
     {
       venue && (
