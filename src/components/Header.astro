@@ -99,42 +99,6 @@ const { hideNav = false } = Astro.props;
         ))
       }
     </div>
-    <div class="divider-horizontal-mini"></div>
-    <div class="text-center">
-      {
-        Object.keys(categoryCount).length > 0 && (
-          <div>
-            <i class="ri-folder-3-line menu-icon"/>{t('sidebar.categories')}
-          </div>
-        )
-      }
-      {
-        Object.keys(categoryCount).map((category) => (
-          <div class="my-2 break-all truncate">
-            <a class="hover:text-skin-active" title={category + " (" + categoryCount[category] + ")"} href={getUrl("/category/") + category}>
-              {category + " (" + categoryCount[category] + ")"}
-            </a>
-          </div>
-
-        ))
-      }
-      {
-        tagArr.length > 0 && (
-          <div class="divider-horizontal-mini"></div>
-          <div class="text-center">
-            <i class="ri-price-tag-3-line menu-icon"/>
-            {t('sidebar.tags')}
-          </div>
-        )
-      }
-      {
-        tagArr &&
-        tagArr.map((tag) => (
-          <div class="my-2 break-all truncate">
-            <a class="my-2 hover:text-skin-active" title={tag} href={getUrl("/tags/") + tag}>{tag + " (" + tagCount[tag] + ")"}</a>
-          </div>
-        ))
-      }
     </div>
 
     </div>

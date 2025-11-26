@@ -38,17 +38,6 @@ const gridClass = hideAside
       id="app"
     >
       <div class={gridClass}>
-        <!-- Profile - Shows first on mobile (order-1) -->
-        {
-          !hideAside && (
-            <div class="col-span-1 lg:col-span-1 order-1 lg:order-2 mb-6 lg:mb-0 lg:hidden">
-              <div>
-                <Profile />
-              </div>
-            </div>
-          )
-        }
-
         <!-- Tags and Recent Articles - Shows fourth on mobile (order-4) -->
         {
           !hideAside && (
