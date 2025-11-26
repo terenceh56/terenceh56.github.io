@@ -439,7 +439,7 @@ header.header--up {
   /* Mobile menu overlay with slide-in animations */
   #mobile-menu,
   #personal-info {
-    margin-top: 200px;
+    margin-top: 20%;
     margin-left: 28px;
     margin-right: 28px;
     /* iOS glassmorphism - MUST have tiny opacity for blur to work */
