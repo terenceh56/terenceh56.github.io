@@ -26,14 +26,14 @@ const categories = flattenCategories(headerCategories || []);
 ---
 
 <div
-  class="intro-container flex flex-col items-center justify-center min-h-screen text-center"
+  class="intro-container flex flex-col items-center justify-center min-h-screen text-center px-8"
 >
   <div class="max-w-2xl">
     <!-- Avatar -->
-    <img class="avatar mb-8 mx-auto" src={getUrl(site.avatar)} alt="avatar" />
+    <img class="avatar mx-auto" src={getUrl(site.avatar)} alt="avatar" />
 
     <!-- Main Title -->
-    <h1 class="text-4xl md:text-5xl font-bold mb-4 text-skin-base">
+    <h1 class="text-4xl md:text-5xl font-bold mb-8 text-skin-base">
       {site.author}
     </h1>
 
@@ -122,6 +122,10 @@ const categories = flattenCategories(headerCategories || []);
 </div>
 
 <style>
+  .avatar {
+    border-radius: 50%;
+    border: 1px solid var(--theme-divider);
+  }
   .intro-container {
     animation: fadeIn 0.8s ease-in-out;
   }

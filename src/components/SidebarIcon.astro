@@ -12,26 +12,4 @@
 
 </div>
 
-<script>
-  let showAsideBtn = document.getElementById("aside-btn");
-  let closeAsideBtn = document.getElementById("aside-close-btn");
-  let menuIcon = document.getElementById("menu-icon");
-  let menuCloseIcon = document.getElementById("menu-icon-close");
-  let menu = document.getElementById("mobile-menu");
 
-  let personalInfo = document.getElementById("personal-info");
-  showAsideBtn.addEventListener("click", () => {
-    if(menuIcon && menuIcon.classList.contains('hidden')){
-      toggleHidden([menuIcon, menuCloseIcon, menu])
-    }
-    toggleHidden([showAsideBtn, closeAsideBtn, personalInfo])
-  });
-  closeAsideBtn.addEventListener("click", () => {
-    toggleHidden([closeAsideBtn, personalInfo, showAsideBtn])
-  });
-  function toggleHidden(arr) {
-    arr.forEach(item => {
-      item.classList.toggle("hidden");
-    });
-  }
-</script>

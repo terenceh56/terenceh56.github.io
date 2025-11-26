@@ -134,7 +134,61 @@ const { hideNav = false } = Astro.props;
 
       // Intercept clicks to homepage to animate header up before navigating
       document.addEventListener('click', function(e){
+        function toggleHidden(elements) {
+            elements.forEach(el => {
+              if (el) el.classList.toggle('hidden');
+            });
+        }
+
         const a = e.target.closest && e.target.closest('a');
+        const menuIcon = e.target.closest('#menu-icon');
+        const menuCloseIcon = e.target.closest('#menu-icon-close');
+        const asideBtn = e.target.closest('#aside-btn');
+        const asideCloseBtn = e.target.closest('#aside-close-btn');
+
+        if (menuIcon) {
+            const menu = document.getElementById('mobile-menu');
+            const personalInfo = document.getElementById('personal-info');
+            const showAsideBtn = document.getElementById('aside-btn');
+            const closeAsideBtn = document.getElementById('aside-close-btn');
+            const menuIconEl = document.getElementById('menu-icon');
+            const menuCloseIconEl = document.getElementById('menu-icon-close');
+
+            // if personal info is shown, close it.
+            if (personalInfo && !personalInfo.classList.contains('hidden')) {
+                toggleHidden([personalInfo, showAsideBtn, closeAsideBtn]);
+            }
+            
+            toggleHidden([menu, menuIconEl, menuCloseIconEl]);
+            return;
+        } else if (menuCloseIcon) {
+            const menu = document.getElementById('mobile-menu');
+            const menuIconEl = document.getElementById('menu-icon');
+            const menuCloseIconEl = document.getElementById('menu-icon-close');
+            toggleHidden([menu, menuIconEl, menuCloseIconEl]);
+            return;
+        } else if (asideBtn) {
+            const menuIconEl = document.getElementById('menu-icon');
+            const menuCloseIconEl = document.getElementById('menu-icon-close');
+            const menu = document.getElementById('mobile-menu');
+            const personalInfo = document.getElementById("personal-info");
+            const showAsideBtn = document.getElementById("aside-btn");
+            const closeAsideBtn = document.getElementById("aside-close-btn");
+            
+            // if menu is open, close it
+            if (menuIconEl && menuIconEl.classList.contains('hidden')) {
+                toggleHidden([menuIconEl, menuCloseIconEl, menu]);
+            }
+            toggleHidden([showAsideBtn, closeAsideBtn, personalInfo]);
+            return;
+        } else if (asideCloseBtn) {
+            const personalInfo = document.getElementById("personal-info");
+            const showAsideBtn = document.getElementById("aside-btn");
+            const closeAsideBtn = document.getElementById("aside-close-btn");
+            toggleHidden([closeAsideBtn, personalInfo, showAsideBtn]);
+            return;
+        }
+
         if(!a) return;
         const href = a.getAttribute('href');
         if(!href) return;
