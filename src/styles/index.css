@@ -550,7 +550,7 @@ header.header--up {
   }
 
   #mobile-menu {
-    margin-top: 20%;
+    margin-top: 26%;
   }
 
   /* Backdrop blur overlay for mobile menu */
@@ -570,7 +570,7 @@ header.header--up {
     -webkit-backdrop-filter: blur(20px) saturate(120%);
 
     /* Smooth fade for opacity only */
-    transition: opacity 0.3s ease-out;
+    transition: opacity 0.33s ease;
   }
 
   /* Active backdrop with intense blur */
