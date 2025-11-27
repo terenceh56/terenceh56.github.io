@@ -88,12 +88,12 @@ export const categories = [
   },
   {
     name: "Thoughts",
-    iconClass: "ri-draft-line",
+    iconClass: "ri-quill-pen-line",
     href: "/thoughts/1",
   },
   {
     name: "Papers",
-    iconClass: "ri-draft-line",
+    iconClass: "ri-article-line",
     href: "/papers/1",
   },
 
@@ -118,8 +118,7 @@ export const categories = [
 
 /**
  * Personal link address
- */
-export const infoLinks = [
+ export const infoLinks = [
   //{
   //  icon: 'ri-telegram-fill',
   //  name: 'telegram',
@@ -142,6 +141,7 @@ export const infoLinks = [
   },
 ]
 
+*/
 // Friendship links removed per user request
 
 /**

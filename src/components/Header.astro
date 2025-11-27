@@ -27,12 +27,12 @@ let tagCount = getCountByTagName(posts);
 const { hideNav = false } = Astro.props;
 ---
 
-<header data-home={getUrl('/')} class="fixed top-0 z-10 w-full glass text-skin-base">
+<header data-home={getUrl('/')} class="fixed top-0 z-50 w-full glass text-skin-base">
   <div class="container flex items-center justify-between">
     <div class="block xl:hidden">
       <MenuIcon></MenuIcon>
     </div>
-    <a class="p-4 text-2xl flex items-center absolute left-1/2 transform -translate-x-1/2 xl:static xl:transform-none xl:left-auto" href={getUrl("/")}>
+    <a class="header-logo p-4 text-2xl flex items-center absolute left-1/2 transform -translate-x-1/2 xl:static xl:transform-none xl:left-auto" href={getUrl("/")}>
       <img src={getUrl(site.favicon)} alt={site.title} class="h-8 w-auto mr-3" />
       <span class="font-bold">{site.title}</span>
     </a>
@@ -49,11 +49,7 @@ const { hideNav = false } = Astro.props;
         </div>
       )}
       <ThemeIcon></ThemeIcon>
-      { !hideNav && (
-        <div class="block xl:hidden">
-          <AsideIcon></AsideIcon>
-        </div>
-      )}
+
     </div>
   </div>
   { !hideNav && (
@@ -90,20 +86,13 @@ const { hideNav = false } = Astro.props;
     <div id="personal-info" class="hidden pb-8 overflow-y-auto break-all" style="height: calc(100vh - 64px)">
     <img class="mx-auto my-4 avatar" src={getUrl(site.avatar)} alt="avatar"/>
     <div class="mb-2 text-center">{site.motto}</div>
-    <div class="flex flex-wrap items-center justify-center">
-      {
-        infoLinks.map((infoItem) => (
-          <a title={infoItem.name} href={infoItem.outlink} target="_blank">
-            <i class={infoItem.icon + " text-2xl mr-2 cursor-pointer"}/>
-          </a>
-        ))
-      }
-    </div>
     </div>
 
     </div>
   )}
 </header>
+<!-- Backdrop blur overlay for mobile menu -->
+<div id="menu-backdrop" class="menu-backdrop"></div>
 <script is:inline>
   (function(){
     try {
@@ -135,57 +124,123 @@ const { hideNav = false } = Astro.props;
       // Intercept clicks to homepage to animate header up before navigating
       document.addEventListener('click', function(e){
         function toggleHidden(elements) {
+            const header = document.querySelector('header');
             elements.forEach(el => {
-              if (el) el.classList.toggle('hidden');
+              if (!el) return;
+              
+              // If element is currently hidden, just show it (remove hidden)
+              if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                return;
+              }
+
+              // If element is visible (not hidden), we want to close it with animation
+              // Check if it's one of the elements that needs animation (menu or personal info)
+              if (el.id === 'mobile-menu' || el.id === 'personal-info') {
+                el.classList.add('closing');
+                // If closing menu, slide header down (remove menu-open)
+                if (el.id === 'mobile-menu') {
+                  header?.classList.remove('menu-open');
+                }
+                
+                // Wait for animation to finish before hiding
+                // Match the longest animation duration (0.4s + 0.35s delay = 0.75s approx)
+                // We'll use 800ms to be safe
+                setTimeout(() => {
+                  el.classList.add('hidden');
+                  el.classList.remove('closing');
+                }, 800);
+              } else {
+                // For other elements (icons etc), just toggle hidden immediately
+                el.classList.add('hidden');
+              }
             });
         }
 
         const a = e.target.closest && e.target.closest('a');
-        const menuIcon = e.target.closest('#menu-icon');
-        const menuCloseIcon = e.target.closest('#menu-icon-close');
+        const menuToggleBtn = e.target.closest('#menu-toggle-btn');
         const asideBtn = e.target.closest('#aside-btn');
         const asideCloseBtn = e.target.closest('#aside-close-btn');
 
-        if (menuIcon) {
+        if (menuToggleBtn) {
             const menu = document.getElementById('mobile-menu');
             const personalInfo = document.getElementById('personal-info');
             const showAsideBtn = document.getElementById('aside-btn');
             const closeAsideBtn = document.getElementById('aside-close-btn');
-            const menuIconEl = document.getElementById('menu-icon');
-            const menuCloseIconEl = document.getElementById('menu-icon-close');
+            const header = document.querySelector('header');
+            const backdrop = document.getElementById('menu-backdrop');
 
             // if personal info is shown, close it.
             if (personalInfo && !personalInfo.classList.contains('hidden')) {
-                toggleHidden([personalInfo, showAsideBtn, closeAsideBtn]);
+                personalInfo.classList.add('closing');
+                setTimeout(() => {
+                  personalInfo.classList.add('hidden');
+                  personalInfo.classList.remove('closing');
+                }, 800);
+                
+                if (showAsideBtn) showAsideBtn.classList.remove('hidden');
+                if (closeAsideBtn) closeAsideBtn.classList.add('hidden');
             }
             
-            toggleHidden([menu, menuIconEl, menuCloseIconEl]);
-            return;
-        } else if (menuCloseIcon) {
-            const menu = document.getElementById('mobile-menu');
-            const menuIconEl = document.getElementById('menu-icon');
-            const menuCloseIconEl = document.getElementById('menu-icon-close');
-            toggleHidden([menu, menuIconEl, menuCloseIconEl]);
+            // Toggle menu
+            if (menu.classList.contains('hidden')) {
+              // Opening
+              menu.classList.remove('hidden');
+              header?.classList.add('menu-open');
+              backdrop?.classList.add('active');
+            } else {
+              // Closing
+              menu.classList.add('closing');
+  
+              // ✅ TRIGGER THE 0.8s FADE-OUT IMMEDIATELY 
+              // (This is now synced with the menu's 0.8s exit animation)
+              header?.classList.remove('menu-open');   
+              backdrop?.classList.remove('active');    
+              
+              // Wait for the animation to finish before setting the 'hidden' state
+              setTimeout(() => {
+                menu.classList.add('hidden');
+                menu.classList.remove('closing');
+              }, 0);
+            }
             return;
         } else if (asideBtn) {
-            const menuIconEl = document.getElementById('menu-icon');
-            const menuCloseIconEl = document.getElementById('menu-icon-close');
             const menu = document.getElementById('mobile-menu');
             const personalInfo = document.getElementById("personal-info");
             const showAsideBtn = document.getElementById("aside-btn");
             const closeAsideBtn = document.getElementById("aside-close-btn");
+            const header = document.querySelector('header');
+            const backdrop = document.getElementById('menu-backdrop');
             
             // if menu is open, close it
-            if (menuIconEl && menuIconEl.classList.contains('hidden')) {
-                toggleHidden([menuIconEl, menuCloseIconEl, menu]);
+            if (menu && !menu.classList.contains('hidden')) {
+                menu.classList.add('closing');
+                header?.classList.remove('menu-open');
+                backdrop?.classList.remove('active');
+                setTimeout(() => {
+                  menu.classList.add('hidden');
+                  menu.classList.remove('closing');
+                }, 800);
             }
-            toggleHidden([showAsideBtn, closeAsideBtn, personalInfo]);
+            
+            // Open personal info
+            personalInfo.classList.remove('hidden');
+            showAsideBtn.classList.add('hidden');
+            closeAsideBtn.classList.remove('hidden');
             return;
         } else if (asideCloseBtn) {
             const personalInfo = document.getElementById("personal-info");
             const showAsideBtn = document.getElementById("aside-btn");
             const closeAsideBtn = document.getElementById("aside-close-btn");
-            toggleHidden([closeAsideBtn, personalInfo, showAsideBtn]);
+            
+            // Close personal info
+            personalInfo.classList.add('closing');
+            showAsideBtn.classList.remove('hidden');
+            closeAsideBtn.classList.add('hidden');
+            setTimeout(() => {
+              personalInfo.classList.add('hidden');
+              personalInfo.classList.remove('closing');
+            }, 800);
             return;
         }
 

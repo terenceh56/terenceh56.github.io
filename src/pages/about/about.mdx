@@ -1,7 +1,24 @@
 ---
 donate: false
 comment: false
+
+infoLinks:
+  - icon: 'ri-instagram-fill'
+    name: 'instagram'
+    outlink: 'https://www.instagram.com/t_hsu5.6'
+  - icon: 'ri-github-fill'
+    name: 'github'
+    outlink: 'https://github.com/terenceh56'
+  - icon: 'ri-mail-fill'
+    name: 'email'
+    outlink: 'mailto:terencehsu56@gmail.com'
 ---
+
+export const infoLinks = [
+  { icon: 'ri-instagram-fill', name: 'instagram', outlink: 'https://www.instagram.com/t_hsu5.6' },
+  { icon: 'ri-github-fill', name: 'github', outlink: 'https://github.com/terenceh56' },
+  { icon: 'ri-mail-fill', name: 'email', outlink: 'mailto:terencehsu56@gmail.com' }
+];
 
 ## About Website
 
@@ -27,4 +44,4 @@ I am originally from Taiwan and am currently pursuing a Bachelor's degree in Ele
 
 ## Contact Info
 
-Email: <terencehsu56@gmail.com>
+<LinksComponent dataKey="infoLinks" frontmatter={{ infoLinks }} />

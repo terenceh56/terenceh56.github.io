@@ -1,11 +1,19 @@
 ---
-import IndexPage from "@/layouts/IndexPage.astro";
-const posts = Object.values(import.meta.glob("./about.md", { eager: true }));
-let {Content, frontmatter} = posts[0];
+import IndexPage from '@/layouts/IndexPage.astro';
+import LinksComponent from '@/components/LinksComponent.astro';
+// Import all necessary parts
+const posts = Object.values(import.meta.glob('./about.mdx', { eager: true }));
+let { Content, frontmatter } = posts[0];
+
+// Define the component map
+const components = {
+  LinksComponent: LinksComponent,
+};
 ---
 
 <IndexPage frontmatter={frontmatter}>
   <article class="markdown-body">
-    <Content/>
+    {/* No change needed here, the 'components' map does the heavy lifting */}
+    <Content components={components} />
   </article>
 </IndexPage>

@@ -1,0 +1,73 @@
+---
+// This is the Astro component Frontmatter script block
+
+interface Props {
+  dataKey: string;
+  frontmatter?: Record<string, any>; // Make it optional for safety
+}
+const { dataKey, frontmatter = {} } = Astro.props; // Provide an empty object as fallback
+
+// Now, frontmatter is guaranteed to be an object, preventing the error.
+const links = frontmatter[dataKey] || [];
+---
+
+<div class="info-links-container">
+  {
+    links.length > 0 ? (
+      links.map((link) => (
+        <a
+          href={link.outlink}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${link.name} link`}
+          class="link-item"
+        >
+          {/* Render the icon using the class name */}
+          <i class={link.icon} />
+          <span class="link-name">{link.name}</span>
+        </a>
+      ))
+    ) : (
+      <p>No links found for key: {dataKey}</p>
+    )
+  }
+</div>
+
+<style>
+  /* Softer, more subtle styling */
+  .info-links-container {
+    display: flex;
+    gap: 1.25rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+  }
+
+  .link-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--color-text-base);
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 0.95rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    opacity: 0.8;
+  }
+
+  .link-item:hover {
+    opacity: 1;
+    background-color: rgba(var(--color-fill), 0.5);
+    transform: translateY(-1px);
+  }
+
+  .link-item i {
+    font-size: 1.25rem;
+    opacity: 0.9;
+  }
+
+  .link-name {
+    text-transform: capitalize;
+  }
+</style>
