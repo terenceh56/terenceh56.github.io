@@ -10,37 +10,6 @@
   src: url('./JetBrainsMono-Regular.ttf');
 }
 
-/* Optional: load SF Pro fonts if you provide them in `src/styles/fonts/` or `public/fonts/`.
-   SF Pro is a proprietary Apple font — you must supply the files yourself.
-   Put WOFF2 or WOFF files at `src/styles/fonts/SFProDisplay-Regular.woff2`,
-   `src/styles/fonts/SFProText-Regular.woff2` (or in `public/fonts/`) and they will be used.
-   
-   These font-face declarations have been disabled as the font files are not included.
-   The system will fall back to the fonts defined in the font-family stack.
-*/
-/* Disabled - files not found
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('./fonts/SFProDisplay-Regular.woff2') format('woff2'),
-       url('./fonts/SFProDisplay-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'SF Pro Text';
-  src: url('./fonts/SFProText-Regular.woff2') format('woff2'),
-       url('./fonts/SFProText-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-*/
-
-/**
-覆写tailwindcss 默认样式
- */
-
 html {
   height: 100%;
   scroll-padding-top: 72px;
@@ -580,11 +549,13 @@ header.header--up {
     }
   }
 
+  #mobile-menu {
+    margin-top: 20%;
+  }
+
   /* Backdrop blur overlay for mobile menu */
   .menu-backdrop {
     position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100vh;
     z-index: 40;
@@ -620,7 +591,6 @@ header.header--up {
 
   .menu-icon-btn {
     position: absolute;
-    transform: translate(-50%, -50%);
     transition: all 0.3s ease;
     background: transparent;
     border: none;
@@ -641,14 +611,14 @@ header.header--up {
 
   #menu-icon-close {
     opacity: 0;
-    transform: translate(0, 0) rotate(-90deg) scale(0.5);
+    transform: translate(0, 0) rotate(-90deg) scale(0.1);
     pointer-events: none;
   }
 
   /* Open state: Menu icon hidden, Close icon visible */
   header.menu-open #menu-icon {
     opacity: 0;
-    transform: translate(0, 0) rotate(90deg) scale(0.5);
+    transform: translate(0, 0) rotate(90deg) scale(0.1);
     pointer-events: none;
   }
 
