@@ -11,4 +11,6 @@ toc: true
 
 This is my lecture note on Probability Theory and Mathematical Statistics.
 
-The notes have been transcribed from a handwritten Chinese version, and their structure may be somewhat informal. If you are interested in seeing the original handwritten document, please feel free to contact me.
+The notes have been transcribed from a handwritten Chinese version, and their structure may be somewhat informal.
+
+Feedback is welcome for any potential errors. Also if you are interested in seeing the original handwritten document, please feel free to contact me.
