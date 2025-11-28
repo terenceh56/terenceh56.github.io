@@ -34,10 +34,9 @@ const links = frontmatter[dataKey] || [];
 </div>
 
 <style>
-  /* Softer, more subtle styling */
   .info-links-container {
     display: flex;
-    gap: 1.25rem;
+    gap: 1.5rem;
     margin: 1.5rem 0;
     flex-wrap: wrap;
   }
@@ -46,20 +45,26 @@ const links = frontmatter[dataKey] || [];
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
     color: var(--color-text-base);
     text-decoration: none;
     font-weight: 400;
     font-size: 0.95rem;
-    border-radius: 0.5rem;
     transition: all 0.2s ease;
     opacity: 0.8;
+    /* Remove button-like styles */
+    padding: 0;
+    border-radius: 0;
+    background: none;
   }
 
   .link-item:hover {
     opacity: 1;
-    background-color: rgba(var(--color-fill), 0.5);
-    transform: translateY(-1px);
+    /* Remove background color on hover */
+    background-color: transparent;
+    /* Remove transform movement */
+    transform: none;
+    /* Add underline on hover for link appearance */
+    text-decoration: underline;
   }
 
   .link-item i {

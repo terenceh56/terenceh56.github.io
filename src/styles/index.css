@@ -104,7 +104,25 @@ menu {
   }
 
   .header-btn {
-    @apply cursor-pointer border rounded py-1 px-2 bg-skin-fill hover:text-skin-active mx-2 z-10
+    @apply cursor-pointer border rounded bg-skin-fill hover:text-skin-active z-10;
+    /* Make buttons same size on mobile */
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Desktop: restore original padding and auto sizing */
+  @media (min-width: 1280px) {
+    .header-btn {
+      width: auto;
+      height: auto;
+      padding: 0.25rem 0.5rem;
+      margin: 0 0.5rem;
+    }
   }
 
   /*侧边栏每个栏目共有样式*/
@@ -369,60 +387,67 @@ menu {
     transform: translateY(1px) scale(.995);
   }
 
-  /* Reduce header flashing: don't re-run the drop animation if header already has been dropped
-   (this CSS ensures the header is visible by default and the drop animation only plays
-   when the class is explicitly added by script). */
-  /* Header base styles: make header visible by default to avoid initial flash on navigation */
-  header {
+  /* Mobile menu animations */
+  #mobile-menu {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 26%;
+  }
+
+  #mobile-menu.open {
+    max-height: 80vh;
+    opacity: 1;
+  }
+
+  #mobile-menu.closed {
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Menu items animation */
+  #mobile-menu>div {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  #mobile-menu.open>div {
     opacity: 1;
     transform: translateY(0);
-    will-change: transform, opacity;
   }
 
-  /* small transition for header-up movements only (when class added) */
-  header.header--up {
-    transition: transform 280ms ease, opacity 280ms ease;
-  }
-}
-
-/* small transition for header-up movements only (when class added) */
-header.header--up {
-  transition: transform 280ms ease, opacity 280ms ease;
-}
-
-/* Mobile-specific fixes */
-@media (max-width: 1279px) {
-
-  /* Disable sticky positioning on mobile - let content flow naturally */
-  .lg\:sticky {
-    position: static !important;
+  /* Staggered animation for opening */
+  #mobile-menu.open>div:nth-child(1) {
+    transition-delay: 0.08s;
   }
 
-  /* Add bottom padding to main content to prevent footer overlap */
-  main#app {
-    padding-bottom: 120px !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
+  #mobile-menu.open>div:nth-child(2) {
+    transition-delay: 0.12s;
   }
 
-  #mobile-menu a:nth-child(3),
-  #personal-info>div>*:nth-child(3) {
-    animation-delay: 0.2s;
+  #mobile-menu.open>div:nth-child(3) {
+    transition-delay: 0.16s;
   }
 
-  #mobile-menu a:nth-child(4),
-  #personal-info>div>*:nth-child(4) {
-    animation-delay: 0.25s;
+  #mobile-menu.open>div:nth-child(4) {
+    transition-delay: 0.20s;
   }
 
-  #mobile-menu a:nth-child(5),
-  #personal-info>div>*:nth-child(5) {
-    animation-delay: 0.3s;
+  #mobile-menu.open>div:nth-child(5) {
+    transition-delay: 0.24s;
   }
 
-  #mobile-menu a:nth-child(6),
-  #personal-info>div>*:nth-child(6) {
-    animation-delay: 0.35s;
+  /* Faster reverse animation for closing */
+  #mobile-menu.closing>div,
+  #mobile-menu.closed>div {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
   }
 
   /* Make button styles from desktop hover permanent on mobile */
@@ -534,8 +559,13 @@ header.header--up {
 
     /* Reduce padding on very small screens */
     main#app {
-      padding-left: 0.75rem !important;
-      padding-right: 0.75rem !important;
+      padding-bottom: 120px !important;
+    }
+
+    /* Increase margins on very small screens */
+    .container {
+      padding-left: 1.5rem !important;
+      padding-right: 1.5rem !important;
     }
 
     /* Smaller icons in mobile menu */
@@ -549,31 +579,22 @@ header.header--up {
     }
   }
 
-  #mobile-menu {
-    margin-top: 26%;
-  }
-
   /* Backdrop blur overlay for mobile menu */
   .menu-backdrop {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100vh;
-    z-index: 40;
+    z-index: 45;
     pointer-events: none;
-
-    /* Base State: Invisible */
     opacity: 0;
     background: rgba(var(--color-fill), 0.6);
-
-    /* Constant Blur: Keeps the radius ready so it doesn't animate from 0px */
     backdrop-filter: blur(20px) saturate(120%);
     -webkit-backdrop-filter: blur(20px) saturate(120%);
-
-    /* Smooth fade for opacity only */
-    transition: opacity 0.33s ease;
+    transition: opacity 0.3s ease;
   }
 
-  /* Active backdrop with intense blur */
   .menu-backdrop.active {
     pointer-events: auto;
     opacity: 1;
@@ -582,8 +603,8 @@ header.header--up {
   /* Menu Icon Animation */
   .menu-icon-container {
     position: relative;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
