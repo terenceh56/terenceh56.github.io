@@ -6,11 +6,10 @@ import Footer from '@/components/Footer.astro';
 import Profile from '@/components/Profile.astro';
 import BlogAside from '@/components/BlogAside.astro';
 import Comment from '@/components/Comment.astro';
-import Donate from '@/components/Donate.astro';
-import { donate, comment, config } from '@/consts';
 
-const { frontmatter = { comment: false, donate: false }, hideAside = false } =
-  Astro.props;
+import { comment, config } from '@/consts';
+
+const { frontmatter = { comment: false }, hideAside = false } = Astro.props;
 // 保持原有的響應式網格設定
 const gridClass = hideAside
   ? 'grid grid-cols-1'
@@ -75,6 +74,10 @@ const gridClass = hideAside
                   This section is mainly about my notes on different subjects,
                   mainly aviation, but also some notes made while pursuing my
                   Bachelor's degree.
+                  <br />
+                  ⚠️ Quick Note: These are personal study notes and
+                  interpretations. Please remember that content accuracy or
+                  completeness is <strong>not guaranteed</strong>.
                 </p>
               </div>
             )
@@ -101,8 +104,26 @@ const gridClass = hideAside
                   Research Papers and Articles
                 </h2>
                 <p class="text-skin-base italic">
-                  This section will mainly documentary my notes from the papers
-                  I've read while working on my graduation project.
+                  Hi there! This section contains my personal reading notes and
+                  interpretations of various academic papers. Please Note:
+                  <br />
+                  1. All content reflects my individual understanding and
+                  perspective and should be treated as a study log, not a
+                  definitive academic source.
+                  <br />
+                  2. I strive for accuracy, but cannot guarantee the absolute
+                  correctness or completeness of the summaries.
+                  <br />
+                  3. Always refer to the original paper for citation or critical
+                  information. By proceeding, you agree to these terms. For full
+                  details on content usage and liability, please visit{' '}
+                  <a
+                    href="/disclaimer"
+                    class="underline hover:text-skin-active"
+                  >
+                    Disclaimer
+                  </a>
+                  .
                 </p>
               </div>
             )
@@ -120,7 +141,7 @@ const gridClass = hideAside
             )
           }
           <slot />
-          {donate?.enable && frontmatter.donate && <Donate />}
+
           {comment?.enable && frontmatter.comment && <Comment />}
         </div>
       </div>

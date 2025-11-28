@@ -59,14 +59,6 @@ export const config = {
   memosPageSize: 10, // number
 }
 
-export const donate = {
-  enable: false,
-  tip: "Thanks for the coffee !!!☕",
-  wechatQRCode: "/WeChatQR.png",
-  alipayQRCode: "/AliPayQR.png",
-  paypalUrl: "",
-}
-
 /**
  * Navigator
  * name {string}

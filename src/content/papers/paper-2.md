@@ -9,6 +9,8 @@ pdf: ""
 mathjax: true
 ---
 
+⚠️**Quick Note**: This is a personal reading note and interpretation. The content is not guaranteed to be fully accurate or comprehensive. Always refer to the original paper for definitive information.
+
 ## Introduction
 
 As chiplet technology is giving us some advantages, there are trade offs. The advantages includes: Higher yield, Larger scale, Heterogeneous integration, and Reuse for multiple chips. And the disadvantages includes: Package cost, D2D (Die to Die) area costs, Worst power usage and performance.

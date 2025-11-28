@@ -9,6 +9,8 @@ pdf: ""
 mathjax: true
 ---
 
+⚠️**Quick Note**: This is a personal reading note and interpretation. The content is not guaranteed to be fully accurate or comprehensive. Always refer to the original paper for definitive information.
+
 ## Introduction
 
 Main contributions of the research:
@@ -98,7 +100,7 @@ Second, bound it with the geometric features. Which means $\lambda$ = (Hot spot)
 
 > $$
 > \lambda\left(x_{p}, y_{p}, z_{p}\right)=\frac{T_{\left(x_{p}, y_{p}, z_{p}\right)}-T_{\min }}{T_{\max }-T_{\min }} \cdot \frac{\left|\nabla T_{\left(x_{p}, y_{p}, z_{p}\right)}\right|}{\left|\nabla T_{\left(x_{p}, y_{p}, z_{p}\right) \max }\right|}
-> $$ 
+> $$
 
 Third, take its reciprocal, it indicates that if the number is greater, make the mesh finer.
 

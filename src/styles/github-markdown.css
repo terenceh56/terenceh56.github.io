@@ -153,23 +153,6 @@
    border-bottom: none;
    text-decoration: underline dotted;
  }
-
- html[data-theme="light"] .markdown-body b,
- html[data-theme="light"] .markdown-body strong {
-   font-weight: 600;
- }
-
- html[data-theme="dark"] .markdown-body b,
- html[data-theme="dark"] .markdown-body strong {
-   font-weight: 600;
-   color: rgb(255, 255, 255);
-   text-shadow: 2px 2px 2px rgba(255, 255, 255, 0.2);
- }
-
- .markdown-body dfn {
-   font-style: italic;
- }
-
  .markdown-body h1 {
    margin: .67em 0;
    font-weight: 600;

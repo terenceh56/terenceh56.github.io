@@ -20,6 +20,7 @@ if (site.asideTagsMaxSize > 0) tagArr = tagArr.slice(0, site.asideTagsMaxSize);
 let categoryCount = getCountByCategory(blogs);
 let sortPosts = await sortPostsByDate(allPosts);
 let resultPosts = sortPosts.splice(0, site.recentBlogSize);
+console.log('tagArr:', tagArr);
 ---
 
 <!--
