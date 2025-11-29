@@ -55,7 +55,8 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
     tagArr.length > 0 && (
       <div class="aside-widget">
         <i class="ri-hashtag menu-icon" />
-        {t('sidebar.tags')} <span class="text-xs opacity-70 ml-auto">[Normal]</span>
+        {t('sidebar.tags')}{' '}
+        <span class="text-xs opacity-70 ml-auto">[Normal]</span>
       </div>
     )
   }
@@ -93,15 +94,26 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
   </div>
   <div class="flex flex-col">
     {
-      resultPosts.map((post) => (
-        <a
-          href={getUrl('/' + post.collection + '/') + post.slug}
-          class="truncate cursor-pointr mt-1 hover:text-skin-active"
-          title={post.data.title}
-        >
-          {post.data.title}
-        </a>
-      ))
+      resultPosts.map((post) => {
+        // Map collection name to display label
+        const categoryLabel =
+          {
+            notes: '[Notes]',
+            papers: '[Papers]',
+            feed: '[Feed]',
+          }[post.collection] || `[${post.collection}]`;
+
+        return (
+          <a
+            href={getUrl('/' + post.collection + '/') + post.slug}
+            class="truncate cursor-pointr mt-1 hover:text-skin-active"
+            title={post.data.title}
+          >
+            <span class="opacity-70 mr-1">{categoryLabel}</span>
+            {post.data.title}
+          </a>
+        );
+      })
     }
   </div>
 </div>
