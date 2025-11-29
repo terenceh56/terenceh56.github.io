@@ -11,7 +11,7 @@ import getUrl from '@/utils/getUrl';
 import getCountByTagName from '@/utils/getCountByTagName';
 // Aggregate posts from all collections EXCEPT Beyond the Surface (reflections/milestones)
 let allPosts = [];
-const collectionsToTry = ['blog', 'notes', 'papers', 'feed'];
+const collectionsToTry = ['notes', 'papers', 'feed'];
 for (const col of collectionsToTry) {
   try {
     const c = await getCollectionByName(col);
@@ -55,7 +55,7 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
     tagArr.length > 0 && (
       <div class="aside-widget">
         <i class="ri-hashtag menu-icon" />
-        {t('sidebar.tags')}
+        {t('sidebar.tags')} <span class="text-xs opacity-70 ml-auto">[Normal]</span>
       </div>
     )
   }

@@ -19,6 +19,7 @@ for (const col of collectionsToTry) {
   }
 }
 let tagCount = getCountByTagName(allPosts);
+console.log('BtS Tag Count:', tagCount);
 let tagArr = getUniqueTags(allPosts);
 if (site.asideTagsMaxSize > 0) tagArr = tagArr.slice(0, site.asideTagsMaxSize);
 let sortPosts = await sortPostsByDate(allPosts);
@@ -30,7 +31,7 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
     tagArr.length > 0 && (
       <div class="aside-widget">
         <i class="ri-hashtag menu-icon" />
-        {t('sidebar.tags')}
+        {t('sidebar.tags')} <span class="text-xs opacity-70 ml-auto">[Beyond the Surface]</span>
       </div>
     )
   }

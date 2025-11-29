@@ -1,3 +1,4 @@
+---
 import BeyondSurfacePage from '@/layouts/BeyondSurfacePage.astro';
 import getUniqueTags from '@/utils/getUniqueTags';
 import getPostsByTag from '@/utils/getPostsByTag';
@@ -8,7 +9,12 @@ import { getCollectionByName } from '@/utils/getCollectionByName';
 import getUrl from '@/utils/getUrl';
 
 export async function getStaticPaths() {
-  return [{ params: { tag: 'test' } }];
+  const reflections = await getCollectionByName('reflections');
+  const milestones = await getCollectionByName('milestones');
+  const allPosts = [...reflections, ...milestones];
+  return getUniqueTags(allPosts).map((tag) => ({
+    params: { tag },
+  }));
 }
 
 const { tag } = Astro.params;

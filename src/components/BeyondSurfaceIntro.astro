@@ -20,6 +20,11 @@ const milestones = (
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 
+const allReflections = await getCollection('reflections', ({ data }) => !data.draft);
+const allMilestones = await getCollection('milestones', ({ data }) => !data.draft);
+const reflectionCount = allReflections.length;
+const milestoneCount = allMilestones.length;
+
 const anim = {
   old: {
     name: 'fadeOut',
@@ -56,9 +61,12 @@ const customTransition = {
         <h2 class="card-title">Thoughts & Reflections</h2>
       </div>
       <p class="card-description">
-        Reflections on what I read, notice, and think — fragments of thoughts
-        that are still growing.
+        Reflections on what I read, notice, and think.
       </p>
+
+      <div class="post-count-badge">
+        {reflectionCount} Posts
+      </div>
 
       <div class="content-preview">
         {
@@ -96,6 +104,10 @@ const customTransition = {
       <p class="card-description">
         Milestones I've achieved and recent updates randomly.
       </p>
+
+      <div class="post-count-badge">
+        {milestoneCount} Posts
+      </div>
 
       <div class="content-preview">
         {
@@ -212,6 +224,22 @@ const customTransition = {
     line-height: 1.6;
     color: rgba(var(--color-base), 0.8);
     margin-bottom: 1.5rem;
+  }
+
+  .post-count-badge {
+    display: inline-block;
+    font-size: 0.85rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    background: rgba(var(--color-text), 0.05);
+    color: rgba(var(--color-text), 0.6);
+    margin-bottom: 1rem;
+    align-self: flex-start;
+  }
+
+  .feature-card:hover .post-count-badge {
+    background: rgba(var(--color-active), 0.1);
+    color: rgb(var(--color-active));
   }
 
   .content-preview {

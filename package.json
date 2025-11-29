@@ -38,6 +38,7 @@
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
     "astro-imagetools": "^0.2.7",
+    "baseline-browser-mapping": "^2.8.32",
     "sass": "^1.72.0",
     "terser": "^5.25.0"
   }

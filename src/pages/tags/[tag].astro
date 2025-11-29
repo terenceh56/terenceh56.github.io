@@ -9,20 +9,18 @@ import { getCollectionByName } from '@/utils/getCollectionByName';
 import getUrl from '@/utils/getUrl';
 
 export async function getStaticPaths() {
-  const posts = await getCollectionByName('blog');
   const notes = await getCollectionByName('notes');
   const papers = await getCollectionByName('papers');
-  const allPosts = [...posts, ...notes, ...papers];
+  const allPosts = [...notes, ...papers];
   return getUniqueTags(allPosts).map((tag) => ({
     params: { tag },
   }));
 }
 
 const { tag } = Astro.params;
-let posts = await getCollectionByName('blog');
 const notes = await getCollectionByName('notes');
 const papers = await getCollectionByName('papers');
-const allPosts = [...posts, ...notes, ...papers];
+const allPosts = [...notes, ...papers];
 const tagPosts = getPostsByTag(allPosts, tag);
 const resultPosts = sortPostsByDate(tagPosts);
 ---

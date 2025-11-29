@@ -12,26 +12,6 @@ const { frontmatter = { comment: false }, hideAside = false } = Astro.props;
 const gridClass = hideAside
   ? 'grid grid-cols-1'
   : 'grid grid-cols-1 lg:grid-cols-4 gap-8';
-
-const anim = {
-  old: {
-    name: 'fadeOut',
-    duration: '0s',
-    easing: 'linear',
-    fillMode: 'forwards',
-  },
-  new: {
-    name: 'rise',
-    duration: '0.7s',
-    easing: 'ease-out',
-    fillMode: 'backwards',
-  },
-};
-
-const customTransition = {
-  forwards: anim,
-  backwards: anim,
-};
 ---
 
 <html lang={config.lang}>
@@ -54,7 +34,7 @@ const customTransition = {
       ]}
       id="app"
     >
-      <div class={gridClass} transition:animate={customTransition}>
+      <div class={gridClass}>
         <!-- Tags and Recent Articles - Shows fourth on mobile (order-4) -->
         {
           !hideAside && (
@@ -100,28 +80,5 @@ const customTransition = {
     <div class="hidden lg:block">
       <Footer />
     </div>
-  </body><script>
-    document.body.querySelectorAll('a').forEach((item) => {
-      item.setAttribute('rel', 'nofollow noreferrer');
-    });
-  </script>
-
-  <style is:global>
-    @keyframes rise {
-      from {
-        opacity: 0;
-        transform: scale(0.9);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-      }
-    }
-  </style>
+  </body>
 </html>

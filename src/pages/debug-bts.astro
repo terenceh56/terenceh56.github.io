@@ -1,0 +1,27 @@
+---
+import { getCollectionByName } from '@/utils/getCollectionByName';
+import getUniqueTags from '@/utils/getUniqueTags';
+import getCountByTagName from '@/utils/getCountByTagName';
+
+let allPosts = [];
+const collectionsToTry = ['reflections', 'milestones'];
+for (const col of collectionsToTry) {
+  try {
+    const c = await getCollectionByName(col);
+    if (c && c.length) allPosts = allPosts.concat(c);
+  } catch (err) {
+    // Ignore
+  }
+}
+let tagCount = getCountByTagName(allPosts);
+let tagArr = getUniqueTags(allPosts);
+---
+
+<html>
+<body>
+  <h1>Debug BtS</h1>
+  <pre id="tag-count">{JSON.stringify(tagCount, null, 2)}</pre>
+  <pre id="tag-arr">{JSON.stringify(tagArr, null, 2)}</pre>
+  <pre id="all-posts-length">{allPosts.length}</pre>
+</body>
+</html>

@@ -5,11 +5,21 @@ import getUniqueTags from "@/utils/getUniqueTags";
 import getUrl from "@/utils/getUrl";
 import {t} from '../../i18n/utils'
 
-const blogs = await getCollectionByName('blog')
-let tagArr = getUniqueTags(blogs);
+// Aggregate tags from all collections EXCEPT Beyond the Surface (reflections/milestones)
+let allPosts = [];
+const collectionsToTry = ['notes', 'papers'];
+for (const col of collectionsToTry) {
+  try {
+    const c = await getCollectionByName(col);
+    if (c && c.length) allPosts = allPosts.concat(c);
+  } catch (err) {
+    // Ignore missing collections
+  }
+}
+let tagArr = getUniqueTags(allPosts);
 ---
 
-<IndexPage title={t('sidebar.tags')}>
+<IndexPage title={t('sidebar.tags') + ' [normal]'}>
   <div class="flex flex-wrap">
     {
       (

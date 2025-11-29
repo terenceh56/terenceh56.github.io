@@ -12,7 +12,7 @@ import getCountByTagName from "@/utils/getCountByTagName";
 import getUrl from "@/utils/getUrl";
 // aggregate posts from multiple collections so counts still work after removing the "blog" category
 let posts = [];
-const collectionsToTry = ['blog', 'notes', 'reflections', 'milestones', 'papers', 'feed'];
+const collectionsToTry = ['notes', 'reflections', 'milestones', 'papers', 'feed'];
 for (const col of collectionsToTry) {
   try {
     const c = await getCollectionByName(col);
@@ -24,6 +24,26 @@ for (const col of collectionsToTry) {
 let tagArr = getUniqueTags(posts);
 let categoryCount = getCountByCategory(posts);
 let tagCount = getCountByTagName(posts);
+
+// Calculate article counts for each collection
+const collectionCounts = {};
+for (const col of collectionsToTry) {
+  try {
+    const c = await getCollectionByName(col);
+    if (c && c.length) {
+      // Filter out drafts in production
+      const filteredPosts = c.filter(({data}) => {
+        return import.meta.env.PROD ? !data.draft : true;
+      });
+      collectionCounts[col] = filteredPosts.length;
+    } else {
+      collectionCounts[col] = 0;
+    }
+  } catch (err) {
+    collectionCounts[col] = 0;
+  }
+}
+
 const { hideNav = false } = Astro.props;
 
 ---
@@ -47,9 +67,41 @@ const { hideNav = false } = Astro.props;
         <div class="hidden xl:block">
           <div class="flex items-center pr-4 space-x-5">
             {
-              categories.map(category => (
-                <HeaderLink href={category.href} icon={category.iconClass} target={category.target ? category.target : '_self'} children={category.children ? category.children : []}>{category.name}</HeaderLink>
-              ))
+              categories.map(category => {
+                // Determine the count to display based on category name
+                let count = 0;
+                if (category.name === 'Notes') {
+                  count = collectionCounts['notes'] || 0;
+                } else if (category.name === 'Papers') {
+                  count = collectionCounts['papers'] || 0;
+                } else if (category.name === 'Beyond the Surface') {
+                  // Sum of reflections and milestones
+                  count = (collectionCounts['reflections'] || 0) + (collectionCounts['milestones'] || 0);
+                }
+                
+                // Add counts to children if they exist
+                const childrenWithCounts = category.children ? category.children.map(child => {
+                  let childCount = 0;
+                  if (child.name === 'Thoughts & Reflections' || child.href?.includes('reflections')) {
+                    childCount = collectionCounts['reflections'] || 0;
+                  } else if (child.name === 'Milestones & Updates' || child.href?.includes('milestones')) {
+                    childCount = collectionCounts['milestones'] || 0;
+                  }
+                  return { ...child, count: childCount };
+                }) : [];
+                
+                return (
+                  <HeaderLink 
+                    href={category.href} 
+                    icon={category.iconClass} 
+                    target={category.target ? category.target : '_self'} 
+                    children={childrenWithCounts}
+                    count={count}
+                  >
+                    {category.name}{count > 0 ? ` (${count})` : ''}
+                  </HeaderLink>
+                );
+              })
             }
           </div>
         </div>
@@ -60,30 +112,47 @@ const { hideNav = false } = Astro.props;
   { !hideNav && (
 <div id="mobile-menu" class="closed pb-8 overflow-y-auto text-center">
     {
-      categories.map((category) => (
-        <div class="py-2">
-          <a class=" hover:text-skin-active" href={getUrl(category.href)}>
-            <i class={category.iconClass}/>
-            <span>{category.name}</span>
-          </a>
-          {
-            category.children && category.children.length > 0 &&
-            <div class="divider-horizontal"></div>
-          }
-          <div class="space-y-4 text-sm">
+      categories.map((category) => {
+        // Determine the count to display based on category name
+        let count = 0;
+        if (category.name === 'Notes') {
+          count = collectionCounts['notes'] || 0;
+        } else if (category.name === 'Papers') {
+          count = collectionCounts['papers'] || 0;
+        }
+        
+        return (
+          <div class="py-2">
+            <a class=" hover:text-skin-active" href={getUrl(category.href)}>
+              <i class={category.iconClass}/>
+              <span>{category.name}{count > 0 ? ` (${count})` : ''}</span>
+            </a>
             {
-              category.children && category.children.map(sub =>
-                (
-                  <a class="block hover:text-skin-active" href={getUrl(sub.href)}>
-                    <i class={sub.iconClass}/>
-                    <span>{sub.name}</span>
-                  </a>
-                )
-              )
+              category.children && category.children.length > 0 &&
+              <div class="divider-horizontal"></div>
             }
+            <div class="space-y-4 text-sm">
+              {
+                category.children && category.children.map(sub => {
+                  let childCount = 0;
+                  if (sub.name === 'Thoughts & Reflections' || sub.href?.includes('reflections')) {
+                    childCount = collectionCounts['reflections'] || 0;
+                  } else if (sub.name === 'Milestones & Updates' || sub.href?.includes('milestones')) {
+                    childCount = collectionCounts['milestones'] || 0;
+                  }
+                  
+                  return (
+                    <a class="block hover:text-skin-active" href={getUrl(sub.href)}>
+                      <i class={sub.iconClass}/>
+                      <span>{sub.name}{childCount > 0 ? ` (${childCount})` : ''}</span>
+                    </a>
+                  );
+                })
+              }
+            </div>
           </div>
-        </div>
-      ))
+        );
+      })
     }
     </div>
   )}
