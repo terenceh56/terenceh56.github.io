@@ -1,7 +1,7 @@
 ---
 import ThoughtPost from '@/layouts/ThoughtPost.astro';
 import PostTitle from '@/components/PostTitle.astro';
-import BlogFooter from '@/components/BlogFooter.astro';
+
 import { getCollectionByName } from '@/utils/getCollectionByName';
 import { sortPostsByDate } from '@/utils/sortPostsByDate';
 import getUrl from '@/utils/getUrl';
@@ -81,11 +81,7 @@ if (sortPosts[currentPostIndex + 1]) {
         )
       }
     </div>
-    <BlogFooter
-      title={entry.data.title}
-      url={getUrl('/') + entry.collection + '/' + entry.slug}
-      date={entry.data.date}
-    />
+
   </div>
 
   <style>
