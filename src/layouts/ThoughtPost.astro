@@ -1,8 +1,8 @@
 ---
 import BaseHead from '@/components/BaseHead.astro';
+import { ClientRouter } from 'astro:transitions';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
-import Profile from '@/components/Profile.astro';
 import Comment from '@/components/Comment.astro';
 import Toc from '@/components/Toc.astro';
 import ProtectedContent from '@/components/ProtectedContent.astro';
@@ -22,13 +22,16 @@ const {
 ---
 
 <html lang={config.lang}>
-  <BaseHead
-    title={frontmatter.title}
-    description={frontmatter.description}
-    mathjax={false}
-    mermaid={frontmatter.mermaid}
-    ogImage={frontmatter.ogImage}
-  />
+  <head>
+    <BaseHead
+      title={frontmatter.title}
+      description={frontmatter.description}
+      mathjax={false}
+      mermaid={frontmatter.mermaid}
+      ogImage={frontmatter.ogImage}
+    />
+    <ClientRouter />
+  </head>
 
   <body class="bg-skin-secondary">
     <Header />
@@ -54,7 +57,6 @@ const {
           {frontmatter.comment && comment.enable && <Comment />}
         </div>
         <div class="relative hidden col-span-1 lg:block lg:col-start-4">
-          <Profile />
           {frontmatter.toc && <Toc headings={headings} />}
         </div>
         <ScrollToTop />

@@ -79,14 +79,14 @@ export const categories = [
     href: "/notes/1",
   },
   {
-    name: "Thoughts",
-    iconClass: "ri-quill-pen-line",
-    href: "/thoughts/1",
-  },
-  {
     name: "Papers",
     iconClass: "ri-article-line",
     href: "/papers/1",
+  },
+  {
+    name: "Beyond the Surface",
+    iconClass: "ri-compass-3-line",
+    href: "/beyond-surface",
   },
 
   {

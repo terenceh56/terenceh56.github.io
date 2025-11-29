@@ -1,0 +1,106 @@
+---
+import ThoughtPost from '@/layouts/ThoughtPost.astro';
+import PostTitle from '@/components/PostTitle.astro';
+import BlogFooter from '@/components/BlogFooter.astro';
+import { getCollectionByName } from '@/utils/getCollectionByName';
+import { sortPostsByDate } from '@/utils/sortPostsByDate';
+import getUrl from '@/utils/getUrl';
+
+export async function getStaticPaths() {
+  const entries = await getCollectionByName('reflections');
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings, remarkPluginFrontmatter } = await entry.render();
+
+const lastModified = remarkPluginFrontmatter.lastModified;
+const readingTime = remarkPluginFrontmatter.readingTime;
+
+const posts = await getCollectionByName('reflections');
+const sortPosts = sortPostsByDate(posts);
+
+const currentPostIndex = sortPosts.findIndex(
+  (postItem) => postItem.data.title === entry.data.title,
+);
+let prevPost, nextPost;
+if (sortPosts[currentPostIndex - 1]) {
+  prevPost = sortPosts[currentPostIndex - 1];
+}
+if (sortPosts[currentPostIndex + 1]) {
+  nextPost = sortPosts[currentPostIndex + 1];
+}
+---
+
+<ThoughtPost frontmatter={entry.data} headings={headings}>
+  <div>
+    <PostTitle
+      {...entry.data}
+      lastModified={lastModified}
+      readingTime={readingTime}
+      collection={entry.collection}
+    />
+    <div class="divider-horizontal"></div>
+    <article class="markdown-body">
+      <Content />
+    </article>
+    <div class="divider-horizontal"></div>
+
+    <div class="h-8 text-skin-base">
+      {
+        prevPost ? (
+          <a
+            class="truncate  w-auto max-w-[40%] float-left"
+            href={getUrl('/') + prevPost.collection + '/' + prevPost.slug}
+            title={prevPost.data.title}
+          >
+            <i class="ri-arrow-left-s-fill" />
+            {prevPost.data.title}
+          </a>
+        ) : (
+          <div />
+        )
+      }
+      {
+        nextPost ? (
+          <div class="flex item-center float-right w-auto max-w-[40%] text-right">
+            <a
+              class="truncate "
+              href={getUrl('/') + nextPost.collection + '/' + nextPost.slug}
+              title={nextPost.data.title}
+            >
+              {nextPost.data.title}
+            </a>
+            <i class="float-right ri-arrow-right-s-fill" />
+          </div>
+        ) : (
+          <div />
+        )
+      }
+    </div>
+    <BlogFooter
+      title={entry.data.title}
+      url={getUrl('/') + entry.collection + '/' + entry.slug}
+      date={entry.data.date}
+    />
+  </div>
+
+  <style>
+    /* Target all images inside the .markdown-body class (which wraps your <Content/>) */
+    .markdown-body img {
+      border: 2px solid #e5e7eb; /* A light gray border */
+      border-radius: 0.5rem; /* Rounded corners for modern look */
+      padding: 0.25rem; /* Small space between border and image */
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); /* Very subtle shadow */
+    }
+
+    /* Ensure images remain responsive */
+    .markdown-body img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</ThoughtPost>

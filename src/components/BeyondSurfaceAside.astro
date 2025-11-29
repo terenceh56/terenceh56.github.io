@@ -1,17 +1,15 @@
 ---
-import CommentAside from '@/components/CommentAside.astro';
-import { comment } from '@/consts';
 import { getCollectionByName } from '@/utils/getCollectionByName';
 import getUniqueTags from '@/utils/getUniqueTags';
-import getCountByCategory from '@/utils/getCountByCategory';
 import { sortPostsByDate } from '@/utils/sortPostsByDate';
 import { site } from '@/consts';
 import { t } from '@/i18n/utils';
 import getUrl from '@/utils/getUrl';
 import getCountByTagName from '@/utils/getCountByTagName';
-// Aggregate posts from all collections EXCEPT Beyond the Surface (reflections/milestones)
+
+// Aggregate posts from Beyond the Surface collections ONLY
 let allPosts = [];
-const collectionsToTry = ['blog', 'notes', 'papers', 'feed'];
+const collectionsToTry = ['reflections', 'milestones'];
 for (const col of collectionsToTry) {
   try {
     const c = await getCollectionByName(col);
@@ -23,33 +21,10 @@ for (const col of collectionsToTry) {
 let tagCount = getCountByTagName(allPosts);
 let tagArr = getUniqueTags(allPosts);
 if (site.asideTagsMaxSize > 0) tagArr = tagArr.slice(0, site.asideTagsMaxSize);
-let categoryCount = getCountByCategory(allPosts);
 let sortPosts = await sortPostsByDate(allPosts);
 let resultPosts = sortPosts.splice(0, site.recentBlogSize);
 ---
 
-<!--
-<div>
-  {
-    Object.keys(categoryCount).length > 0 && (
-      <div class="aside-widget">
-        <i class="ri-folder-3-line menu-icon"/>{t('sidebar.categories')}
-      </div>
-    )
-  }
-  {
-    Object.keys(categoryCount).map((category) => (
-      <a
-        class="my-1 truncate block hover:text-skin-active"
-        title={category + " (" + categoryCount[category] + ")"}
-        href={getUrl("/category/") + category}
-      >
-        {(category === 'uncategorized' ? t('sidebar.uncategorized') : category) + " (" + categoryCount[category] + ")"}
-      </a>
-    ))
-  }
-</div>
--->
 <div class="glass p-4 rounded-lg mb-4">
   {
     tagArr.length > 0 && (
@@ -66,7 +41,7 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
           <a
             class="inline-block truncate m-1 border p-1 text-sm rounded hover:text-skin-active"
             title={tag}
-            href={getUrl('/tags/') + tag}
+            href={getUrl('/beyond-surface/tags/') + tag}
           >
             {tag} ({tagCount[tag]})
           </a>
@@ -77,7 +52,7 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
         <a
           class="inline-block truncate m-1 border p-1 text-sm rounded hover:text-skin-active"
           title={t('more')}
-          href={getUrl('/tags')}
+          href={getUrl('/beyond-surface/tags')}
         >
           {t('more')} »
         </a>
@@ -105,5 +80,3 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
     }
   </div>
 </div>
-
-{comment.enable && comment.type === 'waline' && <CommentAside />}

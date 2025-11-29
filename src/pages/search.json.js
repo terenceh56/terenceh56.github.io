@@ -1,7 +1,7 @@
-import {getCollectionByName} from "../utils/getCollectionByName.js";
+import { getCollectionByName } from "../utils/getCollectionByName.js";
 
 async function getAllPosts() {
-  const collections = ['blog', 'notes', 'thoughts', 'papers'];
+  const collections = ['blog', 'notes', 'reflections', 'milestones', 'papers'];
   let posts = [];
   for (const name of collections) {
     const items = await getCollectionByName(name);
@@ -18,7 +18,7 @@ async function getAllPosts() {
   return posts;
 }
 
-export async function GET({}) {
+export async function GET({ }) {
   return new Response(JSON.stringify(await getAllPosts()), {
     status: 200,
     headers: {

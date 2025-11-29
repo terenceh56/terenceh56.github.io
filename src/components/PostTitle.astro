@@ -4,7 +4,7 @@ import {formatDate} from "@/utils/formatDate";
 import {dealLabel} from "@/utils/dealLabel";
 import {t} from '@/i18n/utils'
 import getUrl from "@/utils/getUrl";
-const {title, date, category, tags, lastModified = '', draft = false, readingTime = {}, venue, doi} = Astro.props
+const {title, date, category, tags, lastModified = '', draft = false, readingTime = {}, venue, doi, collection} = Astro.props
 const lastModifiedDate = dayjs(lastModified === '' ? date : lastModified);
 const publishDate = dayjs(date);
 const mostRecentDate = lastModifiedDate.isAfter(publishDate) ? lastModifiedDate : publishDate;
@@ -38,9 +38,14 @@ const currentDate = dayjs();
 
     <!-- tag -->
     {
-      tags && dealLabel(tags).map((tagName) =>
-        <a href={getUrl("/tags/") + tagName} class="text-wrap break-all hover:text-skin-active mr-2"><i class="ri-hashtag mr-1"/>{tagName}</a>
-      )
+      tags && dealLabel(tags).map((tagName) => {
+        const tagUrl = ['reflections', 'milestones'].includes(collection) 
+          ? getUrl("/beyond-surface/tags/") + tagName 
+          : getUrl("/tags/") + tagName;
+        return (
+          <a href={tagUrl} class="text-wrap break-all hover:text-skin-active mr-2"><i class="ri-hashtag mr-1"/>{tagName}</a>
+        )
+      })
     }
 
     <!-- venue -->

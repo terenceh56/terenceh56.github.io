@@ -1,0 +1,281 @@
+---
+import getUrl from '@/utils/getUrl';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const reflections = (
+  await getCollection('reflections', ({ data }) => !data.draft)
+)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const milestones = (
+  await getCollection('milestones', ({ data }) => !data.draft)
+)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const anim = {
+  old: {
+    name: 'fadeOut',
+    duration: '0s',
+    easing: 'linear',
+    fillMode: 'forwards',
+  },
+  new: {
+    name: 'rise',
+    duration: '0.7s',
+    easing: 'ease-out',
+    fillMode: 'backwards',
+  },
+};
+
+const customTransition = {
+  forwards: anim,
+  backwards: anim,
+};
+---
+
+<div class={`beyond-surface-intro ${className}`}>
+  <div class="feature-cards">
+    <!-- Thoughts & Reflections Card -->
+    <a
+      href={getUrl('/reflections/1')}
+      class="feature-card"
+      transition:animate={customTransition}
+    >
+      <div class="card-header">
+        <div class="card-icon">
+          <i class="ri-lightbulb-line"></i>
+        </div>
+        <h2 class="card-title">Thoughts & Reflections</h2>
+      </div>
+      <p class="card-description">
+        Reflections on what I read, notice, and think — fragments of thoughts
+        that are still growing.
+      </p>
+
+      <div class="content-preview">
+        {
+          reflections.map((post) => (
+            <div class="preview-item">
+              <span class="preview-title">{post.data.title}</span>
+              <span class="preview-date">
+                {post.data.date.toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="card-arrow">
+        <i class="ri-arrow-right-line"></i>
+      </div>
+    </a>
+
+    <!-- Milestones & Updates Card -->
+    <a
+      href={getUrl('/milestones/1')}
+      class="feature-card"
+      transition:animate={customTransition}
+    >
+      <div class="card-header">
+        <div class="card-icon">
+          <i class="ri-flag-line"></i>
+        </div>
+        <h2 class="card-title">Milestones & Updates</h2>
+      </div>
+      <p class="card-description">
+        Milestones I've achieved and recent updates randomly.
+      </p>
+
+      <div class="content-preview">
+        {
+          milestones.map((post) => (
+            <div class="preview-item">
+              <span class="preview-title">{post.data.title}</span>
+              <span class="preview-date">
+                {post.data.date.toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="card-arrow">
+        <i class="ri-arrow-right-line"></i>
+      </div>
+    </a>
+  </div>
+</div>
+
+<style is:global>
+  .beyond-surface-intro {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .feature-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .feature-cards {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+  }
+
+  .feature-card {
+    position: relative;
+    padding: 2rem;
+    border-radius: 1rem;
+    background: rgba(var(--color-fill), 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(var(--color-border), 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    min-height: 380px; /* Increased height for content */
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(var(--color-active), 0.05) 0%,
+      transparent 50%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(var(--color-active), 0.5);
+    box-shadow: 0 12px 40px rgba(var(--color-active), 0.15);
+  }
+
+  .feature-card:hover::before {
+    opacity: 1;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-icon {
+    font-size: 2rem;
+    color: rgb(var(--color-active));
+    transition: transform 0.3s ease;
+  }
+
+  .feature-card:hover .card-icon {
+    transform: scale(1.1);
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(var(--color-base));
+    margin: 0;
+  }
+
+  .card-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(var(--color-base), 0.8);
+    margin-bottom: 1.5rem;
+  }
+
+  .content-preview {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .preview-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.9rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(var(--color-border), 0.2);
+    color: rgba(var(--color-base), 0.7);
+    transition: color 0.2s ease;
+  }
+
+  .feature-card:hover .preview-item {
+    color: rgba(var(--color-base), 0.9);
+  }
+
+  .preview-title {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+  }
+
+  .preview-date {
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+
+  .card-arrow {
+    font-size: 1.5rem;
+    color: rgb(var(--color-active));
+    align-self: flex-end;
+    transition: transform 0.3s ease;
+  }
+
+  .feature-card:hover .card-arrow {
+    transform: translateX(4px);
+  }
+
+  /* Animations */
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+    }
+  }
+</style>

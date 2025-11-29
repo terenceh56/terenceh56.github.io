@@ -1,0 +1,127 @@
+---
+import BaseHead from '@/components/BaseHead.astro';
+import { ClientRouter } from 'astro:transitions';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import BeyondSurfaceAside from '@/components/BeyondSurfaceAside.astro';
+import Comment from '@/components/Comment.astro';
+
+import { comment, config } from '@/consts';
+
+const { frontmatter = { comment: false }, hideAside = false } = Astro.props;
+const gridClass = hideAside
+  ? 'grid grid-cols-1'
+  : 'grid grid-cols-1 lg:grid-cols-4 gap-8';
+
+const anim = {
+  old: {
+    name: 'fadeOut',
+    duration: '0s',
+    easing: 'linear',
+    fillMode: 'forwards',
+  },
+  new: {
+    name: 'rise',
+    duration: '0.7s',
+    easing: 'ease-out',
+    fillMode: 'backwards',
+  },
+};
+
+const customTransition = {
+  forwards: anim,
+  backwards: anim,
+};
+---
+
+<html lang={config.lang}>
+  <head>
+    <BaseHead title={Astro.props.title} />
+    <ClientRouter />
+  </head>
+
+  <body class="bg-skin-secondary relative">
+    {!hideAside ? <Header /> : null}
+    <main
+      class:list={[
+        'container',
+        'p-4',
+        'pb-32',
+        'min-h-full',
+        'relative',
+        'text-skin-base',
+        hideAside ? 'pt-4' : 'pt-20',
+      ]}
+      id="app"
+    >
+      <div class={gridClass} transition:animate={customTransition}>
+        <!-- Tags and Recent Articles - Shows fourth on mobile (order-4) -->
+        {
+          !hideAside && (
+            <div class="col-span-1 lg:col-span-1 order-3 lg:order-2 mb-6 lg:mb-0 lg:hidden">
+              <div>
+                <BeyondSurfaceAside />
+              </div>
+            </div>
+          )
+        }
+
+        <!-- Desktop Sidebar - Only shows on desktop -->
+        {
+          !hideAside && (
+            <div class="hidden lg:block col-span-1 lg:col-span-1 lg:order-2">
+              <div class="lg:sticky lg:top-20">
+                <BeyondSurfaceAside />
+              </div>
+            </div>
+          )
+        }
+
+        <!-- Main Content - Visible on both mobile and desktop -->
+        <div
+          class={hideAside
+            ? 'col-span-1 order-2 lg:order-1'
+            : 'col-span-1 lg:col-span-3 order-2 lg:order-1'}
+        >
+          <slot />
+
+          {comment?.enable && frontmatter.comment && <Comment />}
+        </div>
+      </div>
+
+      <!-- Footer on mobile only - Absolutely centered at bottom -->
+      <div
+        class="lg:hidden fixed bottom-0 left-0 right-0 flex justify-center pb-4 bg-skin-secondary"
+      >
+        <Footer />
+      </div>
+    </main>
+    <!-- Footer on desktop only -->
+    <div class="hidden lg:block">
+      <Footer />
+    </div>
+  </body><script>
+    document.body.querySelectorAll('a').forEach((item) => {
+      item.setAttribute('rel', 'nofollow noreferrer');
+    });
+  </script>
+
+  <style is:global>
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+      }
+    }
+  </style>
+</html>

@@ -3,19 +3,6 @@ import BaseHead from '@/components/BaseHead.astro';
 import { ClientRouter } from 'astro:transitions';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
-import Profile from '@/components/Profile.astro';
-import BlogAside from '@/components/BlogAside.astro';
-import Comment from '@/components/Comment.astro';
-
-import { comment, config } from '@/consts';
-
-const { frontmatter = { comment: false }, hideAside = false } = Astro.props;
-// 保持原有的響應式網格設定
-const gridClass = hideAside
-  ? 'grid grid-cols-1'
-  : 'grid grid-cols-1 lg:grid-cols-4 gap-8';
----
-
 <html lang={config.lang}>
   <head>
     <BaseHead title={Astro.props.title} />

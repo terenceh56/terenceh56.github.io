@@ -12,7 +12,7 @@ import getCountByTagName from "@/utils/getCountByTagName";
 import getUrl from "@/utils/getUrl";
 // aggregate posts from multiple collections so counts still work after removing the "blog" category
 let posts = [];
-const collectionsToTry = ['blog', 'notes', 'thoughts', 'papers', 'feed'];
+const collectionsToTry = ['blog', 'notes', 'reflections', 'milestones', 'papers', 'feed'];
 for (const col of collectionsToTry) {
   try {
     const c = await getCollectionByName(col);
