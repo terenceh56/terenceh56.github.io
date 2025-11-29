@@ -65,12 +65,17 @@ Expend the EM wave function above with spatial basis functions, we can get the f
 >
 >
 
-Where T and S have elements:
+Where $\mathbf{T}$ and $\mathbf{S}$ have elements:
 
 > $$
-> T_{ij} = \varepsilon \iiint \vec{N}_i \cdot \vec{N}_j dV\\
+> T_{ij} = \varepsilon \iiint \vec{N}_i \cdot \vec{N}_j dV
+> $$
+>
+> $$
 > S_{ij} = \frac{1}{\mu} \iiint \nabla \times \vec{N}_i \cdot \nabla \times \vec{N}_j dV
 > $$
+>
+>
 
 Because the second-order derivative term in equation $\mathbf{T}\frac{\partial^2 e}{\partial t^2} + \mathbf{S}e = 0$ makes ADER not straightforward to implement SETD, $\frac{\partial e}{\partial t}=\gamma$, then we can get $\mathbf{T}\frac{\partial \gamma}{\partial t} = -\mathbf{S}e$, combine those, we can get $\frac{\partial u}{\partial t} = \mathbf{M}^{-1}\mathbf{L}u$, where $\mathbf{M}$ and $\mathbf{L}$ are:
 
@@ -116,11 +121,9 @@ Higher order ADER time stepping method can allow larger $\Delta t$.
 
 Empirical formula:
 
-> $$
-> \Delta t \leq C \frac{l_{\min\_element}}{v}
-> $$
+> $$ \Delta t \leq C \frac{l_{min element}}{v} $$
 >
-> $C$ is the Courant number, $l_{min\_element}$ is the characteristic size of the smallest element, and $v$ is the speed of light in the element.
+> $C$ is the Courant number, $l_{min element}$ is the characteristic size of the smallest element, and $v$ is the speed of light in the element.
 
 ### LTS Scheme
 
