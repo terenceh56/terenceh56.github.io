@@ -1,5 +1,4 @@
----
-import IndexPage from '@/layouts/IndexPage.astro';
+import BeyondSurfacePage from '@/layouts/BeyondSurfacePage.astro';
 import getUniqueTags from '@/utils/getUniqueTags';
 import getPostsByTag from '@/utils/getPostsByTag';
 import SearchTitle from '@/components/SearchTitle.astro';
@@ -9,12 +8,7 @@ import { getCollectionByName } from '@/utils/getCollectionByName';
 import getUrl from '@/utils/getUrl';
 
 export async function getStaticPaths() {
-  const reflections = await getCollectionByName('reflections');
-  const milestones = await getCollectionByName('milestones');
-  const allPosts = [...reflections, ...milestones];
-  return getUniqueTags(allPosts).map((tag) => ({
-    params: { tag },
-  }));
+  return [{ params: { tag: 'test' } }];
 }
 
 const { tag } = Astro.params;
@@ -25,7 +19,7 @@ const tagPosts = getPostsByTag(allPosts, tag);
 const resultPosts = sortPostsByDate(tagPosts);
 ---
 
-<IndexPage title={tag}>
+<BeyondSurfacePage title={tag}>
   <SearchTitle label={tag} />
   <ul class="text-skin-base">
     {
@@ -39,4 +33,4 @@ const resultPosts = sortPostsByDate(tagPosts);
       ))
     }
   </ul>
-</IndexPage>
+</BeyondSurfacePage>

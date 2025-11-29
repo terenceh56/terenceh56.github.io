@@ -1,4 +1,6 @@
-import {isEmpty, isString, isArray} from 'lodash-es'
+import isEmpty from 'lodash-es/isEmpty';
+import isString from 'lodash-es/isString';
+import isArray from 'lodash-es/isArray';
 export const dealLabel = (label) => {
   if (isEmpty(label)) {
     return []
