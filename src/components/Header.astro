@@ -49,63 +49,71 @@ const { hideNav = false } = Astro.props;
 ---
 
 <header data-home={getUrl('/')} class="fixed top-0 z-50 w-full glass text-skin-base h-14">
-  <div class="w-full xl:container mx-auto flex items-center justify-between px-4 xl:px-4 h-14">
-    <!-- Left: Menu button (mobile only) -->
-    <div class="flex-shrink-0 xl:hidden">
-      <MenuIcon></MenuIcon>
+  <div class="w-full flex items-center justify-between px-4 h-14">
+    <!-- Left: Logo and Title (desktop) / Menu button (mobile) -->
+    <div class="flex items-center flex-shrink-0">
+      <div class="xl:hidden">
+        <MenuIcon></MenuIcon>
+      </div>
+      <a class="hidden xl:flex header-logo py-1 px-4 text-2xl items-center" href={getUrl("/")}>
+        <img src={getUrl(site.favicon)} alt={site.title} class="h-6 w-auto mr-3" />
+        <span class="font-bold">{site.title}</span>
+      </a>
     </div>
     
-    <!-- Center: Logo -->
-    <a class="header-logo py-1 px-4 text-2xl flex items-center absolute left-1/2 transform -translate-x-1/2 xl:static xl:transform-none xl:left-auto" href={getUrl("/")}>
+    <!-- Center: Logo (mobile only, centered) -->
+    <a class="header-logo py-1 px-4 text-2xl flex items-center xl:hidden absolute left-1/2 transform -translate-x-1/2" href={getUrl("/")}>
       <img src={getUrl(site.favicon)} alt={site.title} class="h-6 w-auto mr-3" />
       <span class="font-bold">{site.title}</span>
     </a>
     
-    <!-- Right: Navigation + Theme button -->
-    <div class="flex items-center flex-shrink-0">
+    <!-- Center: Navigation buttons (desktop only) -->
+    <div class="hidden xl:flex items-center flex-shrink-0 absolute left-1/2 transform -translate-x-1/2">
       { !hideNav && (
-        <div class="hidden xl:block">
-          <div class="flex items-center pr-4 space-x-5">
-            {
-              categories.map(category => {
-                // Determine the count to display based on category name
-                let count = 0;
-                if (category.name === 'Notes') {
-                  count = collectionCounts['notes'] || 0;
-                } else if (category.name === 'Papers') {
-                  count = collectionCounts['papers'] || 0;
-                } else if (category.name === 'Beyond the Surface') {
-                  // Sum of reflections and milestones
-                  count = (collectionCounts['reflections'] || 0) + (collectionCounts['milestones'] || 0);
+        <div class="flex items-center space-x-5">
+          {
+            categories.map(category => {
+              // Determine the count to display based on category name
+              let count = 0;
+              if (category.name === 'Notes') {
+                count = collectionCounts['notes'] || 0;
+              } else if (category.name === 'Papers') {
+                count = collectionCounts['papers'] || 0;
+              } else if (category.name === 'Beyond the Surface') {
+                // Sum of reflections and milestones
+                count = (collectionCounts['reflections'] || 0) + (collectionCounts['milestones'] || 0);
+              }
+              
+              // Add counts to children if they exist
+              const childrenWithCounts = category.children ? category.children.map(child => {
+                let childCount = 0;
+                if (child.name === 'Thoughts & Reflections' || child.href?.includes('reflections')) {
+                  childCount = collectionCounts['reflections'] || 0;
+                } else if (child.name === 'Milestones & Updates' || child.href?.includes('milestones')) {
+                  childCount = collectionCounts['milestones'] || 0;
                 }
-                
-                // Add counts to children if they exist
-                const childrenWithCounts = category.children ? category.children.map(child => {
-                  let childCount = 0;
-                  if (child.name === 'Thoughts & Reflections' || child.href?.includes('reflections')) {
-                    childCount = collectionCounts['reflections'] || 0;
-                  } else if (child.name === 'Milestones & Updates' || child.href?.includes('milestones')) {
-                    childCount = collectionCounts['milestones'] || 0;
-                  }
-                  return { ...child, count: childCount };
-                }) : [];
-                
-                return (
-                  <HeaderLink 
-                    href={category.href} 
-                    icon={category.iconClass} 
-                    target={category.target ? category.target : '_self'} 
-                    children={childrenWithCounts}
-                    count={count}
-                  >
-                    {category.name}{count > 0 ? ` (${count})` : ''}
-                  </HeaderLink>
-                );
-              })
-            }
-          </div>
+                return { ...child, count: childCount };
+              }) : [];
+              
+              return (
+                <HeaderLink 
+                  href={category.href} 
+                  icon={category.iconClass} 
+                  target={category.target ? category.target : '_self'} 
+                  children={childrenWithCounts}
+                  count={count}
+                >
+                  {category.name}{count > 0 ? ` (${count})` : ''}
+                </HeaderLink>
+              );
+            })
+          }
         </div>
       )}
+    </div>
+    
+    <!-- Right: Theme button -->
+    <div class="flex items-center flex-shrink-0">
       <ThemeIcon></ThemeIcon>
     </div>
   </div>

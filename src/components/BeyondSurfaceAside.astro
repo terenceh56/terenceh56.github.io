@@ -36,16 +36,16 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
       </div>
     )
   }
-  <div class="flex flex-wrap">
+  <div class="flex flex-wrap gap-2">
     {
       tagArr &&
         tagArr.map((tag) => (
           <a
-            class="inline-block truncate m-1 border p-1 text-sm rounded hover:text-skin-active"
+            class="inline-block truncate border px-2 py-1 text-sm rounded-md hover:text-skin-active transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5 hover:border-skin-active"
             title={tag}
             href={getUrl('/beyond-surface/tags/') + tag}
           >
-            {tag} ({tagCount[tag]})
+            {tag} <span class="opacity-60">({tagCount[tag]})</span>
           </a>
         ))
     }
@@ -68,7 +68,7 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
     <i class="ri-file-line menu-icon"></i>
     {t('sidebar.recentArticle')}
   </div>
-  <div class="flex flex-col">
+  <div class="flex flex-col gap-2">
     {
       resultPosts.map((post) => {
         // Map collection name to display label
@@ -81,10 +81,10 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
         return (
           <a
             href={getUrl('/' + post.collection + '/') + post.slug}
-            class="truncate cursor-pointr mt-1 hover:text-skin-active"
+            class="truncate cursor-pointer hover:text-skin-active transition-all duration-300 hover:translate-x-1 relative z-10"
             title={post.data.title}
           >
-            <span class="opacity-70 mr-1">{categoryLabel}</span>
+            <span class="opacity-70 mr-1 text-xs">{categoryLabel}</span>
             {post.data.title}
           </a>
         );

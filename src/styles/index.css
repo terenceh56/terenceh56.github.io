@@ -86,7 +86,7 @@ menu {
   .header-link {
     padding: 6px 12px;
     border-radius: 8px;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
   }
 
   .header-link-active {
@@ -96,6 +96,7 @@ menu {
   /* Apply hover effect without underline */
   .header-link:hover {
     background: rgba(var(--color-text), 0.08);
+    transform: translateY(-1px);
   }
 
   .header-link:focus {
@@ -648,5 +649,3 @@ menu {
     pointer-events: auto;
   }
 }
-
-

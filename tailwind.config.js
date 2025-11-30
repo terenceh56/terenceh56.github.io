@@ -31,6 +31,10 @@ export default {
     },
     container: {
       center: true,
+      padding: '1rem',
+      screens: {
+        xl: '1296px',
+      },
     },
     textColor: {
       skin: {

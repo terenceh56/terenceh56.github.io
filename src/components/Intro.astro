@@ -98,7 +98,7 @@ const categories = flattenCategories(headerCategories || []);
           <a
             href={cat.href === 'javascript:void(0);' ? '#' : getUrl(cat.href)}
             target={cat.target}
-            class="px-4 py-2 text-sm rounded-lg border border-skin-base hover:bg-skin-card hover:text-skin-active transition-colors category-btn"
+            class="px-5 py-2.5 text-sm font-medium rounded-lg border border-skin-base hover:bg-skin-card hover:text-skin-active transition-all duration-300 category-btn shadow-sm hover:shadow-md"
             title={cat.name}
             onClick={(e) => {
               e.preventDefault();

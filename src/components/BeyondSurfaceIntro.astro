@@ -20,8 +20,14 @@ const milestones = (
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 
-const allReflections = await getCollection('reflections', ({ data }) => !data.draft);
-const allMilestones = await getCollection('milestones', ({ data }) => !data.draft);
+const allReflections = await getCollection(
+  'reflections',
+  ({ data }) => !data.draft,
+);
+const allMilestones = await getCollection(
+  'milestones',
+  ({ data }) => !data.draft,
+);
 const reflectionCount = allReflections.length;
 const milestoneCount = allMilestones.length;
 
@@ -49,11 +55,10 @@ const customTransition = {
 <div class={`beyond-surface-intro ${className}`}>
   <div class="feature-cards">
     <!-- Thoughts & Reflections Card -->
-    <a
-      href={getUrl('/reflections/1')}
-      class="feature-card"
-      transition:animate={customTransition}
-    >
+    <div class="feature-card" transition:animate={customTransition}>
+      <a href={getUrl('/reflections/1')} class="full-card-link"
+        ><span class="sr-only">View all</span></a
+      >
       <div class="card-header">
         <div class="card-icon">
           <i class="ri-lightbulb-line"></i>
@@ -71,7 +76,7 @@ const customTransition = {
       <div class="content-preview">
         {
           reflections.map((post) => (
-            <div class="preview-item">
+            <a href={getUrl(`/reflections/${post.slug}`)} class="preview-item">
               <span class="preview-title">{post.data.title}</span>
               <span class="preview-date">
                 {post.data.date.toLocaleDateString('en-US', {
@@ -79,7 +84,7 @@ const customTransition = {
                   day: 'numeric',
                 })}
               </span>
-            </div>
+            </a>
           ))
         }
       </div>
@@ -87,14 +92,13 @@ const customTransition = {
       <div class="card-arrow">
         <i class="ri-arrow-right-line"></i>
       </div>
-    </a>
+    </div>
 
     <!-- Milestones & Updates Card -->
-    <a
-      href={getUrl('/milestones/1')}
-      class="feature-card"
-      transition:animate={customTransition}
-    >
+    <div class="feature-card" transition:animate={customTransition}>
+      <a href={getUrl('/milestones/1')} class="full-card-link"
+        ><span class="sr-only">View all</span></a
+      >
       <div class="card-header">
         <div class="card-icon">
           <i class="ri-flag-line"></i>
@@ -112,7 +116,7 @@ const customTransition = {
       <div class="content-preview">
         {
           milestones.map((post) => (
-            <div class="preview-item">
+            <a href={getUrl(`/milestones/${post.slug}`)} class="preview-item">
               <span class="preview-title">{post.data.title}</span>
               <span class="preview-date">
                 {post.data.date.toLocaleDateString('en-US', {
@@ -120,7 +124,7 @@ const customTransition = {
                   day: 'numeric',
                 })}
               </span>
-            </div>
+            </a>
           ))
         }
       </div>
@@ -128,7 +132,7 @@ const customTransition = {
       <div class="card-arrow">
         <i class="ri-arrow-right-line"></i>
       </div>
-    </a>
+    </div>
   </div>
 </div>
 
@@ -242,6 +246,15 @@ const customTransition = {
     color: rgb(var(--color-active));
   }
 
+  .full-card-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
   .content-preview {
     flex: 1;
     display: flex;
@@ -258,11 +271,20 @@ const customTransition = {
     padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(var(--color-border), 0.2);
     color: rgba(var(--color-base), 0.7);
-    transition: color 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
   }
 
   .feature-card:hover .preview-item {
     color: rgba(var(--color-base), 0.9);
+  }
+
+  .preview-item:hover {
+    color: rgb(var(--color-text-active)) !important;
+    transform: translateX(4px);
   }
 
   .preview-title {
