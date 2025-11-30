@@ -75,13 +75,18 @@ const { hideNav = false } = Astro.props;
             categories.map(category => {
               // Determine the count to display based on category name
               let count = 0;
+              let iconColorClass = '';
+              
               if (category.name === 'Notes') {
                 count = collectionCounts['notes'] || 0;
+                iconColorClass = 'bg-gradient-to-br from-blue-500 to-cyan-500 bg-clip-text text-transparent';
               } else if (category.name === 'Papers') {
                 count = collectionCounts['papers'] || 0;
+                iconColorClass = 'bg-gradient-to-br from-purple-500 to-pink-500 bg-clip-text text-transparent';
               } else if (category.name === 'Beyond the Surface') {
                 // Sum of reflections and milestones
                 count = (collectionCounts['reflections'] || 0) + (collectionCounts['milestones'] || 0);
+                iconColorClass = 'bg-gradient-to-br from-orange-500 to-red-500 bg-clip-text text-transparent';
               }
               
               // Add counts to children if they exist
@@ -98,7 +103,7 @@ const { hideNav = false } = Astro.props;
               return (
                 <HeaderLink 
                   href={category.href} 
-                  icon={category.iconClass} 
+                  icon={`${category.iconClass} ${iconColorClass}`}
                   target={category.target ? category.target : '_self'} 
                   children={childrenWithCounts}
                   count={count}
@@ -123,16 +128,23 @@ const { hideNav = false } = Astro.props;
       categories.map((category) => {
         // Determine the count to display based on category name
         let count = 0;
+        let iconColorClass = '';
+        
         if (category.name === 'Notes') {
           count = collectionCounts['notes'] || 0;
+          iconColorClass = 'bg-gradient-to-br from-blue-500 to-cyan-500 bg-clip-text text-transparent';
         } else if (category.name === 'Papers') {
           count = collectionCounts['papers'] || 0;
+          iconColorClass = 'bg-gradient-to-br from-purple-500 to-pink-500 bg-clip-text text-transparent';
+        } else if (category.name === 'Beyond the Surface') {
+          count = (collectionCounts['reflections'] || 0) + (collectionCounts['milestones'] || 0);
+          iconColorClass = 'bg-gradient-to-br from-orange-500 to-red-500 bg-clip-text text-transparent';
         }
         
         return (
           <div class="py-2">
             <a class=" hover:text-skin-active" href={getUrl(category.href)}>
-              <i class={category.iconClass}/>
+              <i class={`${category.iconClass} ${iconColorClass}`}/>
               <span>{category.name}{count > 0 ? ` (${count})` : ''}</span>
             </a>
             {

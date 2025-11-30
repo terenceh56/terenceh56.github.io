@@ -1,136 +1,306 @@
 ---
-import { site, infoLinks, categories as headerCategories } from '@/consts';
+import { site, categories as headerCategories } from '@/consts';
 import getUrl from '@/utils/getUrl';
+import { getCollectionByName } from '@/utils/getCollectionByName';
 
-// Build a flat list of category buttons from header categories + their children
-const flattenCategories = (cats) => {
-  const res = [];
-  cats.forEach((c) => {
-    // push top-level category
-    res.push({ name: c.name, href: c.href, target: c.target ?? '_self' });
-    // push children (if any)
-    if (c.children && c.children.length) {
-      c.children.forEach((ch) =>
-        res.push({
-          name: ch.name,
-          href: ch.href,
-          target: ch.target ?? '_self',
-        }),
-      );
-    }
-  });
-  return res;
-};
+// Get collection counts for statistics
+const notesCount = (await getCollectionByName('notes')).filter(p => !p.data.draft).length;
+const papersCount = (await getCollectionByName('papers')).filter(p => !p.data.draft).length;
+const reflectionsCount = (await getCollectionByName('reflections')).filter(p => !p.data.draft).length;
+const milestonesCount = (await getCollectionByName('milestones')).filter(p => !p.data.draft).length;
+const btsCount = reflectionsCount + milestonesCount;
 
-const categories = flattenCategories(headerCategories || []);
+// Define featured categories with descriptions and stats
+const featuredCategories = [
+  {
+    name: 'Notes',
+    icon: 'ri-draft-line',
+    description: 'Personal study notes on aviation, engineering, and academic subjects',
+    count: notesCount,
+    href: '/notes/1',
+    gradient: 'from-blue-500 to-cyan-500'
+  },
+  {
+    name: 'Papers',
+    icon: 'ri-article-line',
+    description: 'Reading notes and interpretations of research papers and articles',
+    count: papersCount,
+    href: '/papers/1',
+    gradient: 'from-purple-500 to-pink-500'
+  },
+  {
+    name: 'Beyond the Surface',
+    icon: 'ri-compass-3-line',
+    description: 'Thoughts, reflections, milestones, and personal updates',
+    count: btsCount,
+    href: '/beyond-surface',
+    gradient: 'from-orange-500 to-red-500'
+  }
+];
+
+// Quick action links
+const quickActions = [
+  { name: 'Comments', icon: 'ri-chat-1-line', href: '/comments/1' },
+  { name: 'Search', icon: 'ri-search-line', href: '/search' },
+  { name: 'About', icon: 'ri-information-line', href: '/about' }
+];
 ---
 
-<div
-  class="intro-container flex flex-col items-center justify-center min-h-screen text-center px-8"
->
-  <div class="max-w-2xl">
-    <!-- Avatar -->
-    <img class="avatar mx-auto" src={getUrl(site.avatar)} alt="avatar" />
+<div class="intro-container min-h-screen flex flex-col items-center justify-center px-4 py-16 relative overflow-hidden">
+  <!-- Animated gradient background -->
+  <div class="hero-gradient"></div>
+  
+  <!-- Main content -->
+  <div class="relative z-10 max-w-6xl w-full">
+    <!-- Hero Section -->
+    <div class="text-center mb-16 hero-section">
+      <!-- Avatar with glow effect -->
+      <div class="avatar-wrapper mb-6">
+        <img class="avatar mx-auto" src={getUrl(site.avatar)} alt="avatar" />
+      </div>
 
-    <!-- Main Title -->
-    <h1 class="text-4xl md:text-5xl font-bold mb-8 text-skin-base">
-      {site.author}
-    </h1>
+      <!-- Name with gradient text -->
+      <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 gradient-text">
+        {site.author}
+      </h1>
 
-    <!-- Motto/Description -->
-    {
-      (() => {
-        const raw = (site.motto || '').trim();
-        const clean = raw.replace(/^"|"$/g, '').trim();
-        let text = clean;
-        let author = '';
-        // try common separators: double-hyphen, em-dash, spaced hyphen
-        const seps = ['--', '—', ' - ', ' – ', ' — '];
-        for (const sep of seps) {
-          if (clean.includes(sep)) {
-            const parts = clean
-              .split(sep)
-              .map((p) => p.trim())
-              .filter(Boolean);
-            text = parts[0] || '';
-            author =
-              parts
-                .slice(1)
-                .join(' ')
-                .replace(/^[-–—]+\s*/, '') || '';
-            break;
-          }
-        }
-        // fallback: split at last hyphen
-        if (!author) {
-          const idx = Math.max(
-            clean.lastIndexOf(' - '),
-            clean.lastIndexOf('-'),
-          );
-          if (idx > 0) {
-            text = clean.slice(0, idx).trim();
-            author = clean
-              .slice(idx)
-              .replace(/^[-\s]+/, '')
-              .trim();
-          }
-        }
-        return (
-          <div class="text-lg md:text-xl mb-8 text-skin-dodge leading-relaxed">
-            <div>{text}</div>
-            {author && <div class="mt-2">- {author}</div>}
-          </div>
-        );
-      })()
-    }
-
-    <!-- Description -->
-    <p
-      class="text-base md:text-lg mb-12 text-skin-base max-w-xl mx-auto leading-relaxed"
-    >
-      {site.description}
-    </p>
-
-    <!-- Categories (top) rendered from header categories -->
-    <div class="flex items-center justify-center flex-wrap gap-3 mb-6">
+      <!-- Motto -->
       {
-        categories.map((cat) => (
+        (() => {
+          const raw = (site.motto || '').trim();
+          const clean = raw.replace(/^"|"$/g, '').trim();
+          let text = clean;
+          let author = '';
+          const seps = ['--', '—', ' - ', ' – ', ' — '];
+          for (const sep of seps) {
+            if (clean.includes(sep)) {
+              const parts = clean
+                .split(sep)
+                .map((p) => p.trim())
+                .filter(Boolean);
+              text = parts[0] || '';
+              author =
+                parts
+                  .slice(1)
+                  .join(' ')
+                  .replace(/^[-–—]+\s*/, '') || '';
+              break;
+            }
+          }
+          if (!author) {
+            const idx = Math.max(
+              clean.lastIndexOf(' - '),
+              clean.lastIndexOf('-'),
+            );
+            if (idx > 0) {
+              text = clean.slice(0, idx).trim();
+              author = clean
+                .slice(idx)
+                .replace(/^[-\s]+/, '')
+                .trim();
+            }
+          }
+          return (
+            <div class="text-xl md:text-2xl mb-8 text-skin-dodge leading-relaxed max-w-3xl mx-auto motto-text">
+              <div class="italic">{text}</div>
+              {author && <div class="mt-2 text-lg opacity-80">— {author}</div>}
+            </div>
+          );
+        })()
+      }
+
+      <!-- Description -->
+      <p class="text-base md:text-lg mb-12 text-skin-base max-w-2xl mx-auto leading-relaxed opacity-90">
+        {site.description}
+      </p>
+    </div>
+
+    <!-- Featured Category Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 featured-cards">
+      {
+        featuredCategories.map((category, index) => (
           <a
-            href={cat.href === 'javascript:void(0);' ? '#' : getUrl(cat.href)}
-            target={cat.target}
-            class="px-5 py-2.5 text-sm font-medium rounded-lg border border-skin-base hover:bg-skin-card hover:text-skin-active transition-all duration-300 category-btn shadow-sm hover:shadow-md"
-            title={cat.name}
+            href={getUrl(category.href)}
+            class="featured-card glass-panel group"
+            style={`animation-delay: ${index * 0.1}s`}
             onClick={(e) => {
               e.preventDefault();
-              const href =
-                cat.href === 'javascript:void(0);' ? '#' : getUrl(cat.href);
-              // mark that we are navigating from the homepage so the header can drop on the next page
               try {
                 sessionStorage.setItem('fromHomepage', '1');
               } catch (err) {}
-              handleCategoryClick(href);
+              handleCategoryClick(getUrl(category.href));
             }}
           >
-            {cat.name}
+            <div class="card-content">
+              <!-- Icon with gradient background -->
+              <div class={`icon-wrapper bg-gradient-to-br ${category.gradient}`}>
+                <i class={`${category.icon} text-3xl text-white`}></i>
+              </div>
+              
+              <!-- Category name -->
+              <h3 class="text-xl font-bold mb-2 text-skin-base group-hover:text-skin-active transition-colors duration-300">
+                {category.name}
+              </h3>
+              
+              <!-- Description -->
+              <p class="text-sm text-skin-dodge mb-4 leading-relaxed">
+                {category.description}
+              </p>
+              
+              <!-- Stats -->
+              <div class="stat-badge">
+                <span class="stat-number">{category.count}</span>
+                <span class="text-xs text-skin-dodge ml-1">posts</span>
+              </div>
+            </div>
+            
+            <!-- Hover glow effect -->
+            <div class="card-glow"></div>
           </a>
         ))
       }
     </div>
 
-    <!-- (Removed social links and CTA buttons) -->
+    <!-- Quick Actions -->
+    <div class="flex items-center justify-center flex-wrap gap-4 quick-actions">
+      {
+        quickActions.map((action, index) => (
+          <a
+            href={getUrl(action.href)}
+            class="quick-action-btn glass"
+            style={`animation-delay: ${0.3 + index * 0.05}s`}
+            onClick={(e) => {
+              e.preventDefault();
+              try {
+                sessionStorage.setItem('fromHomepage', '1');
+              } catch (err) {}
+              handleCategoryClick(getUrl(action.href));
+            }}
+          >
+            <i class={`${action.icon} text-lg mr-2`}></i>
+            <span class="font-medium">{action.name}</span>
+          </a>
+        ))
+      }
+    </div>
   </div>
 </div>
 
 <style>
-  .avatar {
-    border-radius: 50%;
-    border: 1px solid var(--theme-divider);
-  }
   .intro-container {
     animation: fadeIn 0.8s ease-in-out;
+    position: relative;
   }
 
-  @keyframes fadeIn {
+  /* Animated gradient background - Neutral/Cool tone */
+  .hero-gradient {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(var(--color-text), 0.03) 0%,
+      transparent 60%
+    );
+    animation: gradientFloat 20s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes gradientFloat {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(30px, -30px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+  }
+
+  /* Hero section animations */
+  .hero-section {
+    animation: floatIn 0.8s ease-out;
+  }
+
+  @keyframes floatIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Avatar styling */
+  .avatar-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid rgba(var(--color-text), 0.1);
+    box-shadow: 
+      0 0 30px rgba(var(--color-text), 0.1),
+      0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s ease;
+    animation: avatarPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes avatarPulse {
+    0%, 100% { 
+      transform: translateY(0) scale(1);
+      box-shadow: 
+        0 0 30px rgba(var(--color-text), 0.1),
+        0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    50% { 
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 
+        0 0 45px rgba(var(--color-text), 0.15),
+        0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .avatar:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 
+      0 0 60px rgba(var(--color-text-active), 0.3),
+      0 15px 40px rgba(0, 0, 0, 0.2);
+    border-color: rgba(var(--color-text-active), 0.3);
+  }
+
+  /* Gradient text effect */
+  .gradient-text {
+    background: linear-gradient(
+      135deg,
+      rgb(var(--color-text)) 0%,
+      rgb(var(--color-text-active)) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 5s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(20deg); }
+  }
+
+  /* Motto text animation */
+  .motto-text {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+  }
+
+  @keyframes fadeInUp {
     from {
       opacity: 0;
       transform: translateY(20px);
@@ -140,26 +310,217 @@ const categories = flattenCategories(headerCategories || []);
       transform: translateY(0);
     }
   }
+
+  /* Featured cards container */
+  .featured-cards {
+    animation: fadeIn 0.8s ease-out 0.3s both;
+  }
+
+  /* Featured card styling */
+  .featured-card {
+    position: relative;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: cardFloat 0.6s ease-out both;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    border: 1px solid rgba(var(--color-text), 0.1);
+  }
+
+  @keyframes cardFloat {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .glass-panel {
+    background: rgba(var(--color-fill), 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .featured-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.15),
+      0 0 40px rgba(var(--color-text-active), 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: rgba(var(--color-text-active), 0.3);
+  }
+
+  .card-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Card glow effect */
+  .card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle,
+      rgba(var(--color-text-active), 0.1) 0%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .featured-card:hover .card-glow {
+    opacity: 1;
+  }
+
+  /* Icon wrapper */
+  .icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .featured-card:hover .icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Stat badge */
+  .stat-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(var(--color-text), 0.05);
+    border-radius: 2rem;
+    border: 1px solid rgba(var(--color-text), 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .featured-card:hover .stat-badge {
+    background: rgba(var(--color-text-active), 0.1);
+    border-color: rgba(var(--color-text-active), 0.2);
+  }
+
+  .stat-number {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: rgb(var(--color-text-active));
+  }
+
+  /* Quick actions */
+  .quick-actions {
+    animation: fadeIn 0.6s ease-out 0.5s both;
+  }
+
+  .quick-action-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 3rem;
+    border: 1px solid rgba(var(--color-text), 0.15);
+    transition: all 0.3s ease;
+    animation: slideUp 0.5s ease-out both;
+    text-decoration: none;
+    color: rgb(var(--color-text));
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .quick-action-btn:hover {
+    transform: translateY(-4px);
+    background: rgba(var(--color-text-active), 0.1);
+    border-color: rgba(var(--color-text-active), 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    color: rgb(var(--color-text-active));
+  }
+
+  .quick-action-btn:active {
+    transform: translateY(-2px) scale(0.98);
+  }
+
+  /* Page exit animation */
+  :global(.page-exit .intro-container) {
+    transform: scale(0.98);
+    opacity: 0;
+    transition: transform 320ms ease, opacity 320ms ease;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .hero-section h1 {
+      font-size: 2.5rem;
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+    }
+
+    .featured-card {
+      padding: 1.5rem;
+    }
+
+    .icon-wrapper {
+      width: 56px;
+      height: 56px;
+    }
+
+    .icon-wrapper i {
+      font-size: 1.5rem;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 </style>
 
 <script is:inline>
   function handleCategoryClick(href) {
-    // mark that we are leaving the homepage so header can animate down on arrival
     try {
       sessionStorage.setItem('fromHomepage', '1');
     } catch (err) {}
-    // add exit class to trigger CSS transition
     document.documentElement.classList.add('page-exit');
-    // small delay to allow animation to play before navigation
     const delay = 350;
     setTimeout(() => {
       if (!href || href === '#' || href === 'javascript:void(0);') return;
-      // navigate
       window.location.href = href;
     }, delay);
   }
 
-  // Also set `fromHomepage` for other internal link clicks from the intro section
+  // Set fromHomepage for other internal link clicks
   (function () {
     try {
       document.addEventListener(
@@ -169,18 +530,15 @@ const categories = flattenCategories(headerCategories || []);
           if (!a) return;
           const href = a.getAttribute('href');
           if (!href) return;
-          // ignore external and hash links
           if (
             href.startsWith('http') ||
             href.startsWith('#') ||
             href === 'javascript:void(0);'
           )
             return;
-          // mark leaving homepage so the header can drop on arrival
           try {
             sessionStorage.setItem('fromHomepage', '1');
           } catch (err) {}
-          // add exit class so intro animates away when navigating
           document.documentElement.classList.add('page-exit');
         },
         { capture: true },

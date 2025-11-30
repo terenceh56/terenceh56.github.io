@@ -1,35 +1,43 @@
 ---
-const {href, icon: iconClass, children, target, ...props} = Astro.props;
-import getUrl from "@/utils/getUrl";
+const { href, icon: iconClass, children, target, ...props } = Astro.props;
+import getUrl from '@/utils/getUrl';
 
-const {pathname} = Astro.url;
-let hrefMath = href.split('/')
-let pathnameMatch = pathname.split('/')
-const isActive = hrefMath[1] === pathnameMatch[1]
+const { pathname } = Astro.url;
+let hrefMath = href.split('/');
+let pathnameMatch = pathname.split('/');
+const isActive = hrefMath[1] === pathnameMatch[1];
 ---
-<div class="relative flex items-center w-auto h-10 box">
-  <a href={getUrl(href)} target={target} class:list={[isActive ? 'header-link-active' : '', 'header-link']} {...props}>
-    <i class={iconClass}/>
-    <slot/>
-    {
-      children.length > 0 && <i class="ri-arrow-down-s-line"></i>
-    }
-  </a>
-  {children && children.length > 0 && (
-    <div class="p-4 border rounded cursor-pointer dropdown bg-skin-fill">
-      <ul class="space-y-4 w-28">
-        {
-          children.map(child =>
-            <li class="text-center select-none hover:text-skin-active">
-              <i class={child.iconClass}></i>
-              <a target={child.target ? child.target : "_self"} href={getUrl(child.href)}>{child.name}</a>
-            </li>
-          )
-        }
-      </ul>
-    </div>
-  )}
 
+<div class="relative flex items-center w-auto h-10 box">
+  <a
+    href={getUrl(href)}
+    target={target}
+    class:list={[isActive ? 'header-link-active' : '', 'header-link']}
+    {...props}
+  >
+    <i class={iconClass}></i>
+    <slot />
+    {children.length > 0 && <i class="ri-arrow-down-s-line" />}
+  </a>
+  {
+    children && children.length > 0 && (
+      <div class="p-4 border rounded cursor-pointer dropdown bg-skin-fill">
+        <ul class="space-y-4 w-28">
+          {children.map((child) => (
+            <li class="text-center select-none hover:text-skin-active">
+              <i class={child.iconClass} />
+              <a
+                target={child.target ? child.target : '_self'}
+                href={getUrl(child.href)}
+              >
+                {child.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
 </div>
 
 <style>
@@ -41,7 +49,10 @@ const isActive = hrefMath[1] === pathnameMatch[1]
     opacity: 0;
     pointer-events: none;
     transform-origin: top left;
-    transition: opacity 160ms ease, visibility 160ms ease, transform 160ms ease;
+    transition:
+      opacity 160ms ease,
+      visibility 160ms ease,
+      transform 160ms ease;
     transform: translateY(-6px);
   }
 
@@ -52,5 +63,29 @@ const isActive = hrefMath[1] === pathnameMatch[1]
     transform: translateY(0);
   }
 
-</style>
+  /* Navbar button styles */
+  .header-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 3rem;
+    border: 1px solid rgba(var(--color-text), 0.15);
+    color: rgb(var(--color-text));
+    transition: all 0.3s ease;
+  }
 
+  .header-link:hover {
+    background: rgba(var(--color-text-active), 0.1);
+    border-color: rgba(var(--color-text-active), 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    color: rgb(var(--color-text-active));
+  }
+
+  .header-link-active {
+    background: rgba(var(--color-text-active), 0.1);
+    border-color: rgba(var(--color-text-active), 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    color: rgb(var(--color-text-active));
+  }
+</style>
