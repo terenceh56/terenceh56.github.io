@@ -93,53 +93,6 @@ menu {
     background: rgba(var(--color-text), 0.15);
   }
 
-  /* Apply hover effect without underline */
-  .header-link:hover {
-    background: rgba(var(--color-text), 0.08);
-    transform: translateY(-1px);
-  }
-
-  .header-link:focus {
-    text-decoration: none;
-    outline: none;
-  }
-
-  .header-btn {
-    @apply cursor-pointer border rounded bg-skin-fill hover:text-skin-active z-10;
-    /* Make buttons same size on mobile */
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    margin: 0;
-  }
-
-  /* Desktop: restore original padding and auto sizing */
-  @media (min-width: 1280px) {
-    .header-btn {
-      width: auto;
-      height: auto;
-      padding: 0.25rem 0.5rem;
-      margin: 0 0.5rem;
-    }
-  }
-
-  /*侧边栏每个栏目共有样式*/
-  .aside-widget {
-    @apply flex items-center w-full mb-2;
-    border-bottom: 1px solid rgba(var(--color-text), .3);
-  }
-
-  /* 侧边最近评论列表样式 */
-  .waline-comment-content {
-    @apply p-1 overflow-auto break-words max-h-72 hover:text-skin-active;
-  }
-
-  .waline-comment-author {
-    @apply mb-1 break-words text-end hover:text-skin-active;
-  }
 
   a {
     @apply cursor-pointer;
