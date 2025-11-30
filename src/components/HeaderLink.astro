@@ -72,14 +72,39 @@ const isActive = hrefMath[1] === pathnameMatch[1];
     border: 1px solid rgba(var(--color-text), 0.15);
     color: rgb(var(--color-text));
     transition: all 0.3s ease;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    position: relative;
+    outline: none !important;
+  }
+
+  .header-link:focus,
+  .header-link:focus-visible {
+    outline: none !important;
+  }
+
+  /* Responsive font sizing for smaller desktop screens */
+  @media (min-width: 960px) and (max-width: 1200px) {
+    .header-link {
+      font-size: 0.8125rem;
+      padding: 6px 10px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .header-link {
+      font-size: 0.875rem;
+    }
   }
 
   .header-link:hover {
     background: rgba(var(--color-text-active), 0.1);
-    border-color: rgba(var(--color-text-active), 0.3);
+    border-color: rgba(var(--color-text), 0.15);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
     color: rgb(var(--color-text-active));
+    outline: 1.5px solid rgba(var(--color-text-active), 0.5);
+    outline-offset: 3px;
   }
 
   .header-link-active {

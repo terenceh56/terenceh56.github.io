@@ -21,7 +21,7 @@ const gridClass = hideAside
   </head>
 
   <body class="bg-skin-secondary relative">
-    {!hideAside ? <Header /> : null}
+    <Header />
     <main
       class:list={[
         'container',
@@ -30,7 +30,7 @@ const gridClass = hideAside
         'min-h-full',
         'relative',
         'text-skin-base',
-        hideAside ? 'pt-4' : 'pt-20',
+        'pt-20',
       ]}
       id="app"
     >

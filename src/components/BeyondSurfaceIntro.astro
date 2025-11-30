@@ -53,84 +53,96 @@ const customTransition = {
 ---
 
 <div class={`beyond-surface-intro ${className}`}>
-  <div class="feature-cards">
-    <!-- Thoughts & Reflections Card -->
-    <div class="feature-card" transition:animate={customTransition}>
-      <a href={getUrl('/reflections/1')} class="full-card-link"
-        ><span class="sr-only">View all</span></a
-      >
-      <div class="card-header">
-        <div class="card-icon">
-          <i class="ri-lightbulb-line"></i>
+  <div class="mb-8 text-center" transition:animate={customTransition}>
+    <h1 class="text-4xl font-bold mb-4">Beyond the Surface</h1>
+    <p class="text-lg text-skin-base opacity-80 italic">
+      A space dedicated to what shapes me beneath appearances — where ideas take
+      form, thoughts settle, and subtle moments evolve into milestones. I record
+      the shifts in thinking, the books and experiences that challenge me, and
+      the turning points that quietly influence my journey here.
+    </p>
+  </div>
+  <div class="featured-cards">
+    <div class="card-container">
+      <div class="left-content">
+        <a
+          href={getUrl('/reflections/1')}
+          class="featured-card glass-panel group"
+          transition:animate={customTransition}
+        >
+          <div class="card-content">
+            <div class="stat-badge">
+              <span class="stat-number">{reflectionCount}</span>
+              <span class="ml-2">posts</span>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Thoughts & Reflections</h2>
+            <p class="text-skin-base opacity-70 mb-4">
+              Personal insights, book notes, and evolving perspectives on life
+              and learning.
+            </p>
+          </div>
+        </a>
+        <div class="content-preview">
+          {
+            reflections.map((post) => (
+              <a
+                href={getUrl(`/reflections/${post.slug}`)}
+                class="preview-item"
+                data-preview-link
+              >
+                <span class="preview-title">{post.data.title}</span>
+                <span class="preview-date">
+                  {post.data.date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
+              </a>
+            ))
+          }
         </div>
-        <h2 class="card-title">Thoughts & Reflections</h2>
-      </div>
-      <p class="card-description">
-        Reflections on what I read, notice, and think.
-      </p>
-
-      <div class="post-count-badge">
-        {reflectionCount} Posts
-      </div>
-
-      <div class="content-preview">
-        {
-          reflections.map((post) => (
-            <a href={getUrl(`/reflections/${post.slug}`)} class="preview-item">
-              <span class="preview-title">{post.data.title}</span>
-              <span class="preview-date">
-                {post.data.date.toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                })}
-              </span>
-            </a>
-          ))
-        }
-      </div>
-
-      <div class="card-arrow">
-        <i class="ri-arrow-right-line"></i>
       </div>
     </div>
 
-    <!-- Milestones & Updates Card -->
-    <div class="feature-card" transition:animate={customTransition}>
-      <a href={getUrl('/milestones/1')} class="full-card-link"
-        ><span class="sr-only">View all</span></a
-      >
-      <div class="card-header">
-        <div class="card-icon">
-          <i class="ri-flag-line"></i>
+    <div class="card-container">
+      <div class="left-content">
+        <a
+          href={getUrl('/milestones/1')}
+          class="featured-card glass-panel group"
+          transition:animate={customTransition}
+        >
+          <div class="card-content">
+            <div class="stat-badge">
+              <span class="stat-number">{milestoneCount}</span>
+              <span class="ml-2">posts</span>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Milestones & Updates</h2>
+            <p class="text-skin-base opacity-70 mb-4">
+              Key moments, achievements, and significant updates along my
+              journey.
+            </p>
+          </div>
+        </a>
+
+        <div class="content-preview">
+          {
+            milestones.map((post) => (
+              <a
+                href={getUrl(`/milestones/${post.slug}`)}
+                class="preview-item"
+                data-preview-link
+              >
+                <span class="preview-title">{post.data.title}</span>
+                <span class="preview-date">
+                  {post.data.date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
+              </a>
+            ))
+          }
         </div>
-        <h2 class="card-title">Milestones & Updates</h2>
-      </div>
-      <p class="card-description">
-        Milestones I've achieved and recent updates randomly.
-      </p>
-
-      <div class="post-count-badge">
-        {milestoneCount} Posts
-      </div>
-
-      <div class="content-preview">
-        {
-          milestones.map((post) => (
-            <a href={getUrl(`/milestones/${post.slug}`)} class="preview-item">
-              <span class="preview-title">{post.data.title}</span>
-              <span class="preview-date">
-                {post.data.date.toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                })}
-              </span>
-            </a>
-          ))
-        }
-      </div>
-
-      <div class="card-arrow">
-        <i class="ri-arrow-right-line"></i>
       </div>
     </div>
   </div>
@@ -139,155 +151,183 @@ const customTransition = {
 <style is:global>
   .beyond-surface-intro {
     width: 100%;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
     margin-bottom: 2rem;
   }
 
-  .feature-cards {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .beyond-surface-intro .featured-cards {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    width: 100%;
   }
 
-  @media (min-width: 768px) {
-    .feature-cards {
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+  .beyond-surface-intro .card-container {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .beyond-surface-intro .left-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .beyond-surface-intro .right-spacer {
+    /* Empty right column */
+  }
+
+  /* Use exact homepage card styles */
+  .beyond-surface-intro .featured-card {
+    position: relative;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: cardFloat 0.6s ease-out both;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    border: 1px solid rgba(var(--color-text), 0.1);
+  }
+
+  @keyframes cardFloat {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
   }
 
-  .feature-card {
-    position: relative;
-    padding: 2rem;
-    border-radius: 1rem;
-    background: rgba(var(--color-fill), 0.5);
+  .beyond-surface-intro .glass-panel {
+    background: rgba(var(--color-fill), 0.6);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(var(--color-border), 0.3);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    min-height: 380px; /* Increased height for content */
-    overflow: hidden;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
-  .feature-card::before {
-    content: '';
+  .beyond-surface-intro .featured-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.15),
+      0 0 40px rgba(var(--color-text-active), 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: rgba(var(--color-text-active), 0.3);
+  }
+
+  .beyond-surface-intro .card-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Card glow effect */
+  .beyond-surface-intro .card-glow {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(var(--color-active), 0.05) 0%,
-      transparent 50%
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle,
+      rgba(var(--color-text-active), 0.1) 0%,
+      transparent 70%
     );
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
     pointer-events: none;
   }
 
-  .feature-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(var(--color-active), 0.5);
-    box-shadow: 0 12px 40px rgba(var(--color-active), 0.15);
-  }
-
-  .feature-card:hover::before {
+  .beyond-surface-intro .featured-card:hover .card-glow {
     opacity: 1;
   }
 
-  .card-header {
+  /* Icon wrapper */
+  .beyond-surface-intro .icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 1rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .card-icon {
-    font-size: 2rem;
-    color: rgb(var(--color-active));
-    transition: transform 0.3s ease;
-  }
-
-  .feature-card:hover .card-icon {
-    transform: scale(1.1);
-  }
-
-  .card-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: rgb(var(--color-base));
-    margin: 0;
-  }
-
-  .card-description {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: rgba(var(--color-base), 0.8);
+    justify-content: center;
     margin-bottom: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
   }
 
-  .post-count-badge {
-    display: inline-block;
-    font-size: 0.85rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 6px;
+  .beyond-surface-intro .featured-card:hover .icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Stat badge */
+  .beyond-surface-intro .stat-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
     background: rgba(var(--color-text), 0.05);
-    color: rgba(var(--color-text), 0.6);
+    border-radius: 2rem;
+    border: 1px solid rgba(var(--color-text), 0.1);
+    transition: all 0.3s ease;
     margin-bottom: 1rem;
-    align-self: flex-start;
   }
 
-  .feature-card:hover .post-count-badge {
-    background: rgba(var(--color-active), 0.1);
-    color: rgb(var(--color-active));
+  .beyond-surface-intro .featured-card:hover .stat-badge {
+    background: rgba(var(--color-text-active), 0.1);
+    border-color: rgba(var(--color-text-active), 0.2);
   }
 
-  .full-card-link {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
+  .beyond-surface-intro .stat-number {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: rgb(var(--color-text-active));
   }
 
-  .content-preview {
-    flex: 1;
+  /* Preview items */
+  .beyond-surface-intro .content-preview {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(var(--color-fill), 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 1.5rem;
+    border: 1px solid rgba(var(--color-text), 0.1);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
-  .preview-item {
+  .beyond-surface-intro .preview-item {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     font-size: 0.9rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(var(--color-border), 0.2);
-    color: rgba(var(--color-base), 0.7);
+    border-bottom: 1px solid rgba(var(--color-text), 0.1);
+    color: rgba(var(--color-text), 0.7);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
     cursor: pointer;
     position: relative;
-    z-index: 2;
+    z-index: 10;
   }
 
-  .feature-card:hover .preview-item {
-    color: rgba(var(--color-base), 0.9);
-  }
-
-  .preview-item:hover {
+  .beyond-surface-intro .preview-item:hover {
     color: rgb(var(--color-text-active)) !important;
     transform: translateX(4px);
   }
 
-  .preview-title {
+  .beyond-surface-intro .preview-title {
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
@@ -295,7 +335,7 @@ const customTransition = {
     max-width: 70%;
   }
 
-  .preview-date {
+  .beyond-surface-intro .preview-date {
     font-size: 0.8rem;
     opacity: 0.7;
   }
@@ -328,4 +368,35 @@ const customTransition = {
       opacity: 0;
     }
   }
+
+  /* Responsive design for mobile */
+  @media (max-width: 1024px) {
+    .beyond-surface-intro .featured-cards {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .beyond-surface-intro .featured-card {
+      padding: 1.5rem;
+    }
+
+    .beyond-surface-intro h2 {
+      font-size: 1.5rem;
+    }
+  }
 </style>
+
+<script>
+  // Prevent card link from being triggered when clicking preview items
+  document.addEventListener(
+    'click',
+    (e) => {
+      const target = e.target as HTMLElement;
+      const previewLink = target.closest('[data-preview-link]');
+      if (previewLink) {
+        e.stopPropagation();
+      }
+    },
+    true,
+  );
+</script>

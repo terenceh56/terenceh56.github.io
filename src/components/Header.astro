@@ -49,14 +49,14 @@ const { hideNav = false } = Astro.props;
 ---
 
 <header data-home={getUrl('/')} class="fixed top-0 z-50 w-full glass text-skin-base h-14">
-  <div class="w-full flex items-center justify-between px-4 h-14">
+  <div class="w-full flex items-center justify-between px-2 xl:px-4 h-14 relative">
     <!-- Left: Logo and Title (desktop) / Menu button (mobile) -->
-    <div class="flex items-center flex-shrink-0">
+    <div class="flex items-center flex-shrink-0 z-10">
       <div class="xl:hidden">
         <MenuIcon></MenuIcon>
       </div>
-      <a class="hidden xl:flex header-logo py-1 px-4 text-2xl items-center" href={getUrl("/")}>
-        <img src={getUrl(site.favicon)} alt={site.title} class="h-6 w-auto mr-3" />
+      <a class="hidden xl:flex header-logo py-1 px-2 xl:px-4 text-xl xl:text-2xl items-center whitespace-nowrap" href={getUrl("/")}>
+        <img src={getUrl(site.favicon)} alt={site.title} class="h-5 xl:h-6 w-auto mr-2 xl:mr-3" />
         <span class="font-bold">{site.title}</span>
       </a>
     </div>
@@ -68,9 +68,9 @@ const { hideNav = false } = Astro.props;
     </a>
     
     <!-- Center: Navigation buttons (desktop only) -->
-    <div class="hidden xl:flex items-center flex-shrink-0 absolute left-1/2 transform -translate-x-1/2">
+    <div class="nav-center-container hidden xl:flex items-center flex-shrink-0 absolute left-1/2 transform -translate-x-1/2 max-w-[calc(100%-200px)]">
       { !hideNav && (
-        <div class="flex items-center space-x-5">
+        <div class="flex items-center space-x-2 xl:space-x-5">
           {
             categories.map(category => {
               // Determine the count to display based on category name
@@ -118,7 +118,7 @@ const { hideNav = false } = Astro.props;
     </div>
     
     <!-- Right: Theme button -->
-    <div class="flex items-center flex-shrink-0">
+    <div class="flex items-center flex-shrink-0 z-10">
       <ThemeIcon></ThemeIcon>
     </div>
   </div>
