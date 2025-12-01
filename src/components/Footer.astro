@@ -14,7 +14,7 @@ let shouldLoadBusuanzi = analytics.enable && analytics.busuanzi
     <span id="busuanzi_container_site_pv">
       {t('footer.busuanziSitePV')}<span id="busuanzi_value_site_pv"></span>{t('footer.busuanziSitePVUnit')}
     </span>
-        <div class="divider-vertical"></div>
+        <span class="mx-2">|</span>
         <span id="busuanzi_container_site_uv">
       {t('footer.busuanziSiteUV')}<span id="busuanzi_value_site_uv"></span>{t('footer.busuanziSiteUVUnit')}
     </span>
@@ -29,15 +29,15 @@ let shouldLoadBusuanzi = analytics.enable && analytics.busuanzi
     </div>
     {
       site.beian && (
-        <div class="divider-vertical hidden sm:block"></div>
+        <span class="mx-2 hidden sm:inline">|</span>
         <a rel="nofollow" target="_blank" href="https://beian.miit.gov.cn/">
           {site.beian}
         </a>
       )
     }
-    <div class="divider-vertical"></div>
+    <span class="mx-2">|</span>
     <a href={getUrl("/sitemap-0.xml")}>{t('footer.sitemap')}</a>
-    <div class="divider-vertical"></div>
-    <a href="https://github.com/cirry/astro-yi" target="_blank">Made with Astro Theme Yi</a>
+    <span class="mx-2">|</span>
+    <a class="hover:text-skin-active hover:underline transition-colors" href="https://github.com/cirry/astro-yi" target="_blank">Made with Astro Theme Yi</a>
   </div>
 </div>

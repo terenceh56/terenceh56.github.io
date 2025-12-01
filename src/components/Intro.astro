@@ -15,7 +15,7 @@ const featuredCategories = [
   {
     name: 'Notes',
     icon: 'ri-draft-line',
-    description: 'Personal study notes on aviation, engineering, and academic subjects',
+    description: 'Personal study notes on multiple subjects',
     count: notesCount,
     href: '/notes/1',
     gradient: 'from-blue-500 to-cyan-500'
@@ -150,7 +150,7 @@ const quickActions = [
               <!-- Stats -->
               <div class="stat-badge">
                 <span class="stat-number">{category.count}</span>
-                <span class="text-xs text-skin-dodge ml-1">posts</span>
+                <span class="text-xs text-skin-dodge ml-1">articles</span>
               </div>
             </div>
             
@@ -253,20 +253,24 @@ const quickActions = [
   }
 
   /* Rippling water effect with high-contrast silver gradient */
+  /* Rippling water effect with high-contrast silver gradient - Irregular pattern */
   .gradient-text {
     background: linear-gradient(
       90deg,
       #888888 0%,
-      #FFFFFF 25%,
+      #888888 5%,
+      #FFFFFF 15%,
+      #888888 25%,
       #888888 50%,
-      #FFFFFF 75%,
+      #FFFFFF 60%,
+      #888888 70%,
       #888888 100%
     );
     background-size: 200% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: waterRipple 2.5s linear infinite;
+    animation: waterRipple 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
   @keyframes waterRipple {
