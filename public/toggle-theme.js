@@ -29,7 +29,8 @@ function reflectPreference() {
   document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
 }
 
-// set early so no page flashes / CSS is made aware
+// Apply the current theme as early as possible to avoid flashes,
+// especially on initial page load and full navigations to articles.
 reflectPreference();
 
 function init() {
@@ -37,28 +38,46 @@ function init() {
   reflectPreference();
 
   // now this script can find and listen for clicks on the control
-  document.querySelector("#theme-btn")?.addEventListener("click", () => {
-    themeValue = themeValue === "light" ? "dark" : "light";
-    setPreference();
-  });
-  document.querySelector("#theme-btn-mobile")?.addEventListener("click", () => {
-    themeValue = themeValue === "light" ? "dark" : "light";
-    setPreference();
-  });
+  const desktopBtn = document.querySelector("#theme-btn");
+  const mobileBtn = document.querySelector("#theme-btn-mobile");
+
+  // Use onclick so repeated init calls simply overwrite handlers
+  if (desktopBtn) {
+    desktopBtn.onclick = () => {
+      themeValue = themeValue === "light" ? "dark" : "light";
+      setPreference();
+    };
+  }
+
+  if (mobileBtn) {
+    mobileBtn.onclick = () => {
+      themeValue = themeValue === "light" ? "dark" : "light";
+      setPreference();
+    };
+  }
 }
 
+// --- Initialization hooks ---
+// 1) Standard page loads (layouts without ClientRouter / transitions)
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init, { once: true });
+} else {
+  // DOM is already ready
+  init();
+}
 
-
-document.addEventListener('astro:page-load', () => {
+// 2) Astro transitions (pages using ClientRouter)
+document.addEventListener("astro:page-load", () => {
   init();
 });
 
-document.addEventListener('astro:after-swap', () => {
+document.addEventListener("astro:after-swap", () => {
   reflectPreference();
 });
 
 // sync with system changes
-window.matchMedia("(prefers-color-scheme: dark)")
+window
+  .matchMedia("(prefers-color-scheme: dark)")
   .addEventListener("change", ({ matches: isDark }) => {
     themeValue = isDark ? "dark" : "light";
     setPreference();

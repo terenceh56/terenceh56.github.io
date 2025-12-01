@@ -2,6 +2,7 @@
 import { site, categories as headerCategories } from '@/consts';
 import getUrl from '@/utils/getUrl';
 import { getCollectionByName } from '@/utils/getCollectionByName';
+import ThemeIcon from '@/components/ThemeIcon.astro';
 
 // Get collection counts for statistics
 const notesCount = (await getCollectionByName('notes')).filter(p => !p.data.draft).length;
@@ -52,6 +53,10 @@ const quickActions = [
   
   <!-- Main content -->
   <div class="relative z-10 w-full max-w-6xl px-4">
+    <!-- Fixed top-right theme toggle (matches header position) -->
+    <div class="fixed top-3 right-4 z-50">
+      <ThemeIcon />
+    </div>
     <!-- Hero Section -->
     <div class="text-center mb-16 hero-section">
       <!-- Avatar with glow effect -->
