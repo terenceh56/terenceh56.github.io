@@ -35,7 +35,7 @@ export  const en = {
   'remark.open': 'Open',
   'search.labelOne':'Viewing articles under the ',
   'search.labelTwo':'',
-  'search.placeholder': 'Enter title or abstract keywords',
+  'search.placeholder': 'Enter title keywords only',
   'search.search': 'Search',
   'search.searchLabelOne':'Found ',
   'search.searchLabelTwo': ' article(s) in total',

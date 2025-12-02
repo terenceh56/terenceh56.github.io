@@ -35,7 +35,7 @@ export  let cs = {
   'post.lastUpdatedTip2':'a vzhledem k uplynulému času již některé informace nemusí být aktuální.',
   'search.labelOne':'Zobrazení článků pod',
   'search.labelTwo':'',
-  'search.placeholder': 'Zadejte klíčová slova názvu nebo abstraktu',
+  'search.placeholder': 'Zadejte pouze klíčová slova názvu',
   'search.searchLabelOne':'Nalezeno ',
   'search.searchLabelTwo': ' článek(ů) celkem',
   'search.search': 'Hledat',

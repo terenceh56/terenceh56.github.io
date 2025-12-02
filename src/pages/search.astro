@@ -5,29 +5,44 @@ import { t } from '@/i18n/utils';
 
 <IndexPage>
   <aside>
-    <label for="search" class="text-2xl mb-4 text-skin-base">
-      {t('search.search')}
-    </label>
+    <div class="mb-6 p-4 glass rounded-lg shadow-md">
+      <div class="flex items-center mb-3">
+        <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md">
+          <i class="ri-search-line text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold italic text-skin-base">
+            {t('search.search')}
+          </h1>
+          <p class="text-sm text-skin-dodge opacity-80">
+            {t('search.placeholder')}
+          </p>
+        </div>
+      </div>
 
-    <div class="relative">
-      <span class="absolute inset-y-0 flex items-center pl-2 opacity-75">
-        <i class="ri-search-line text-skin-active ml-1"></i>
-      </span>
-      <input
-        required
-        maxlength="24"
-        id="search"
-        class="block w-full rounded border border-opacity-40 mt-4 bg-skin-fill text-skin-base py-3 pl-10 pr-3 placeholder:italic placeholder:text-opacity-75 focus:border-skin-accent focus:outline-none"
-        placeholder={t('search.placeholder')}
-        type="search"
-        name="search"
-        autofocus
-      />
+      <div class="relative mt-2">
+        <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-75">
+          <i class="ri-search-line text-skin-active"></i>
+        </span>
+        <input
+          required
+          maxlength="24"
+          id="search"
+          class="block w-full rounded-xl border border-skin-line/60 bg-skin-fill/80 text-skin-base py-3 pl-10 pr-3 text-sm placeholder:italic placeholder:text-opacity-75 focus:border-skin-accent focus:outline-none focus:ring-2 focus:ring-skin-accent/60 transition-all"
+          placeholder={t('search.placeholder')}
+          type="search"
+          name="search"
+          autofocus
+        />
+      </div>
     </div>
   </aside>
-  <p id="searchReadout"></p>
+
   <section aria-label="Search Results">
-    <div id="resultsList"></div>
+    <div class="glass rounded-lg p-4 shadow-sm">
+      <p id="searchReadout" class="mb-2 text-sm text-skin-base"></p>
+      <div id="resultsList" class="mt-2"></div>
+    </div>
   </section>
 </IndexPage>
 <script>
@@ -44,15 +59,11 @@ import { t } from '@/i18n/utils';
   let FUSE_OPTIONS = {
     includeScore: true,
     shouldSort: true,
-    threshold: 0.5,
+    threshold: 0.4,
     keys: [
       {
         name: 'title',
         weight: 1,
-      },
-      {
-        name: 'description',
-        weight: 0.75,
       },
     ],
   };
@@ -69,30 +80,68 @@ import { t } from '@/i18n/utils';
 </style>
 </svg>`;
 
-  const search = document.querySelector('#search');
-  const searchReadout = document.querySelector('#searchReadout');
-  const resultsList = document.querySelector('#resultsList');
+  let searchInputEl = null;
+  let searchReadoutEl = null;
+  let resultsListEl = null;
+  let teardownSearchListeners = null;
 
-  window.addEventListener('DOMContentLoaded', () => {
-    const urlParams = DOMPurify.sanitize(
-      new URLSearchParams(window.location.search).get('q'),
-    );
-    fetchSearchResults(urlParams);
-    search.value = urlParams;
-    search.focus();
-  });
+  const sanitizeTerm = (value) => DOMPurify.sanitize(value ?? '').trim();
 
-  search.addEventListener('input', (e) => {
-    const searchTerm = DOMPurify.sanitize(search.value);
-    fetchSearchResults(searchTerm);
-    updateSearchPageUrl(searchTerm);
-  });
+  const escapeRegExp = (value) =>
+    value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  function initSearchUI() {
+    teardownSearchListeners?.();
+    searchInputEl = document.querySelector('#search');
+    searchReadoutEl = document.querySelector('#searchReadout');
+    resultsListEl = document.querySelector('#resultsList');
+
+    if (!searchInputEl || !searchReadoutEl || !resultsListEl) {
+      console.warn('Search UI elements missing.');
+      return;
+    }
+
+    const handleInput = () => {
+      const searchTerm = sanitizeTerm(searchInputEl.value);
+      fetchSearchResults(searchTerm);
+      updateSearchPageUrl(searchTerm);
+    };
+
+    searchInputEl.addEventListener('input', handleInput);
+
+    const urlQuery = new URLSearchParams(window.location.search).get('q');
+    const initialTerm = sanitizeTerm(urlQuery);
+    searchInputEl.value = initialTerm;
+    if (initialTerm) {
+      fetchSearchResults(initialTerm);
+    } else {
+      updateReadout(null);
+      resultsListEl.innerHTML = '';
+    }
+    searchInputEl.focus();
+
+    teardownSearchListeners = () => {
+      searchInputEl?.removeEventListener('input', handleInput);
+    };
+  }
+
+  const bootstrapSearch = () => {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSearchUI, { once: true });
+    } else {
+      initSearchUI();
+    }
+  };
+
+  bootstrapSearch();
+  document.addEventListener('astro:page-load', initSearchUI);
 
   function updateReadout(length) {
+    if (!searchReadoutEl) return;
     if (isNumber(length)) {
-      searchReadout.innerHTML = `<div class="my-2">${t('search.searchLabelOne')}<span class="px-2 font-bold text-skin-active">${length}</span>${t('search.searchLabelTwo')}</div>`;
+      searchReadoutEl.innerHTML = `<div class="my-2">${t('search.searchLabelOne')}<span class="px-2 font-bold text-skin-active">${length}</span>${t('search.searchLabelTwo')}</div>`;
     } else {
-      searchReadout.innerHTML = '';
+      searchReadoutEl.innerHTML = '';
     }
   }
 
@@ -107,15 +156,11 @@ import { t } from '@/i18n/utils';
       .map((r) => {
         const { title, description, date, slug, category, tags, collection } =
           r.item;
-        const reg = new RegExp(searchTerm, 'gi');
+        const reg = new RegExp(escapeRegExp(searchTerm), 'gi');
         let titleStr = title.replace(reg, (match) => {
           return `<span class="text-skin-active font-bold">${match}</span>`;
         });
-        let descriptionStr = description
-          ? description.replace(reg, (match) => {
-              return `<span class="text-skin-active font-bold">${match}</span>`;
-            })
-          : '';
+        let descriptionStr = description || '';
 
         let categoryStr = dealLabel(category)
           .filter((item) => item !== 'uncategorized')
@@ -133,7 +178,7 @@ import { t } from '@/i18n/utils';
         return `
         <div class="my-5">
             <a
-              class="text-xl underline-offset-4 decoration-skin-base decoration-wavy hover:underline hover:decoration-sky-500 font-bold"
+              class="text-xl font-bold underline-offset-4 decoration-skin-base decoration-wavy cursor-pointer transition-all duration-300 hover:text-skin-active hover:translate-x-1"
               href=${getUrl('/') + collection + '/' + slug}>${titleStr}
             </a>
             <div class="flex items-center my-2">
@@ -148,9 +193,10 @@ import { t } from '@/i18n/utils';
   }
 
   async function fetchSearchResults(search) {
+    if (!resultsListEl) return;
     if (!search) {
       updateReadout(null);
-      resultsList.innerHTML = '';
+      resultsListEl.innerHTML = '';
       return;
     }
     if (search.length === 0) return;
@@ -173,7 +219,9 @@ import { t } from '@/i18n/utils';
     if (!FUSE_INSTANCE) return;
     const searchResults = FUSE_INSTANCE.search(search);
     updateReadout(searchResults.length);
-    resultsList.innerHTML =
-      searchResults.length > 0 ? generateSearchList(searchResults, search) : '';
+    resultsListEl.innerHTML =
+      searchResults.length > 0
+        ? generateSearchList(searchResults, search)
+        : '<p class="text-sm text-skin-dodge opacity-80">No matching titles found.</p>';
   }
 </script>

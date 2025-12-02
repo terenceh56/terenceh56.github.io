@@ -43,7 +43,7 @@ export const zhCn = {
   'search.search': '搜索',
   'search.searchLabelOne': '共找到 ',
   'search.searchLabelTwo': ' 篇文章',
-  'search.placeholder': '输入标题或摘要关键字',
+  'search.placeholder': '仅输入标题关键词',
   'feed.previous': '上一条动态',
   'feed.next': '下一条动态',
   'more': '更多'

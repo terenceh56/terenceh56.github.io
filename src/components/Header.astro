@@ -44,6 +44,8 @@ for (const col of collectionsToTry) {
   }
 }
 
+const notesAndPapersCount = (collectionCounts['notes'] || 0) + (collectionCounts['papers'] || 0);
+
 const { hideNav = false } = Astro.props;
 
 ---
@@ -78,7 +80,7 @@ const { hideNav = false } = Astro.props;
               let iconColorClass = '';
               
               if (category.name === 'Notes') {
-                count = collectionCounts['notes'] || 0;
+                count = notesAndPapersCount;
                 iconColorClass = 'bg-gradient-to-br from-blue-500 to-cyan-500 bg-clip-text text-transparent';
               } else if (category.name === 'Papers') {
                 count = collectionCounts['papers'] || 0;
@@ -131,7 +133,7 @@ const { hideNav = false } = Astro.props;
         let iconColorClass = '';
         
         if (category.name === 'Notes') {
-          count = collectionCounts['notes'] || 0;
+          count = notesAndPapersCount;
           iconColorClass = 'bg-gradient-to-br from-blue-500 to-cyan-500 bg-clip-text text-transparent';
         } else if (category.name === 'Papers') {
           count = collectionCounts['papers'] || 0;

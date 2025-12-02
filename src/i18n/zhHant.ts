@@ -38,7 +38,7 @@ export  const zhHant = {
   'search.search': '搜索',
   'search.searchLabelOne':'共找到 ',
   'search.searchLabelTwo': ' 篇文章',
-  'search.placeholder': '輸入標題或摘要關鍵字',
+  'search.placeholder': '僅輸入標題關鍵字',
   'feed.previous': '上一條動態',
   'feed.next': '下一條動態',
   'more': '更多'
