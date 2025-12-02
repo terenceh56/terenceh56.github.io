@@ -28,13 +28,49 @@ const shouldLoadBusuanzi = analytics.enable && analytics.busuanzi;
 }
 
 <script>
+  // Simple global cache so the values "stick" across pages and don't
+  // reset to "-" on every navigation.
+  const ensureBusuanziCache = () => {
+    if (typeof window === 'undefined') return;
+    if (!window.__BUSUANZI_CACHE__) {
+      window.__BUSUANZI_CACHE__ = { pv: null, uv: null };
+    }
+  };
+
+  const applyCachedValues = () => {
+    if (typeof window === 'undefined') return;
+    ensureBusuanziCache();
+    const cache = window.__BUSUANZI_CACHE__;
+    const pvEl = document.getElementById('busuanzi_value_site_pv');
+    const uvEl = document.getElementById('busuanzi_value_site_uv');
+    if (pvEl && cache.pv != null) pvEl.textContent = cache.pv;
+    if (uvEl && cache.uv != null) uvEl.textContent = cache.uv;
+  };
+
+  const captureCurrentValuesToCache = () => {
+    if (typeof window === 'undefined') return;
+    ensureBusuanziCache();
+    const cache = window.__BUSUANZI_CACHE__;
+    const pvEl = document.getElementById('busuanzi_value_site_pv');
+    const uvEl = document.getElementById('busuanzi_value_site_uv');
+    if (pvEl && pvEl.textContent && pvEl.textContent !== '-') {
+      cache.pv = pvEl.textContent;
+    }
+    if (uvEl && uvEl.textContent && uvEl.textContent !== '-') {
+      cache.uv = uvEl.textContent;
+    }
+  };
+
   const refreshBusuanzi = () => {
-    // Busuanzi attaches a global BUSUANZI object when the script has loaded.
-    // We call fetch() so that it re-scans the DOM and fills in the
-    // #busuanzi_value_site_pv / #busuanzi_value_site_uv spans after
-    // Astro ClientRouter navigations.
+    // First, show whatever we last knew so the user never sees "-"
+    applyCachedValues();
+
+    // Then, if Busuanzi is ready, ask it to re-scan the DOM
     if (typeof window !== 'undefined' && window.BUSUANZI && window.BUSUANZI.fetch) {
       window.BUSUANZI.fetch();
+
+      // Give Busuanzi a short moment to update the DOM, then cache the result
+      setTimeout(captureCurrentValuesToCache, 1000);
     }
   };
 
