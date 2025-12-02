@@ -11,12 +11,14 @@ const shouldLoadBusuanzi = analytics.enable && analytics.busuanzi;
         <div class="counter-item">
           <span id="busuanzi_container_site_pv">
             <i class="ri-eye-line" />
+            <span class="label">{t('footer.busuanziSitePV')}</span>
             <span id="busuanzi_value_site_pv">-</span>
           </span>
         </div>
         <div class="counter-item">
           <span id="busuanzi_container_site_uv">
             <i class="ri-user-line" />
+            <span class="label">{t('footer.busuanziSiteUV')}</span>
             <span id="busuanzi_value_site_uv">-</span>
           </span>
         </div>
@@ -24,6 +26,29 @@ const shouldLoadBusuanzi = analytics.enable && analytics.busuanzi;
     </div>
   )
 }
+
+<script>
+  const refreshBusuanzi = () => {
+    // Busuanzi attaches a global BUSUANZI object when the script has loaded.
+    // We call fetch() so that it re-scans the DOM and fills in the
+    // #busuanzi_value_site_pv / #busuanzi_value_site_uv spans after
+    // Astro ClientRouter navigations.
+    if (typeof window !== 'undefined' && window.BUSUANZI && window.BUSUANZI.fetch) {
+      window.BUSUANZI.fetch();
+    }
+  };
+
+  // Initial load (no transitions or hard refresh)
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    refreshBusuanzi();
+  } else {
+    document.addEventListener('DOMContentLoaded', refreshBusuanzi, { once: true });
+  }
+
+  // Astro transitions events (SPA-style navigation)
+  document.addEventListener('astro:page-load', refreshBusuanzi);
+  document.addEventListener('astro:after-swap', refreshBusuanzi);
+</script>
 
 <style>
   .visitor-counter {
@@ -63,6 +88,10 @@ const shouldLoadBusuanzi = analytics.enable && analytics.busuanzi;
     display: flex;
     align-items: center;
     gap: 6px;
+  }
+
+  .counter-item .label {
+    opacity: 0.8;
   }
 
   .counter-item i {
