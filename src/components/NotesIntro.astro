@@ -8,26 +8,16 @@ interface Props {
 
 const { class: className = '' } = Astro.props;
 
-const notes = (
-  await getCollection('notes', ({ data }) => !data.draft)
-)
+const notes = (await getCollection('notes', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 
-const papers = (
-  await getCollection('papers', ({ data }) => !data.draft)
-)
+const papers = (await getCollection('papers', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 
-const allNotes = await getCollection(
-  'notes',
-  ({ data }) => !data.draft,
-);
-const allPapers = await getCollection(
-  'papers',
-  ({ data }) => !data.draft,
-);
+const allNotes = await getCollection('notes', ({ data }) => !data.draft);
+const allPapers = await getCollection('papers', ({ data }) => !data.draft);
 const notesCount = allNotes.length;
 const papersCount = allPapers.length;
 
@@ -56,8 +46,8 @@ const customTransition = {
   <div class="mb-8 text-center" transition:animate={customTransition}>
     <h1 class="text-4xl font-bold italic mb-4">Notes</h1>
     <p class="text-lg text-skin-base opacity-80 italic">
-      Personal notes on various subjects, alongside interpretations and summaries
-      of research articles.
+      Personal notes on various subjects, alongside interpretations and
+      summaries of research articles.
     </p>
   </div>
   <div class="featured-cards">
@@ -81,8 +71,7 @@ const customTransition = {
             </div>
             <h2 class="text-2xl font-bold mb-2">Other Notes</h2>
             <p class="text-skin-base opacity-70 mb-4">
-              Personal study notes on different subjects, mainly aviation, but also
-              some notes made while pursuing my Bachelor's degree.
+              Personal study notes on different subjects.
             </p>
           </div>
         </a>
@@ -129,7 +118,8 @@ const customTransition = {
             </div>
             <h2 class="text-2xl font-bold mb-2">Papers</h2>
             <p class="text-skin-base opacity-70 mb-4">
-              Personal reading notes and interpretations of various academic papers.
+              Personal reading notes and interpretations of various academic
+              papers.
             </p>
           </div>
         </a>
@@ -393,4 +383,3 @@ const customTransition = {
     true,
   );
 </script>
-
