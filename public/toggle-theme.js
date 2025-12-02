@@ -32,33 +32,44 @@ function reflectPreference() {
 // set early so no page flashes / CSS is made aware
 reflectPreference();
 
-let initialized = false;
+// Store references to event handlers so we can remove them properly
+let themeToggleHandler = null;
+let themeToggleMobileHandler = null;
 
 function init() {
   // set on load so screen readers can get the latest value on the button
   reflectPreference();
 
-  // Only attach listeners once per page load
-  if (!initialized) {
-    // now this script can find and listen for clicks on the control
-    const themeBtn = document.querySelector("#theme-btn");
-    const themeBtnMobile = document.querySelector("#theme-btn-mobile");
-    
-    if (themeBtn) {
-      themeBtn.addEventListener("click", () => {
-        themeValue = themeValue === "light" ? "dark" : "light";
-        setPreference();
-      });
-    }
-    
-    if (themeBtnMobile) {
-      themeBtnMobile.addEventListener("click", () => {
-        themeValue = themeValue === "light" ? "dark" : "light";
-        setPreference();
-      });
-    }
-    
-    initialized = true;
+  // Get button elements
+  const themeBtn = document.querySelector("#theme-btn");
+  const themeBtnMobile = document.querySelector("#theme-btn-mobile");
+
+  // Remove old listeners if they exist (prevents duplicate listeners)
+  if (themeBtn && themeToggleHandler) {
+    themeBtn.removeEventListener("click", themeToggleHandler);
+  }
+  if (themeBtnMobile && themeToggleMobileHandler) {
+    themeBtnMobile.removeEventListener("click", themeToggleMobileHandler);
+  }
+
+  // Create new handler functions
+  themeToggleHandler = () => {
+    themeValue = themeValue === "light" ? "dark" : "light";
+    setPreference();
+  };
+
+  themeToggleMobileHandler = () => {
+    themeValue = themeValue === "light" ? "dark" : "light";
+    setPreference();
+  };
+
+  // Attach new listeners
+  if (themeBtn) {
+    themeBtn.addEventListener("click", themeToggleHandler);
+  }
+
+  if (themeBtnMobile) {
+    themeBtnMobile.addEventListener("click", themeToggleMobileHandler);
   }
 }
 
@@ -70,10 +81,8 @@ if (document.readyState === 'loading') {
   init();
 }
 
-document.addEventListener('astro:page-load', () => {
-  initialized = false; // Reset on page navigation to re-attach listeners
-  init();
-});
+// Re-initialize on every page navigation (View Transitions)
+document.addEventListener('astro:page-load', init);
 
 document.addEventListener('astro:after-swap', () => {
   reflectPreference();

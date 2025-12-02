@@ -10,6 +10,7 @@ import { comment, config } from '@/consts';
 import ScrollToTop from '@/components/ScrollToTop.astro';
 import { t } from '@/i18n/utils';
 import KaTeXLoader from '@/components/KaTeXLoader.astro';
+import VisitorCounter from '@/components/VisitorCounter.astro';
 
 const {
   frontmatter = {
@@ -63,6 +64,7 @@ const {
       <Footer />
     </main>
     <KaTeXLoader />
+    <VisitorCounter />
   </body>
 </html>
 

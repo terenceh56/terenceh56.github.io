@@ -188,7 +188,7 @@ export const DISQUS_SHORTNAME = "terenceh56";
  * It defines and exports the default settings for Umami and Google Analytics.
  */
 export const analytics: AnalyticsConfig = {
-  enable: false,
+  enable: true,
   umamiConfig: {
     enable: false,
     id: "",
@@ -198,7 +198,7 @@ export const analytics: AnalyticsConfig = {
     enable: false,
     id: ""
   },
-  busuanzi: false,
+  busuanzi: true,
 };
 
 /**

@@ -79,19 +79,21 @@ const customTransition = {
         <div class="content-preview">
           {
             notes.map((post) => (
-              <a
-                href={getUrl(`/notes/${post.slug}`)}
-                class="preview-item"
-                data-preview-link
-              >
-                <span class="preview-title">{post.data.title}</span>
-                <span class="preview-date">
-                  {post.data.date.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                  })}
-                </span>
-              </a>
+              <div class="preview-item-wrapper">
+                <a
+                  href={getUrl(`/notes/${post.slug}`)}
+                  class="preview-item"
+                  data-preview-link
+                >
+                  <span class="preview-title">{post.data.title}</span>
+                  <span class="preview-date">
+                    {post.data.date.toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </a>
+              </div>
             ))
           }
         </div>
@@ -127,19 +129,21 @@ const customTransition = {
         <div class="content-preview">
           {
             papers.map((post) => (
-              <a
-                href={getUrl(`/papers/${post.slug}`)}
-                class="preview-item"
-                data-preview-link
-              >
-                <span class="preview-title">{post.data.title}</span>
-                <span class="preview-date">
-                  {post.data.date.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                  })}
-                </span>
-              </a>
+              <div class="preview-item-wrapper">
+                <a
+                  href={getUrl(`/papers/${post.slug}`)}
+                  class="preview-item"
+                  data-preview-link
+                >
+                  <span class="preview-title">{post.data.title}</span>
+                  <span class="preview-date">
+                    {post.data.date.toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </a>
+              </div>
             ))
           }
         </div>
@@ -263,33 +267,39 @@ const customTransition = {
   .notes-intro .content-preview {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
     padding: 1.5rem;
     background: rgba(var(--color-fill), 0.3);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 1rem;
     border: 1px solid rgba(var(--color-text), 0.08);
+    pointer-events: none;
+  }
+
+  /* Preview item wrapper - handles border and spacing */
+  .notes-intro .preview-item-wrapper {
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(var(--color-text), 0.1);
+  }
+
+  .notes-intro .preview-item-wrapper:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
   }
 
   .notes-intro .preview-item {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    font-size: 0.9rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(var(--color-text), 0.1);
+    font-size: 1rem;
+    padding: 0.5rem 0;
     color: rgba(var(--color-text), 0.7);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
     cursor: pointer;
     position: relative;
-    z-index: 10;
-  }
-
-  .notes-intro .preview-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+    z-index: 20;
+    pointer-events: auto;
   }
 
   .notes-intro .preview-item:hover {

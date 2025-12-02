@@ -1,0 +1,96 @@
+---
+import { analytics } from '@/consts';
+import { t } from '@/i18n/utils';
+const shouldLoadBusuanzi = analytics.enable && analytics.busuanzi;
+---
+
+{
+  shouldLoadBusuanzi && (
+    <div class="visitor-counter">
+      <div class="counter-content">
+        <div class="counter-item">
+          <span id="busuanzi_container_site_pv">
+            <i class="ri-eye-line" />
+            <span id="busuanzi_value_site_pv">-</span>
+          </span>
+        </div>
+        <div class="counter-item">
+          <span id="busuanzi_container_site_uv">
+            <i class="ri-user-line" />
+            <span id="busuanzi_value_site_uv">-</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .visitor-counter {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .visitor-counter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  [data-theme='dark'] .visitor-counter {
+    background: rgba(30, 30, 30, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .counter-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--color-text-base);
+  }
+
+  .counter-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .counter-item i {
+    font-size: 1rem;
+    opacity: 0.7;
+  }
+
+  .counter-item span {
+    font-weight: 500;
+  }
+
+  #busuanzi_value_site_pv,
+  #busuanzi_value_site_uv {
+    font-weight: 600;
+    color: var(--color-text-active);
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 640px) {
+    .visitor-counter {
+      bottom: 15px;
+      right: 15px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+    }
+
+    .counter-item i {
+      font-size: 0.9rem;
+    }
+  }
+</style>
