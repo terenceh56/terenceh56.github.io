@@ -2,7 +2,6 @@
 import { site, categories as headerCategories } from '@/consts';
 import getUrl from '@/utils/getUrl';
 import { getCollectionByName } from '@/utils/getCollectionByName';
-import ThemeIcon from '@/components/ThemeIcon.astro';
 
 // Get collection counts for statistics
 const notesCount = (await getCollectionByName('notes')).filter(p => !p.data.draft).length;
@@ -16,18 +15,10 @@ const featuredCategories = [
   {
     name: 'Notes',
     icon: 'ri-draft-line',
-    description: 'Personal study notes on multiple subjects',
-    count: notesCount,
-    href: '/notes/1',
+    description: 'Personal study notes and paper summaries — notes on aviation, engineering, and academic research',
+    count: notesCount + papersCount,
+    href: '/notes',
     gradient: 'from-blue-500 to-cyan-500'
-  },
-  {
-    name: 'Papers',
-    icon: 'ri-article-line',
-    description: 'Reading notes and interpretations of research papers and articles',
-    count: papersCount,
-    href: '/papers/1',
-    gradient: 'from-purple-500 to-pink-500'
   },
   {
     name: 'Beyond the Surface',
@@ -47,16 +38,12 @@ const quickActions = [
 ];
 ---
 
-<div class="intro-container min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-24">
+<div class="intro-container min-h-screen flex flex-col items-center justify-center px-4 py-16 relative overflow-hidden">
   <!-- Animated gradient background -->
   <div class="hero-gradient"></div>
   
   <!-- Main content -->
-  <div class="relative z-10 w-full max-w-6xl px-4">
-    <!-- Fixed top-right theme toggle (matches header position) -->
-    <div class="fixed top-3 right-4 z-50">
-      <ThemeIcon />
-    </div>
+  <div class="relative z-10 max-w-6xl w-full">
     <!-- Hero Section -->
     <div class="text-center mb-16 hero-section">
       <!-- Avatar with glow effect -->
@@ -121,7 +108,7 @@ const quickActions = [
     </div>
 
     <!-- Featured Category Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 featured-cards">
+    <div class="flex flex-wrap justify-center gap-6 mb-12 featured-cards">
       {
         featuredCategories.map((category, index) => (
           <a
@@ -155,7 +142,7 @@ const quickActions = [
               <!-- Stats -->
               <div class="stat-badge">
                 <span class="stat-number">{category.count}</span>
-                <span class="text-xs text-skin-dodge ml-1">articles</span>
+                <span class="text-xs text-skin-dodge ml-1">posts</span>
               </div>
             </div>
             
@@ -241,7 +228,7 @@ const quickActions = [
     }
   }
 
-  /* Avatar styling - Static */
+  /* Avatar styling */
   .avatar-wrapper {
     position: relative;
     display: inline-block;
@@ -255,39 +242,49 @@ const quickActions = [
     box-shadow: 
       0 0 30px rgba(var(--color-text), 0.1),
       0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s ease;
+    animation: avatarPulse 4s ease-in-out infinite;
   }
 
-  /* Rippling water effect with high-contrast silver gradient */
-  /* Rippling water effect with high-contrast silver gradient - Irregular pattern */
+  @keyframes avatarPulse {
+    0%, 100% { 
+      transform: translateY(0) scale(1);
+      box-shadow: 
+        0 0 30px rgba(var(--color-text), 0.1),
+        0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    50% { 
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 
+        0 0 45px rgba(var(--color-text), 0.15),
+        0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .avatar:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 
+      0 0 60px rgba(var(--color-text-active), 0.3),
+      0 15px 40px rgba(0, 0, 0, 0.2);
+    border-color: rgba(var(--color-text-active), 0.3);
+  }
+
+  /* Gradient text effect */
   .gradient-text {
     background: linear-gradient(
-      90deg,
-      #888888 0%,
-      #888888 5%,
-      #FFFFFF 15%,
-      #888888 25%,
-      #888888 50%,
-      #FFFFFF 60%,
-      #888888 70%,
-      #888888 100%
+      135deg,
+      /*rgb(var(--color-text))*/ #404040 0%,
+      /*rgb(var(--color-text-active))*/ #F0F0F0 100%
     );
-    background-size: 200% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: waterRipple 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    animation: gradientShift 5s ease infinite;
   }
 
-  @keyframes waterRipple {
-    0% { 
-      background-position: 0% 50%;
-    }
-    50% { 
-      background-position: 100% 50%;
-    }
-    100% { 
-      background-position: 0% 50%;
-    }
+  @keyframes gradientShift {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(20deg); }
   }
 
   /* Motto text animation */
@@ -309,6 +306,10 @@ const quickActions = [
   /* Featured cards container */
   .featured-cards {
     animation: fadeIn 0.8s ease-out 0.3s both;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
   }
 
   /* Featured card styling */
@@ -323,6 +324,17 @@ const quickActions = [
     text-decoration: none;
     display: block;
     border: 1px solid rgba(var(--color-text), 0.1);
+    flex: 0 1 auto;
+    min-width: 280px;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .featured-card {
+      width: calc(50% - 0.75rem);
+      max-width: 400px;
+    }
   }
 
   @keyframes cardFloat {
@@ -423,7 +435,6 @@ const quickActions = [
   /* Quick actions */
   .quick-actions {
     animation: fadeIn 0.6s ease-out 0.5s both;
-    position: relative;
   }
 
   .quick-action-btn {
@@ -436,16 +447,6 @@ const quickActions = [
     animation: slideUp 0.5s ease-out both;
     text-decoration: none;
     color: rgb(var(--color-text));
-    position: relative;
-    background: rgba(var(--color-fill), 0.5);
-    z-index: 1;
-    margin: 3px;
-    outline: none !important;
-  }
-
-  .quick-action-btn:focus,
-  .quick-action-btn:focus-visible {
-    outline: none !important;
   }
 
   @keyframes slideUp {
@@ -461,15 +462,9 @@ const quickActions = [
 
   .quick-action-btn:hover {
     transform: translateY(-4px);
-    background: rgba(var(--color-fill), 0.7);
-    border-color: rgba(var(--color-text), 0.15);
+    background: rgba(var(--color-text-active), 0.1);
+    border-color: rgba(var(--color-text-active), 0.3);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    color: rgb(var(--color-text-active));
-    outline: 1.5px solid rgba(var(--color-text-active), 0.5);
-    outline-offset: 3px;
-  }
-
-  .quick-action-btn:hover i {
     color: rgb(var(--color-text-active));
   }
 

@@ -1,0 +1,397 @@
+---
+import getUrl from '@/utils/getUrl';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const notes = (
+  await getCollection('notes', ({ data }) => !data.draft)
+)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const papers = (
+  await getCollection('papers', ({ data }) => !data.draft)
+)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const allNotes = await getCollection(
+  'notes',
+  ({ data }) => !data.draft,
+);
+const allPapers = await getCollection(
+  'papers',
+  ({ data }) => !data.draft,
+);
+const notesCount = allNotes.length;
+const papersCount = allPapers.length;
+
+const anim = {
+  old: {
+    name: 'fadeOut',
+    duration: '0s',
+    easing: 'linear',
+    fillMode: 'forwards',
+  },
+  new: {
+    name: 'rise',
+    duration: '0.7s',
+    easing: 'ease-out',
+    fillMode: 'backwards',
+  },
+};
+
+const customTransition = {
+  forwards: anim,
+  backwards: anim,
+};
+---
+
+<div class={`notes-intro ${className}`}>
+  <div class="mb-8 text-center" transition:animate={customTransition}>
+    <h1 class="text-4xl font-bold italic mb-4">Notes</h1>
+    <p class="text-lg text-skin-base opacity-80 italic">
+      A collection of my study notes and reading summaries — personal notes on various
+      subjects, primarily aviation and engineering, alongside interpretations and summaries
+      of research papers and academic articles.
+    </p>
+  </div>
+  <div class="featured-cards">
+    <div class="card-container">
+      <div
+        class="unified-card glass-panel"
+        transition:animate={customTransition}
+      >
+        <a href={getUrl('/notes/1')} class="card-header-link">
+          <div class="card-header">
+            <!-- Icon with gradient background -->
+            <div
+              class="icon-wrapper bg-gradient-to-br from-blue-500 to-cyan-500"
+            >
+              <i class="ri-draft-line text-3xl text-white"></i>
+            </div>
+
+            <div class="stat-badge">
+              <span class="stat-number">{notesCount}</span>
+              <span class="ml-2">articles</span>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Other Notes</h2>
+            <p class="text-skin-base opacity-70 mb-4">
+              Personal study notes on different subjects, mainly aviation, but also
+              some notes made while pursuing my Bachelor's degree.
+            </p>
+          </div>
+        </a>
+
+        <div class="content-preview">
+          {
+            notes.map((post) => (
+              <a
+                href={getUrl(`/notes/${post.slug}`)}
+                class="preview-item"
+                data-preview-link
+              >
+                <span class="preview-title">{post.data.title}</span>
+                <span class="preview-date">
+                  {post.data.date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="card-container">
+      <div
+        class="unified-card glass-panel"
+        transition:animate={customTransition}
+      >
+        <a href={getUrl('/papers/1')} class="card-header-link">
+          <div class="card-header">
+            <!-- Icon with gradient background -->
+            <div
+              class="icon-wrapper bg-gradient-to-br from-purple-500 to-pink-500"
+            >
+              <i class="ri-article-line text-3xl text-white"></i>
+            </div>
+
+            <div class="stat-badge">
+              <span class="stat-number">{papersCount}</span>
+              <span class="ml-2">articles</span>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Papers</h2>
+            <p class="text-skin-base opacity-70 mb-4">
+              Personal reading notes and interpretations of various academic papers.
+            </p>
+          </div>
+        </a>
+
+        <div class="content-preview">
+          {
+            papers.map((post) => (
+              <a
+                href={getUrl(`/papers/${post.slug}`)}
+                class="preview-item"
+                data-preview-link
+              >
+                <span class="preview-title">{post.data.title}</span>
+                <span class="preview-date">
+                  {post.data.date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .notes-intro {
+    width: 100%;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 2rem;
+  }
+
+  .notes-intro .featured-cards {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .notes-intro .card-container {
+    min-width: 0;
+    flex: 1;
+  }
+
+  /* Unified card combining header and preview */
+  .notes-intro .unified-card {
+    position: relative;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: cardFloat 0.6s ease-out both;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border: 1px solid rgba(var(--color-text), 0.1);
+  }
+
+  @keyframes cardFloat {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .notes-intro .glass-panel {
+    background: rgba(var(--color-fill), 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .notes-intro .unified-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.15),
+      0 0 40px rgba(var(--color-text-active), 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: rgba(var(--color-text-active), 0.2);
+  }
+
+  .notes-intro .card-header {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Icon wrapper */
+  .notes-intro .icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .notes-intro .unified-card:hover .icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Stat badge */
+  .notes-intro .stat-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(var(--color-text), 0.05);
+    border-radius: 2rem;
+    border: 1px solid rgba(var(--color-text), 0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+  }
+
+  .notes-intro .unified-card:hover .stat-badge {
+    background: rgba(var(--color-text-active), 0.1);
+    border-color: rgba(var(--color-text-active), 0.2);
+  }
+
+  .notes-intro .stat-number {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: rgb(var(--color-text-active));
+  }
+
+  /* Preview items - now integrated into the card */
+  .notes-intro .content-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: rgba(var(--color-fill), 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    border: 1px solid rgba(var(--color-text), 0.08);
+  }
+
+  .notes-intro .preview-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.9rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(var(--color-text), 0.1);
+    color: rgba(var(--color-text), 0.7);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+  }
+
+  .notes-intro .preview-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .notes-intro .preview-item:hover {
+    color: rgb(var(--color-text-active)) !important;
+    transform: translateX(4px);
+  }
+
+  .notes-intro .preview-title {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+  }
+
+  .notes-intro .preview-date {
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+
+  /* Clickable card header link */
+  .notes-intro .card-header-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .notes-intro .card-header-link:hover h2 {
+    color: rgb(var(--color-text-active));
+  }
+
+  .card-arrow {
+    font-size: 1.5rem;
+    color: rgb(var(--color-active));
+    align-self: flex-end;
+    transition: transform 0.3s ease;
+  }
+
+  .feature-card:hover .card-arrow {
+    transform: translateX(4px);
+  }
+
+  /* Animations */
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Responsive design for mobile */
+  @media (max-width: 1024px) {
+    .notes-intro .featured-cards {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .notes-intro .featured-card {
+      padding: 1.5rem;
+    }
+
+    .notes-intro h2 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  // Prevent card link from being triggered when clicking preview items
+  document.addEventListener(
+    'click',
+    (e) => {
+      const target = e.target as HTMLElement;
+      const previewLink = target.closest('[data-preview-link]');
+      if (previewLink) {
+        e.stopPropagation();
+      }
+    },
+    true,
+  );
+</script>
+

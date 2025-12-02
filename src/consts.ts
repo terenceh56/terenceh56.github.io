@@ -76,12 +76,7 @@ export const categories = [
   {
     name: "Notes",
     iconClass: "ri-draft-line",
-    href: "/notes/1",
-  },
-  {
-    name: "Papers",
-    iconClass: "ri-article-line",
-    href: "/papers/1",
+    href: "/notes",
   },
   {
     name: "Beyond the Surface",

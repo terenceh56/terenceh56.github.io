@@ -29,55 +29,58 @@ function reflectPreference() {
   document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
 }
 
-// Apply the current theme as early as possible to avoid flashes,
-// especially on initial page load and full navigations to articles.
+// set early so no page flashes / CSS is made aware
 reflectPreference();
+
+let initialized = false;
 
 function init() {
   // set on load so screen readers can get the latest value on the button
   reflectPreference();
 
-  // now this script can find and listen for clicks on the control
-  const desktopBtn = document.querySelector("#theme-btn");
-  const mobileBtn = document.querySelector("#theme-btn-mobile");
-
-  // Use onclick so repeated init calls simply overwrite handlers
-  if (desktopBtn) {
-    desktopBtn.onclick = () => {
-      themeValue = themeValue === "light" ? "dark" : "light";
-      setPreference();
-    };
-  }
-
-  if (mobileBtn) {
-    mobileBtn.onclick = () => {
-      themeValue = themeValue === "light" ? "dark" : "light";
-      setPreference();
-    };
+  // Only attach listeners once per page load
+  if (!initialized) {
+    // now this script can find and listen for clicks on the control
+    const themeBtn = document.querySelector("#theme-btn");
+    const themeBtnMobile = document.querySelector("#theme-btn-mobile");
+    
+    if (themeBtn) {
+      themeBtn.addEventListener("click", () => {
+        themeValue = themeValue === "light" ? "dark" : "light";
+        setPreference();
+      });
+    }
+    
+    if (themeBtnMobile) {
+      themeBtnMobile.addEventListener("click", () => {
+        themeValue = themeValue === "light" ? "dark" : "light";
+        setPreference();
+      });
+    }
+    
+    initialized = true;
   }
 }
 
-// --- Initialization hooks ---
-// 1) Standard page loads (layouts without ClientRouter / transitions)
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init, { once: true });
+// Initialize on DOM ready (for initial page load)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
 } else {
   // DOM is already ready
   init();
 }
 
-// 2) Astro transitions (pages using ClientRouter)
-document.addEventListener("astro:page-load", () => {
+document.addEventListener('astro:page-load', () => {
+  initialized = false; // Reset on page navigation to re-attach listeners
   init();
 });
 
-document.addEventListener("astro:after-swap", () => {
+document.addEventListener('astro:after-swap', () => {
   reflectPreference();
 });
 
 // sync with system changes
-window
-  .matchMedia("(prefers-color-scheme: dark)")
+window.matchMedia("(prefers-color-scheme: dark)")
   .addEventListener("change", ({ matches: isDark }) => {
     themeValue = isDark ? "dark" : "light";
     setPreference();
