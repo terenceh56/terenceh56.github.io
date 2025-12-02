@@ -15,7 +15,7 @@ const featuredCategories = [
   {
     name: 'Notes',
     icon: 'ri-draft-line',
-    description: 'Personal study notes and paper summaries — notes on aviation, engineering, and academic research',
+    description: 'Personal study notes and paper summaries — notes on multiple subjects, and academic research',
     count: notesCount + papersCount,
     href: '/notes',
     gradient: 'from-blue-500 to-cyan-500'
@@ -38,21 +38,21 @@ const quickActions = [
 ];
 ---
 
-<div class="intro-container min-h-screen flex flex-col items-center justify-center px-4 py-16 relative overflow-hidden">
+<div class="intro-container min-h-screen flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden">
   <!-- Animated gradient background -->
   <div class="hero-gradient"></div>
   
   <!-- Main content -->
   <div class="relative z-10 max-w-6xl w-full">
     <!-- Hero Section -->
-    <div class="text-center mb-16 hero-section">
+    <div class="text-center mb-8 hero-section">
       <!-- Avatar with glow effect -->
-      <div class="avatar-wrapper mb-6">
+      <div class="avatar-wrapper mb-3">
         <img class="avatar mx-auto" src={getUrl(site.avatar)} alt="avatar" />
       </div>
 
       <!-- Name with gradient text -->
-      <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 gradient-text">
+      <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-4 gradient-text">
         {site.author}
       </h1>
 
@@ -93,7 +93,7 @@ const quickActions = [
             }
           }
           return (
-            <div class="text-xl md:text-2xl mb-8 text-skin-dodge leading-relaxed max-w-3xl mx-auto motto-text">
+            <div class="text-xl md:text-2xl mb-4 text-skin-dodge leading-relaxed max-w-3xl mx-auto motto-text">
               <div class="italic">{text}</div>
               {author && <div class="mt-2 text-lg opacity-80">— {author}</div>}
             </div>
@@ -102,13 +102,13 @@ const quickActions = [
       }
 
       <!-- Description -->
-      <p class="text-base md:text-lg mb-12 text-skin-base max-w-2xl mx-auto leading-relaxed opacity-90">
+      <p class="text-base md:text-lg mb-6 text-skin-base max-w-2xl mx-auto leading-relaxed opacity-90">
         {site.description}
       </p>
     </div>
 
     <!-- Featured Category Cards -->
-    <div class="flex flex-wrap justify-center gap-6 mb-12 featured-cards">
+    <div class="flex flex-wrap justify-center gap-6 mb-6 featured-cards">
       {
         featuredCategories.map((category, index) => (
           <a
