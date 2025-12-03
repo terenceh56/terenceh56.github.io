@@ -1,161 +1,189 @@
 ---
 import { analytics } from '@/consts';
 import { t } from '@/i18n/utils';
-const shouldLoadBusuanzi = analytics.enable && analytics.busuanzi;
+
+const shouldShowCounter = analytics.enable && analytics.busuanzi;
 ---
 
 {
-  shouldLoadBusuanzi && (
-    <div class="visitor-counter">
-      <div class="counter-content">
-        <div class="counter-item">
-          <span id="busuanzi_container_site_pv">
-            <i class="ri-eye-line" />
-            <span class="label">{t('footer.busuanziSitePV')}</span>
-            <span id="busuanzi_value_site_pv">-</span>
+  shouldShowCounter && (
+    <>
+      <div
+        class="visitor-chip"
+        aria-live="polite"
+        aria-label="Site traffic"
+      >
+        <span class="chip-item" id="busuanzi_container_site_pv">
+          <i class="ri-eye-line" aria-hidden="true" />
+          <span class="chip-label">
+            {t('footer.busuanziSitePV')}
           </span>
-        </div>
-        <div class="counter-item">
-          <span id="busuanzi_container_site_uv">
-            <i class="ri-user-line" />
-            <span class="label">{t('footer.busuanziSiteUV')}</span>
-            <span id="busuanzi_value_site_uv">-</span>
+          <span class="chip-value" id="busuanzi_value_site_pv">--</span>
+          {t('footer.busuanziSitePVUnit') && (
+            <span class="chip-unit">
+              {t('footer.busuanziSitePVUnit')}
+            </span>
+          )}
+        </span>
+
+        <span class="chip-separator">·</span>
+
+        <span class="chip-item" id="busuanzi_container_site_uv">
+          <i class="ri-user-line" aria-hidden="true" />
+          <span class="chip-label">
+            {t('footer.busuanziSiteUV')}
           </span>
-        </div>
+          <span class="chip-value" id="busuanzi_value_site_uv">--</span>
+          {t('footer.busuanziSiteUVUnit') && (
+            <span class="chip-unit">
+              {t('footer.busuanziSiteUVUnit')}
+            </span>
+          )}
+        </span>
       </div>
-    </div>
+
+      <script>
+        const STORAGE_KEY = 'th_busuanzi_cache';
+
+        const applyCachedValues = () => {
+          try {
+            const raw = window.localStorage.getItem(STORAGE_KEY);
+            if (!raw) return;
+            const cache = JSON.parse(raw);
+            if (cache && typeof cache === 'object') {
+              const pvEl = document.getElementById('busuanzi_value_site_pv');
+              const uvEl = document.getElementById('busuanzi_value_site_uv');
+              if (pvEl && cache.pv != null) pvEl.textContent = String(cache.pv);
+              if (uvEl && cache.uv != null) uvEl.textContent = String(cache.uv);
+            }
+          } catch {
+            // ignore cache errors
+          }
+        };
+
+        const saveCurrentValuesToCache = () => {
+          try {
+            const pvEl = document.getElementById('busuanzi_value_site_pv');
+            const uvEl = document.getElementById('busuanzi_value_site_uv');
+            if (!pvEl || !uvEl) return;
+
+            const pv = pvEl.textContent && pvEl.textContent !== '--' ? pvEl.textContent : null;
+            const uv = uvEl.textContent && uvEl.textContent !== '--' ? uvEl.textContent : null;
+
+            if (pv || uv) {
+              window.localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify({ pv, uv })
+              );
+            }
+          } catch {
+            // ignore storage errors
+          }
+        };
+
+        const triggerBusuanziFetch = () => {
+          const busuanzi = window.BUSUANZI;
+          if (busuanzi && typeof busuanzi.fetch === 'function') {
+            busuanzi.fetch();
+            // give Busuanzi a moment to write numbers, then cache them
+            window.setTimeout(saveCurrentValuesToCache, 800);
+            return true;
+          }
+          return false;
+        };
+
+        const waitForBusuanzi = () => {
+          if (!triggerBusuanziFetch()) {
+            window.setTimeout(waitForBusuanzi, 300);
+          }
+        };
+
+        const initVisitorCounter = () => {
+          // show something meaningful immediately if we have it
+          applyCachedValues();
+          // then keep trying Busuanzi until it’s ready
+          waitForBusuanzi();
+          document.addEventListener('astro:page-load', () => {
+            applyCachedValues();
+            waitForBusuanzi();
+          });
+        };
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+          initVisitorCounter();
+        } else {
+          document.addEventListener('DOMContentLoaded', initVisitorCounter, { once: true });
+        }
+      </script>
+    </>
   )
 }
 
-<script>
-  // Simple global cache so the values "stick" across pages and don't
-  // reset to "-" on every navigation.
-  const ensureBusuanziCache = () => {
-    if (typeof window === 'undefined') return;
-    if (!window.__BUSUANZI_CACHE__) {
-      window.__BUSUANZI_CACHE__ = { pv: null, uv: null };
-    }
-  };
-
-  const applyCachedValues = () => {
-    if (typeof window === 'undefined') return;
-    ensureBusuanziCache();
-    const cache = window.__BUSUANZI_CACHE__;
-    const pvEl = document.getElementById('busuanzi_value_site_pv');
-    const uvEl = document.getElementById('busuanzi_value_site_uv');
-    if (pvEl && cache.pv != null) pvEl.textContent = cache.pv;
-    if (uvEl && cache.uv != null) uvEl.textContent = cache.uv;
-  };
-
-  const captureCurrentValuesToCache = () => {
-    if (typeof window === 'undefined') return;
-    ensureBusuanziCache();
-    const cache = window.__BUSUANZI_CACHE__;
-    const pvEl = document.getElementById('busuanzi_value_site_pv');
-    const uvEl = document.getElementById('busuanzi_value_site_uv');
-    if (pvEl && pvEl.textContent && pvEl.textContent !== '-') {
-      cache.pv = pvEl.textContent;
-    }
-    if (uvEl && uvEl.textContent && uvEl.textContent !== '-') {
-      cache.uv = uvEl.textContent;
-    }
-  };
-
-  const refreshBusuanzi = () => {
-    // First, show whatever we last knew so the user never sees "-"
-    applyCachedValues();
-
-    // Then, if Busuanzi is ready, ask it to re-scan the DOM
-    if (typeof window !== 'undefined' && window.BUSUANZI && window.BUSUANZI.fetch) {
-      window.BUSUANZI.fetch();
-
-      // Give Busuanzi a short moment to update the DOM, then cache the result
-      setTimeout(captureCurrentValuesToCache, 1000);
-    }
-  };
-
-  // Initial load (no transitions or hard refresh)
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    refreshBusuanzi();
-  } else {
-    document.addEventListener('DOMContentLoaded', refreshBusuanzi, { once: true });
-  }
-
-  // Astro transitions events (SPA-style navigation)
-  document.addEventListener('astro:page-load', refreshBusuanzi);
-  document.addEventListener('astro:after-swap', refreshBusuanzi);
-</script>
-
 <style>
-  .visitor-counter {
+  .visitor-chip {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 100;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 12px;
-    padding: 12px 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-  }
-
-  .visitor-counter:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  }
-
-  [data-theme='dark'] .visitor-counter {
-    background: rgba(30, 30, 30, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .counter-content {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 0.875rem;
-    color: var(--color-text-base);
-  }
-
-  .counter-item {
-    display: flex;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 40;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(var(--color-fill), 0.85);
+    border: 1px solid rgba(var(--color-text), 0.08);
+    color: rgba(var(--color-text), 0.8);
+    font-size: 0.78rem;
+    line-height: 1;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
-  .counter-item .label {
-    opacity: 0.8;
+  [data-theme='dark'] .visitor-chip {
+    background: rgba(18, 18, 18, 0.85);
+    border-color: rgba(255, 255, 255, 0.12);
   }
 
-  .counter-item i {
-    font-size: 1rem;
+  .chip-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    white-space: nowrap;
+  }
+
+  .chip-item i {
+    font-size: 0.9rem;
+    opacity: 0.6;
+  }
+
+  .chip-label {
     opacity: 0.7;
   }
 
-  .counter-item span {
-    font-weight: 500;
-  }
-
-  #busuanzi_value_site_pv,
-  #busuanzi_value_site_uv {
+  .chip-value {
     font-weight: 600;
-    color: var(--color-text-active);
+    color: rgb(var(--color-text-active));
   }
 
-  /* Mobile responsiveness */
-  @media (max-width: 640px) {
-    .visitor-counter {
-      bottom: 15px;
-      right: 15px;
-      padding: 10px 14px;
-      font-size: 0.8rem;
+  .chip-unit {
+    opacity: 0.6;
+  }
+
+  .chip-separator {
+    opacity: 0.4;
+  }
+
+  @media (max-width: 768px) {
+    .visitor-chip {
+      right: 0.75rem;
+      bottom: 0.75rem;
+      font-size: 0.7rem;
+      padding: 0.3rem 0.7rem;
+      max-width: calc(100% - 1.5rem);
     }
 
-    .counter-item i {
-      font-size: 0.9rem;
+    .chip-label {
+      display: none;
     }
   }
 </style>
