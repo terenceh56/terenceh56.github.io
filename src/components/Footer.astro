@@ -4,24 +4,31 @@ import {t} from '@/i18n/utils'
 import getUrl from "@/utils/getUrl";
 ---
 
-<div class="h-10 p-1 w-full">
-  <div class="flex items-center flex-col flex-wrap justify-center mb-4 text-skin-base first:mb-0 sm:flex-row">
-    <div>
-      <span class="cursor-default">Copyright</span>
-      <i class="ri-copyright-line align-middle"></i>
-      <span class="align-middle">{new Date().getFullYear()}</span>
+<div class="w-full py-6 mt-8 border-t border-skin-line transition-colors duration-300">
+  <div class="flex flex-col items-center justify-center text-sm text-skin-base opacity-80 hover:opacity-100 transition-opacity duration-300">
+    <div class="flex items-center space-x-2 mb-2">
+      <span>&copy; {new Date().getFullYear()}</span>
+      <span class="font-medium">{site.author}</span>
     </div>
-    {
-      site.beian && (
-        <span class="mx-2 hidden sm:inline">|</span>
-        <a rel="nofollow" target="_blank" href="https://beian.miit.gov.cn/">
-          {site.beian}
-        </a>
-      )
-    }
-    <span class="mx-2">|</span>
-    <a href={getUrl("/sitemap-0.xml")}>{t('footer.sitemap')}</a>
-    <span class="mx-2">|</span>
-    <a class="hover:text-skin-active hover:underline transition-colors" href="https://github.com/cirry/astro-yi" target="_blank">Made with Astro Theme Yi</a>
+    
+    <div class="flex items-center space-x-3 text-xs text-skin-dodge">
+      {
+        site.beian && (
+          <a rel="nofollow" target="_blank" href="https://beian.miit.gov.cn/" class="hover:text-skin-active transition-colors">
+            {site.beian}
+          </a>
+          <span class="opacity-50">|</span>
+        )
+      }
+      <a href={getUrl("/sitemap-0.xml")} class="hover:text-skin-active transition-colors">{t('footer.sitemap')}</a>
+      <span class="opacity-50">|</span>
+      <a class="hover:text-skin-active transition-colors" href="https://github.com/cirry/astro-yi" target="_blank">Theme Yi</a>
+    </div>
   </div>
 </div>
+
+<style>
+  .border-skin-line {
+    border-color: rgba(var(--color-border), 0.5);
+  }
+</style>

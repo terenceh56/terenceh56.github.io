@@ -22,7 +22,7 @@ const gridClass = hideAside
   </head>
 
   <body class="bg-skin-secondary relative">
-    {!hideAside ? <Header /> : null}
+    <Header hideNav={hideAside} />
     <main
       class:list={[
         hideAside ? '' : 'container',
@@ -51,7 +51,7 @@ const gridClass = hideAside
         {
           !hideAside && (
             <div class="hidden lg:block col-span-1 lg:col-span-1 lg:order-2">
-              <div class="lg:sticky lg:top-20">
+              <div class="lg:sticky lg:top-20 space-y-4">
                 <Profile />
                 <BlogAside />
               </div>
@@ -61,9 +61,12 @@ const gridClass = hideAside
 
         <!-- Main Content - Visible on both mobile and desktop -->
         <div
-          class={hideAside
-            ? 'col-span-1 order-2 lg:order-1'
-            : 'col-span-1 lg:col-span-3 order-2 lg:order-1'}
+          class:list={[
+            hideAside
+              ? 'col-span-1 order-2 lg:order-1'
+              : 'col-span-1 lg:col-span-3 order-2 lg:order-1',
+            'fade-in-up',
+          ]}
         >
           {
             Astro.url.pathname === '/notes/1' && (

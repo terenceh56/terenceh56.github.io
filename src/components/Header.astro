@@ -1,18 +1,24 @@
 ---
-import {getCollectionByName} from "@/utils/getCollectionByName";
-import getUniqueTags from "@/utils/getUniqueTags";
-import getCountByCategory from "@/utils/getCountByCategory";
+import { getCollectionByName } from '@/utils/getCollectionByName';
+import getUniqueTags from '@/utils/getUniqueTags';
+import getCountByCategory from '@/utils/getCountByCategory';
 import HeaderLink from './HeaderLink.astro';
-import ThemeIcon from './ThemeIcon.astro'
-import MenuIcon from './MenuIcon.astro'
-import {site, categories, infoLinks} from '@/consts';
-import AsideIcon from "./SidebarIcon.astro";
-import {t} from "@/i18n/utils";
-import getCountByTagName from "@/utils/getCountByTagName";
-import getUrl from "@/utils/getUrl";
+import ThemeIcon from './ThemeIcon.astro';
+import MenuIcon from './MenuIcon.astro';
+import { site, categories, infoLinks } from '@/consts';
+import AsideIcon from './SidebarIcon.astro';
+import { t } from '@/i18n/utils';
+import getCountByTagName from '@/utils/getCountByTagName';
+import getUrl from '@/utils/getUrl';
 // aggregate posts from multiple collections so counts still work after removing the "blog" category
 let posts = [];
-const collectionsToTry = ['notes', 'reflections', 'milestones', 'papers', 'feed'];
+const collectionsToTry = [
+  'notes',
+  'reflections',
+  'milestones',
+  'papers',
+  'feed',
+];
 for (const col of collectionsToTry) {
   try {
     const c = await getCollectionByName(col);
@@ -32,7 +38,7 @@ for (const col of collectionsToTry) {
     const c = await getCollectionByName(col);
     if (c && c.length) {
       // Filter out drafts in production
-      const filteredPosts = c.filter(({data}) => {
+      const filteredPosts = c.filter(({ data }) => {
         return import.meta.env.PROD ? !data.draft : true;
       });
       collectionCounts[col] = filteredPosts.length;
@@ -44,362 +50,452 @@ for (const col of collectionsToTry) {
   }
 }
 
-const notesAndPapersCount = (collectionCounts['notes'] || 0) + (collectionCounts['papers'] || 0);
+const notesAndPapersCount =
+  (collectionCounts['notes'] || 0) + (collectionCounts['papers'] || 0);
 
 const { hideNav = false } = Astro.props;
-
 ---
 
-<header data-home={getUrl('/')} class="fixed top-0 z-50 w-full glass text-skin-base h-14">
-  <div class="w-full flex items-center justify-between px-2 xl:px-4 h-14 relative">
-    <!-- Left: Logo and Title (desktop) / Menu button (mobile) -->
-    <div class="flex items-center flex-shrink-0 z-10">
-      <div class="xl:hidden">
-        <MenuIcon></MenuIcon>
-      </div>
-      <a class="hidden xl:flex header-logo py-1 px-2 xl:px-4 text-xl xl:text-2xl items-center whitespace-nowrap" href={getUrl("/")}>
-        <img src={getUrl(site.favicon)} alt={site.title} class="h-5 xl:h-6 w-auto mr-2 xl:mr-3" />
-        <span class="font-bold">{site.title}</span>
-      </a>
+{
+  hideNav ? (
+    // Homepage: show only floating theme button, no nav bar
+    <div class="fixed top-3 right-3 z-50">
+      <ThemeIcon />
     </div>
-    
-    <!-- Center: Logo (mobile only, centered) -->
-    <a class="header-logo py-1 px-4 text-2xl flex items-center xl:hidden absolute left-1/2 transform -translate-x-1/2" href={getUrl("/")}>
-      <img src={getUrl(site.favicon)} alt={site.title} class="h-6 w-auto mr-3" />
-      <span class="font-bold">{site.title}</span>
-    </a>
-    
-    <!-- Center: Navigation buttons (desktop only) -->
-    <div class="nav-center-container hidden xl:flex items-center flex-shrink-0 absolute left-1/2 transform -translate-x-1/2 max-w-[calc(100%-200px)]">
-      { !hideNav && (
-        <div class="flex items-center space-x-2 xl:space-x-5">
-          {
-            categories.map(category => {
-              // Determine the count to display based on category name
-              let count = 0;
-              let iconColorClass = '';
-              
-              if (category.name === 'Notes') {
-                count = notesAndPapersCount;
-                iconColorClass = 'bg-gradient-to-br from-blue-500 to-cyan-500 bg-clip-text text-transparent';
-              } else if (category.name === 'Papers') {
-                count = collectionCounts['papers'] || 0;
-                iconColorClass = 'bg-gradient-to-br from-purple-500 to-pink-500 bg-clip-text text-transparent';
-              } else if (category.name === 'Beyond the Surface') {
-                // Sum of reflections and milestones
-                count = (collectionCounts['reflections'] || 0) + (collectionCounts['milestones'] || 0);
-                iconColorClass = 'bg-gradient-to-br from-orange-500 to-red-500 bg-clip-text text-transparent';
-              }
-              
-              // Add counts to children if they exist
-              const childrenWithCounts = category.children ? category.children.map(child => {
-                let childCount = 0;
-                if (child.name === 'Thoughts & Reflections' || child.href?.includes('reflections')) {
-                  childCount = collectionCounts['reflections'] || 0;
-                } else if (child.name === 'Milestones & Updates' || child.href?.includes('milestones')) {
-                  childCount = collectionCounts['milestones'] || 0;
-                }
-                return { ...child, count: childCount };
-              }) : [];
-              
-              return (
-                <HeaderLink 
-                  href={category.href} 
-                  icon={`${category.iconClass} ${iconColorClass}`}
-                  target={category.target ? category.target : '_self'} 
-                  children={childrenWithCounts}
-                  count={count}
-                >
-                  {category.name}{count > 0 ? ` (${count})` : ''}
-                </HeaderLink>
-              );
-            })
-          }
-        </div>
-      )}
-    </div>
-    
-    <!-- Right: Theme button -->
-    <div class="flex items-center flex-shrink-0 z-10">
-      <ThemeIcon></ThemeIcon>
-    </div>
-  </div>
-  { !hideNav && (
-<div id="mobile-menu" class="closed pb-8 overflow-y-auto text-center">
-    {
-      categories.map((category) => {
-        // Determine the count to display based on category name
-        let count = 0;
-        let iconColorClass = '';
-        
-        if (category.name === 'Notes') {
-          count = notesAndPapersCount;
-          iconColorClass = 'bg-gradient-to-br from-blue-500 to-cyan-500 bg-clip-text text-transparent';
-        } else if (category.name === 'Papers') {
-          count = collectionCounts['papers'] || 0;
-          iconColorClass = 'bg-gradient-to-br from-purple-500 to-pink-500 bg-clip-text text-transparent';
-        } else if (category.name === 'Beyond the Surface') {
-          count = (collectionCounts['reflections'] || 0) + (collectionCounts['milestones'] || 0);
-          iconColorClass = 'bg-gradient-to-br from-orange-500 to-red-500 bg-clip-text text-transparent';
-        }
-        
-        return (
-          <div class="py-2">
-            <a class=" hover:text-skin-active" href={getUrl(category.href)}>
-              <i class={`${category.iconClass} ${iconColorClass}`}/>
-              <span>{category.name}{count > 0 ? ` (${count})` : ''}</span>
+  ) : (
+    <>
+      <header
+        data-home={getUrl('/')}
+        class="fixed top-0 z-50 w-full glass text-skin-base h-14"
+      >
+        <div
+          class="w-full flex items-center justify-between px-2 xl:px-4 h-14 relative"
+        >
+          <!-- Left: Logo and Title (desktop) / Menu button (mobile) -->
+          <div class="flex items-center flex-shrink-0 z-10">
+            <div class="xl:hidden">
+              <MenuIcon />
+            </div>
+            <a
+              class="hidden xl:flex header-logo py-1 px-2 xl:px-4 text-xl xl:text-2xl items-center whitespace-nowrap"
+              href={getUrl('/')}
+            >
+              <img
+                src={getUrl(site.favicon)}
+                alt={site.title}
+                class="h-5 xl:h-6 w-auto mr-2 xl:mr-3"
+              />
+              <span class="font-bold">{site.title}</span>
             </a>
-            {
-              category.children && category.children.length > 0 &&
-              <div class="divider-horizontal"></div>
-            }
-            <div class="space-y-4 text-sm">
-              {
-                category.children && category.children.map(sub => {
-                  let childCount = 0;
-                  if (sub.name === 'Thoughts & Reflections' || sub.href?.includes('reflections')) {
-                    childCount = collectionCounts['reflections'] || 0;
-                  } else if (sub.name === 'Milestones & Updates' || sub.href?.includes('milestones')) {
-                    childCount = collectionCounts['milestones'] || 0;
-                  }
-                  
-                  return (
-                    <a class="block hover:text-skin-active" href={getUrl(sub.href)}>
-                      <i class={sub.iconClass}/>
-                      <span>{sub.name}{childCount > 0 ? ` (${childCount})` : ''}</span>
-                    </a>
-                  );
-                })
-              }
+          </div>
+
+          <!-- Center: Logo (mobile only, centered) -->
+          <a
+            class="header-logo py-1 px-4 text-2xl flex items-center xl:hidden absolute left-1/2 transform -translate-x-1/2"
+            href={getUrl('/')}
+          >
+            <img
+              src={getUrl(site.favicon)}
+              alt={site.title}
+              class="h-6 w-auto mr-3"
+            />
+            <span class="font-bold">{site.title}</span>
+          </a>
+
+          <!-- Center: Navigation buttons (desktop only) -->
+          <div
+            class="nav-center-container hidden xl:flex items-center flex-shrink-0 absolute left-1/2 transform -translate-x-1/2 max-w-[calc(100%-200px)]"
+          >
+            <div class="flex items-center space-x-2 xl:space-x-5">
+              {categories.map((category) => {
+                // Determine the count to display based on category name
+                let count = 0;
+                let iconColorClass = '';
+
+                if (category.name === 'Notes') {
+                  count = notesAndPapersCount;
+                  iconColorClass =
+                    'bg-gradient-to-br from-blue-500 to-cyan-500 bg-clip-text text-transparent';
+                } else if (category.name === 'Papers') {
+                  count = collectionCounts['papers'] || 0;
+                  iconColorClass =
+                    'bg-gradient-to-br from-purple-500 to-pink-500 bg-clip-text text-transparent';
+                } else if (category.name === 'Beyond the Surface') {
+                  // Sum of reflections and milestones
+                  count =
+                    (collectionCounts['reflections'] || 0) +
+                    (collectionCounts['milestones'] || 0);
+                  iconColorClass =
+                    'bg-gradient-to-br from-orange-500 to-red-500 bg-clip-text text-transparent';
+                }
+
+                // Add counts to children if they exist
+                const childrenWithCounts = category.children
+                  ? category.children.map((child) => {
+                      let childCount = 0;
+                      if (
+                        child.name === 'Thoughts & Reflections' ||
+                        child.href?.includes('reflections')
+                      ) {
+                        childCount = collectionCounts['reflections'] || 0;
+                      } else if (
+                        child.name === 'Milestones & Updates' ||
+                        child.href?.includes('milestones')
+                      ) {
+                        childCount = collectionCounts['milestones'] || 0;
+                      }
+                      return { ...child, count: childCount };
+                    })
+                  : [];
+
+                // Determine active state
+                let isActive = false;
+                const currentPath = Astro.url.pathname;
+                
+                if (category.name === 'Notes') {
+                  isActive = currentPath.startsWith('/notes') || currentPath.startsWith('/papers');
+                } else if (category.name === 'Beyond the Surface') {
+                  isActive = 
+                    currentPath.startsWith('/beyond-surface') || 
+                    currentPath.startsWith('/reflections') || 
+                    currentPath.startsWith('/milestones');
+                } else {
+                   // Default check for other links
+                   const linkPath = getUrl(category.href);
+                   // Remove trailing slash for comparison if needed, or just simple check
+                   // The HeaderLink has its own fallback, but we can pass undefined to let it handle it, 
+                   // or calculate it here. 
+                   // Let's pass undefined for others to let HeaderLink handle the default logic
+                   // unless we want to be explicit.
+                   // Actually, passing undefined is safer if we want to retain exact original behavior for others.
+                   // But since we are in a loop, we need a value.
+                   // Let's use undefined for "default behavior" which we implemented in HeaderLink as `isActiveProp ?? ...`
+                   isActive = undefined;
+                }
+
+                return (
+                  <HeaderLink
+                    href={category.href}
+                    icon={`${category.iconClass} ${iconColorClass}`}
+                    target={category.target ? category.target : '_self'}
+                    children={childrenWithCounts}
+                    count={count}
+                    isActive={isActive}
+                  >
+                    {category.name}
+                    {count > 0 ? ` (${count})` : ''}
+                  </HeaderLink>
+                );
+              })}
             </div>
           </div>
-        );
-      })
-    }
-    </div>
-  )}
-  { !hideNav && (
-    <div id="personal-info" class="hidden pb-8 overflow-y-auto break-all">
-    <img class="mx-auto my-4 avatar" src={getUrl(site.avatar)} alt="avatar"/>
-    <div class="mb-2 text-center">{site.motto}</div>
-    </div>
 
-    </div>
-  )}
-</header>
-  <!-- Backdrop blur overlay for mobile menu -->
-  <div id="menu-backdrop" class="menu-backdrop"></div>
+          <!-- Right: Theme button -->
+          <div class="flex items-center flex-shrink-0 z-10">
+            <ThemeIcon />
+          </div>
+        </div>
+        <div id="mobile-menu" class="closed pb-8 overflow-y-auto text-center">
+          {categories.map((category) => {
+            // Determine the count to display based on category name
+            let count = 0;
+            let iconColorClass = '';
+
+            if (category.name === 'Notes') {
+              count = notesAndPapersCount;
+              iconColorClass =
+                'bg-gradient-to-br from-blue-500 to-cyan-500 bg-clip-text text-transparent';
+            } else if (category.name === 'Papers') {
+              count = collectionCounts['papers'] || 0;
+              iconColorClass =
+                'bg-gradient-to-br from-purple-500 to-pink-500 bg-clip-text text-transparent';
+            } else if (category.name === 'Beyond the Surface') {
+              count =
+                (collectionCounts['reflections'] || 0) +
+                (collectionCounts['milestones'] || 0);
+              iconColorClass =
+                'bg-gradient-to-br from-orange-500 to-red-500 bg-clip-text text-transparent';
+            }
+
+            return (
+              <div class="py-2">
+                <a class=" hover:text-skin-active" href={getUrl(category.href)}>
+                  <i class={`${category.iconClass} ${iconColorClass}`} />
+                  <span>
+                    {category.name}
+                    {count > 0 ? ` (${count})` : ''}
+                  </span>
+                </a>
+                {category.children && category.children.length > 0 && (
+                  <div class="divider-horizontal" />
+                )}
+                <div class="space-y-4 text-sm">
+                  {category.children &&
+                    category.children.map((sub) => {
+                      let childCount = 0;
+                      if (
+                        sub.name === 'Thoughts & Reflections' ||
+                        sub.href?.includes('reflections')
+                      ) {
+                        childCount = collectionCounts['reflections'] || 0;
+                      } else if (
+                        sub.name === 'Milestones & Updates' ||
+                        sub.href?.includes('milestones')
+                      ) {
+                        childCount = collectionCounts['milestones'] || 0;
+                      }
+
+                      return (
+                        <a
+                          class="block hover:text-skin-active"
+                          href={getUrl(sub.href)}
+                        >
+                          <i class={sub.iconClass} />
+                          <span>
+                            {sub.name}
+                            {childCount > 0 ? ` (${childCount})` : ''}
+                          </span>
+                        </a>
+                      );
+                    })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div id="personal-info" class="hidden pb-8 overflow-y-auto break-all">
+          <img
+            class="mx-auto my-4 avatar"
+            src={getUrl(site.avatar)}
+            alt="avatar"
+          />
+          <div class="mb-2 text-center">{site.motto}</div>
+        </div>
+      </header>
+      {/* Backdrop blur overlay for mobile menu */}
+      <div id="menu-backdrop" class="menu-backdrop"></div>
+    </>
+  )
+}
 
 <script>
-(function(){
+  (function () {
     try {
-        const header = document.querySelector('header');
-        const homepage = header && header.dataset ? header.dataset.home || '/' : '/';
-        
-        // Header animation logic (keep your existing code)
-        const fromHomepage = sessionStorage.getItem('fromHomepage');
-        if (fromHomepage && header) {
-            if (!header.classList.contains('header--drop') && !header.classList.contains('header--dropped')) {
-                header.classList.add('header--drop');
-                const ANIM_DURATION = 360 + 80;
-                setTimeout(() => {
-                    header.classList.remove('header--drop');
-                    header.classList.add('header--dropped');
-                }, ANIM_DURATION + 40);
-            }
-            sessionStorage.removeItem('fromHomepage');
-        } else if (header) {
+      const header = document.querySelector('header');
+      const homepage =
+        header && header.dataset ? header.dataset.home || '/' : '/';
+
+      // Header animation logic (keep your existing code)
+      const fromHomepage = sessionStorage.getItem('fromHomepage');
+      if (fromHomepage && header) {
+        if (
+          !header.classList.contains('header--drop') &&
+          !header.classList.contains('header--dropped')
+        ) {
+          header.classList.add('header--drop');
+          const ANIM_DURATION = 360 + 80;
+          setTimeout(() => {
             header.classList.remove('header--drop');
-            header.classList.remove('header--up');
             header.classList.add('header--dropped');
+          }, ANIM_DURATION + 40);
+        }
+        sessionStorage.removeItem('fromHomepage');
+      } else if (header) {
+        header.classList.remove('header--drop');
+        header.classList.remove('header--up');
+        header.classList.add('header--dropped');
+      }
+
+      // Mobile menu functionality
+      function closeMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        const backdrop = document.getElementById('menu-backdrop');
+        const header = document.querySelector('header');
+
+        if (menu && menu.classList.contains('open')) {
+          // Start closing animation
+          menu.classList.remove('open');
+          menu.classList.add('closing');
+          backdrop?.classList.remove('active');
+          header?.classList.remove('menu-open');
+
+          // Remove closing class after animation completes
+          setTimeout(() => {
+            menu.classList.remove('closing');
+            menu.classList.add('closed');
+          }, 300);
+        }
+      }
+
+      function openMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        const personalInfo = document.getElementById('personal-info');
+        const backdrop = document.getElementById('menu-backdrop');
+        const header = document.querySelector('header');
+
+        // Close personal info if open
+        if (personalInfo && !personalInfo.classList.contains('hidden')) {
+          personalInfo.classList.add('closing');
+          setTimeout(() => {
+            personalInfo.classList.add('hidden');
+            personalInfo.classList.remove('closing');
+          }, 250);
         }
 
-        // Mobile menu functionality
-        function closeMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            const backdrop = document.getElementById('menu-backdrop');
-            const header = document.querySelector('header');
-            
-            if (menu && menu.classList.contains('open')) {
-                // Start closing animation
-                menu.classList.remove('open');
-                menu.classList.add('closing');
-                backdrop?.classList.remove('active');
-                header?.classList.remove('menu-open');
-                
-                // Remove closing class after animation completes
-                setTimeout(() => {
-                    menu.classList.remove('closing');
-                    menu.classList.add('closed');
-                }, 300);
-            }
+        // Open mobile menu
+        menu.classList.remove('closed', 'closing');
+        menu.classList.add('open');
+        backdrop?.classList.add('active');
+        header?.classList.add('menu-open');
+      }
+
+      function isMenuOpen() {
+        const menu = document.getElementById('mobile-menu');
+        return menu && menu.classList.contains('open');
+      }
+
+      // Main click handler
+      document.addEventListener('click', function (e) {
+        const target = e.target;
+        const a = target.closest('a');
+        const menuToggleBtn = target.closest('#menu-toggle-btn');
+        const asideBtn = target.closest('#aside-btn');
+        const asideCloseBtn = target.closest('#aside-close-btn');
+        const backdrop = target.closest('#menu-backdrop');
+
+        // Backdrop click - close menu
+        if (backdrop && isMenuOpen()) {
+          closeMobileMenu();
+          return;
         }
 
-        function openMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            const personalInfo = document.getElementById('personal-info');
-            const backdrop = document.getElementById('menu-backdrop');
-            const header = document.querySelector('header');
-
-            // Close personal info if open
-            if (personalInfo && !personalInfo.classList.contains('hidden')) {
-                personalInfo.classList.add('closing');
-                setTimeout(() => {
-                    personalInfo.classList.add('hidden');
-                    personalInfo.classList.remove('closing');
-                }, 250);
-            }
-            
-            // Open mobile menu
-            menu.classList.remove('closed', 'closing');
-            menu.classList.add('open');
-            backdrop?.classList.add('active');
-            header?.classList.add('menu-open');
+        // Menu toggle button
+        if (menuToggleBtn) {
+          if (isMenuOpen()) {
+            closeMobileMenu();
+          } else {
+            openMobileMenu();
+          }
+          e.preventDefault();
+          return;
         }
 
-        function isMenuOpen() {
-            const menu = document.getElementById('mobile-menu');
-            return menu && menu.classList.contains('open');
+        // Aside button
+        if (asideBtn) {
+          const menu = document.getElementById('mobile-menu');
+          const personalInfo = document.getElementById('personal-info');
+          const showAsideBtn = document.getElementById('aside-btn');
+          const closeAsideBtn = document.getElementById('aside-close-btn');
+
+          // Close menu if open
+          if (menu && isMenuOpen()) {
+            closeMobileMenu();
+          }
+
+          // Open personal info
+          personalInfo.classList.remove('hidden', 'closing');
+          showAsideBtn.classList.add('hidden');
+          closeAsideBtn.classList.remove('hidden');
+          e.preventDefault();
+          return;
         }
 
-        // Main click handler
-        document.addEventListener('click', function(e){
-            const target = e.target;
-            const a = target.closest('a');
-            const menuToggleBtn = target.closest('#menu-toggle-btn');
-            const asideBtn = target.closest('#aside-btn');
-            const asideCloseBtn = target.closest('#aside-close-btn');
-            const backdrop = target.closest('#menu-backdrop');
+        // Aside close button
+        if (asideCloseBtn) {
+          const personalInfo = document.getElementById('personal-info');
+          const showAsideBtn = document.getElementById('aside-btn');
+          const closeAsideBtn = document.getElementById('aside-close-btn');
 
-            // Backdrop click - close menu
-            if (backdrop && isMenuOpen()) {
-                closeMobileMenu();
-                return;
-            }
+          // Close personal info
+          personalInfo.classList.add('closing');
+          showAsideBtn.classList.remove('hidden');
+          closeAsideBtn.classList.add('hidden');
+          setTimeout(() => {
+            personalInfo.classList.add('hidden');
+            personalInfo.classList.remove('closing');
+          }, 250);
+          e.preventDefault();
+          return;
+        }
 
-            // Menu toggle button
-            if (menuToggleBtn) {
-                if (isMenuOpen()) {
-                    closeMobileMenu();
-                } else {
-                    openMobileMenu();
-                }
-                e.preventDefault();
-                return;
-            }
+        // Close menu when clicking on menu links (optional)
+        if (a && a.closest('#mobile-menu') && isMenuOpen()) {
+          setTimeout(closeMobileMenu, 200);
+        }
 
-            // Aside button
-            if (asideBtn) {
-                const menu = document.getElementById('mobile-menu');
-                const personalInfo = document.getElementById('personal-info');
-                const showAsideBtn = document.getElementById('aside-btn');
-                const closeAsideBtn = document.getElementById('aside-close-btn');
-                
-                // Close menu if open
-                if (menu && isMenuOpen()) {
-                    closeMobileMenu();
-                }
-                
-                // Open personal info
-                personalInfo.classList.remove('hidden', 'closing');
-                showAsideBtn.classList.add('hidden');
-                closeAsideBtn.classList.remove('hidden');
-                e.preventDefault();
-                return;
-            }
-
-            // Aside close button
-            if (asideCloseBtn) {
-                const personalInfo = document.getElementById('personal-info');
-                const showAsideBtn = document.getElementById('aside-btn');
-                const closeAsideBtn = document.getElementById('aside-close-btn');
-                
-                // Close personal info
-                personalInfo.classList.add('closing');
-                showAsideBtn.classList.remove('hidden');
-                closeAsideBtn.classList.add('hidden');
-                setTimeout(() => {
-                    personalInfo.classList.add('hidden');
-                    personalInfo.classList.remove('closing');
-                }, 250);
-                e.preventDefault();
-                return;
-            }
-
-            // Close menu when clicking on menu links (optional)
-            if (a && a.closest('#mobile-menu') && isMenuOpen()) {
-                setTimeout(closeMobileMenu, 200);
-            }
-
-            // Homepage link animation
-            if(!a) return;
-            const href = a.getAttribute('href');
-            if(!href) return;
-            const currentPath = window.location.pathname;
-            const isHomepage = currentPath === '/' || currentPath === homepage;
-
-            if (href === '/' || href === '' || href === homepage) {
-                e.preventDefault();
-                if (header && !header.classList.contains('header--up')) {
-                    header.classList.add('header--up');
-                    header.classList.remove('header--dropped');
-                }
-                setTimeout(function(){ window.location.href = href; }, 280);
-            } else if (isHomepage) {
-                sessionStorage.setItem('fromHomepage', 'true');
-            }
-        });
-
-        // Close menu on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && isMenuOpen()) {
-                closeMobileMenu();
-            }
-        });
-
-        // Close menu when touching outside on mobile
-        document.addEventListener('touchstart', function(e) {
-            const menu = document.getElementById('mobile-menu');
-            const backdrop = document.getElementById('menu-backdrop');
-            
-            if (isMenuOpen() && 
-                !menu.contains(e.target) && 
-                !backdrop.contains(e.target) &&
-                !e.target.closest('#menu-toggle-btn')) {
-                closeMobileMenu();
-            }
-        });
-
-        // Glassmorphic blur effect
+        // Homepage link animation
+        if (!a) return;
+        const href = a.getAttribute('href');
+        if (!href) return;
         const currentPath = window.location.pathname;
         const isHomepage = currentPath === '/' || currentPath === homepage;
-        
-        if (!isHomepage && header) {
-            let ticking = false;
-            const SCROLL_THRESHOLD = 50;
 
-            function updateGlassEffect() {
-                const scrollY = window.scrollY || window.pageYOffset;
-                if (scrollY > SCROLL_THRESHOLD) {
-                    header.classList.add('glass--active');
-                } else {
-                    header.classList.remove('glass--active');
-                }
-                ticking = false;
-            }
-
-            function onScroll() {
-                if (!ticking) {
-                    window.requestAnimationFrame(updateGlassEffect);
-                    ticking = true;
-                }
-            }
-
-            updateGlassEffect();
-            window.addEventListener('scroll', onScroll, { passive: true });
+        if (href === '/' || href === '' || href === homepage) {
+          e.preventDefault();
+          if (header && !header.classList.contains('header--up')) {
+            header.classList.add('header--up');
+            header.classList.remove('header--dropped');
+          }
+          setTimeout(function () {
+            window.location.href = href;
+          }, 280);
+        } else if (isHomepage) {
+          sessionStorage.setItem('fromHomepage', 'true');
         }
-    } catch (err) { 
-        console.error(err); 
+      });
+
+      // Close menu on escape key
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isMenuOpen()) {
+          closeMobileMenu();
+        }
+      });
+
+      // Close menu when touching outside on mobile
+      document.addEventListener('touchstart', function (e) {
+        const menu = document.getElementById('mobile-menu');
+        const backdrop = document.getElementById('menu-backdrop');
+
+        if (
+          isMenuOpen() &&
+          !menu.contains(e.target) &&
+          !backdrop.contains(e.target) &&
+          !e.target.closest('#menu-toggle-btn')
+        ) {
+          closeMobileMenu();
+        }
+      });
+
+      // Glassmorphic blur effect
+      const currentPath = window.location.pathname;
+      const isHomepage = currentPath === '/' || currentPath === homepage;
+
+      if (!isHomepage && header) {
+        let ticking = false;
+        const SCROLL_THRESHOLD = 50;
+
+        function updateGlassEffect() {
+          const scrollY = window.scrollY || window.pageYOffset;
+          if (scrollY > SCROLL_THRESHOLD) {
+            header.classList.add('glass--active');
+          } else {
+            header.classList.remove('glass--active');
+          }
+          ticking = false;
+        }
+
+        function onScroll() {
+          if (!ticking) {
+            window.requestAnimationFrame(updateGlassEffect);
+            ticking = true;
+          }
+        }
+
+        updateGlassEffect();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    } catch (err) {
+      console.error(err);
     }
-})();
+  })();
 </script>

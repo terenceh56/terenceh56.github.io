@@ -5,8 +5,6 @@ import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import BlogAside from '@/components/BlogAside.astro';
 import Comment from '@/components/Comment.astro';
-import VisitorCounter from '@/components/VisitorCounter.astro';
-
 import { comment, config } from '@/consts';
 
 const { frontmatter = { comment: false }, hideAside = false } = Astro.props;
@@ -81,6 +79,5 @@ const gridClass = hideAside
     <div class="hidden lg:block">
       <Footer />
     </div>
-    <VisitorCounter />
   </body>
 </html>

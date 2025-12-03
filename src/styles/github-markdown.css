@@ -153,6 +153,7 @@
    border-bottom: none;
    text-decoration: underline dotted;
  }
+
  .markdown-body h1 {
    margin: .67em 0;
    font-weight: 600;
@@ -191,6 +192,7 @@
    max-width: 100%;
    box-sizing: content-box;
    background-color: var(--color-canvas-default);
+   border-radius: 12px;
  }
 
  .markdown-body code,

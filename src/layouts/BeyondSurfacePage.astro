@@ -5,8 +5,6 @@ import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import BeyondSurfaceAside from '@/components/BeyondSurfaceAside.astro';
 import Comment from '@/components/Comment.astro';
-import VisitorCounter from '@/components/VisitorCounter.astro';
-
 import { comment, config } from '@/consts';
 
 const { frontmatter = { comment: false }, hideAside = false } = Astro.props;
@@ -60,9 +58,12 @@ const gridClass = hideAside
 
         <!-- Main Content - Visible on both mobile and desktop -->
         <div
-          class={hideAside
-            ? 'col-span-1 order-2 lg:order-1'
-            : 'col-span-1 lg:col-span-3 order-2 lg:order-1'}
+          class:list={[
+            hideAside
+              ? 'col-span-1 order-2 lg:order-1'
+              : 'col-span-1 lg:col-span-3 order-2 lg:order-1',
+            'fade-in-up',
+          ]}
         >
           <slot />
 
@@ -81,6 +82,5 @@ const gridClass = hideAside
     <div class="hidden lg:block">
       <Footer />
     </div>
-    <VisitorCounter />
   </body>
 </html>
