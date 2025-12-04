@@ -2,6 +2,7 @@
 title: "A Dinner"
 date: 2025-12-03
 tags: ["updates"]
+category: "Updates"
 toc: true
 ---
 

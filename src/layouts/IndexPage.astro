@@ -4,6 +4,7 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import BlogAside from '@/components/BlogAside.astro';
+import UnifiedAside from '@/components/UnifiedAside.astro';
 import Profile from '@/components/Profile.astro';
 import Comment from '@/components/Comment.astro';
 import VisitorCounter from '@/components/VisitorCounter.astro';
@@ -21,14 +22,14 @@ const gridClass = hideAside
     <ClientRouter />
   </head>
 
-  <body class="bg-skin-secondary relative">
+  <body class="bg-skin-secondary relative min-h-screen flex flex-col">
     <Header hideNav={hideAside} />
     <main
       class:list={[
         hideAside ? '' : 'container',
         hideAside ? '' : 'p-4',
-        hideAside ? '' : 'pb-32',
-        'min-h-full',
+        hideAside ? '' : 'pb-8',
+        'flex-grow',
         'relative',
         'text-skin-base',
         hideAside ? 'pt-0' : 'pt-20',
@@ -41,7 +42,7 @@ const gridClass = hideAside
           !hideAside && (
             <div class="col-span-1 lg:col-span-1 order-3 lg:order-2 mb-6 lg:mb-0 lg:hidden">
               <div>
-                <BlogAside />
+                <UnifiedAside />
               </div>
             </div>
           )
@@ -53,7 +54,7 @@ const gridClass = hideAside
             <div class="hidden lg:block col-span-1 lg:col-span-1 lg:order-2">
               <div class="lg:sticky lg:top-20 space-y-4">
                 <Profile />
-                <BlogAside />
+                <UnifiedAside />
               </div>
             </div>
           )
@@ -147,18 +148,13 @@ const gridClass = hideAside
           {comment?.enable && frontmatter.comment && <Comment />}
         </div>
       </div>
-
-      <!-- Footer on mobile only - Absolutely centered at bottom -->
-      <div
-        class="lg:hidden fixed bottom-0 left-0 right-0 flex justify-center pb-4 bg-skin-secondary"
-      >
-        <Footer />
-      </div>
     </main>
-    <!-- Footer on desktop only -->
-    <div class="hidden lg:block">
+
+    <!-- Footer - Centered at bottom on all screen sizes -->
+    <footer class="w-full flex justify-center bg-skin-secondary">
       <Footer />
-    </div>
+    </footer>
+
     <!-- Visitor Counter - Fixed bottom right -->
     <VisitorCounter />
   </body><script>

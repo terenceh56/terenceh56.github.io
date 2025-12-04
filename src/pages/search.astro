@@ -7,21 +7,22 @@ import { t } from '@/i18n/utils';
   <aside>
     <div class="mb-6 p-4 glass rounded-lg shadow-md">
       <div class="flex items-center mb-3">
-        <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md">
+        <div
+          class="mr-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md"
+        >
           <i class="ri-search-line text-xl"></i>
         </div>
         <div>
           <h1 class="text-2xl font-bold italic text-skin-base">
             {t('search.search')}
           </h1>
-          <p class="text-sm text-skin-dodge opacity-80">
-            {t('search.placeholder')}
-          </p>
         </div>
       </div>
 
       <div class="relative mt-2">
-        <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-75">
+        <span
+          class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-75"
+        >
           <i class="ri-search-line text-skin-active"></i>
         </span>
         <input
@@ -39,7 +40,7 @@ import { t } from '@/i18n/utils';
   </aside>
 
   <section aria-label="Search Results">
-    <div class="glass rounded-lg p-4 shadow-sm">
+    <div id="searchResults" class="hidden glass rounded-lg p-4 shadow-sm">
       <p id="searchReadout" class="mb-2 text-sm text-skin-base"></p>
       <div id="resultsList" class="mt-2"></div>
     </div>
@@ -83,18 +84,19 @@ import { t } from '@/i18n/utils';
   let searchInputEl = null;
   let searchReadoutEl = null;
   let resultsListEl = null;
+  let searchResultsContainerEl = null;
   let teardownSearchListeners = null;
 
   const sanitizeTerm = (value) => DOMPurify.sanitize(value ?? '').trim();
 
-  const escapeRegExp = (value) =>
-    value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
   function initSearchUI() {
     teardownSearchListeners?.();
     searchInputEl = document.querySelector('#search');
     searchReadoutEl = document.querySelector('#searchReadout');
     resultsListEl = document.querySelector('#resultsList');
+    searchResultsContainerEl = document.querySelector('#searchResults');
 
     if (!searchInputEl || !searchReadoutEl || !resultsListEl) {
       console.warn('Search UI elements missing.');
@@ -117,6 +119,7 @@ import { t } from '@/i18n/utils';
     } else {
       updateReadout(null);
       resultsListEl.innerHTML = '';
+      searchResultsContainerEl?.classList.add('hidden');
     }
     searchInputEl.focus();
 
@@ -127,7 +130,9 @@ import { t } from '@/i18n/utils';
 
   const bootstrapSearch = () => {
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initSearchUI, { once: true });
+      document.addEventListener('DOMContentLoaded', initSearchUI, {
+        once: true,
+      });
     } else {
       initSearchUI();
     }
@@ -197,10 +202,12 @@ import { t } from '@/i18n/utils';
     if (!search) {
       updateReadout(null);
       resultsListEl.innerHTML = '';
+      searchResultsContainerEl?.classList.add('hidden');
       return;
     }
     if (search.length === 0) return;
-    resultsList.innerHTML = SPINNER;
+    searchResultsContainerEl?.classList.remove('hidden');
+    resultsListEl.innerHTML = SPINNER;
     if (!SEARCH_DATA) {
       try {
         const res = await fetch(getUrl('/search.json'));

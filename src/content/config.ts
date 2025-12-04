@@ -18,13 +18,14 @@ const notes = defineCollection({
   }),
 });
 
-const reflections = defineCollection({
+const thoughtsAndReflections = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
     description: z.string().optional().nullable(),
     date: z.date(),
     tags: z.array(z.string()).or(z.string()).optional().nullable(),
+    category: z.string().optional().nullable(), // Custom category label: 'Milestones', 'Updates', 'Reflections', 'Thoughts'
     draft: z.boolean().default(false).nullable(),
     toc: z.boolean().default(false).nullable(),
 
@@ -33,13 +34,14 @@ const reflections = defineCollection({
   }),
 });
 
-const milestones = defineCollection({
+const milestonesAndUpdates = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
     description: z.string().optional().nullable(),
     date: z.date(),
     tags: z.array(z.string()).or(z.string()).optional().nullable(),
+    category: z.string().optional().nullable(), // Custom category label: 'Milestones', 'Updates', 'Reflections', 'Thoughts'
     draft: z.boolean().default(false).nullable(),
     toc: z.boolean().default(false).nullable(),
 
@@ -76,4 +78,10 @@ const feed = defineCollection({
   })
 })
 
-export const collections = { notes, reflections, milestones, papers, feed };
+export const collections = {
+  notes,
+  'thoughts-and-reflections': thoughtsAndReflections,
+  'milestones-and-updates': milestonesAndUpdates,
+  papers,
+  feed,
+};

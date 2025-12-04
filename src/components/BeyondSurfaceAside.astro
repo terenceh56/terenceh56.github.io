@@ -9,7 +9,7 @@ import getCountByTagName from '@/utils/getCountByTagName';
 
 // Aggregate posts from Beyond the Surface collections ONLY
 let allPosts = [];
-const collectionsToTry = ['reflections', 'milestones'];
+const collectionsToTry = ['thoughts-and-reflections', 'milestones-and-updates'];
 for (const col of collectionsToTry) {
   try {
     const c = await getCollectionByName(col);
@@ -71,12 +71,17 @@ let resultPosts = sortPosts.splice(0, site.recentBlogSize);
   <div class="flex flex-col gap-1">
     {
       resultPosts.map((post) => {
-        // Map collection name to display label
-        const categoryLabel =
-          {
-            reflections: '[Reflections]',
-            milestones: '[Milestones]',
-          }[post.collection] || `[${post.collection}]`;
+        // Use custom category from frontmatter if available, otherwise use collection-based default
+        let categoryLabel;
+        if (post.data.category) {
+          categoryLabel = `[${post.data.category}]`;
+        } else {
+          categoryLabel =
+            {
+              'thoughts-and-reflections': '[Reflections]',
+              'milestones-and-updates': '[Milestones]',
+            }[post.collection] || `[${post.collection}]`;
+        }
 
         return (
           <a

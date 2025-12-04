@@ -19,14 +19,14 @@ const gridClass = hideAside
     <ClientRouter />
   </head>
 
-  <body class="bg-skin-secondary relative">
+  <body class="bg-skin-secondary relative min-h-screen flex flex-col">
     <Header />
     <main
       class:list={[
         'container',
         'p-4',
-        'pb-32',
-        'min-h-full',
+        'pb-8',
+        'flex-grow',
         'relative',
         'text-skin-base',
         'pt-20',
@@ -67,17 +67,11 @@ const gridClass = hideAside
           {comment?.enable && frontmatter.comment && <Comment />}
         </div>
       </div>
-
-      <!-- Footer on mobile only - Absolutely centered at bottom -->
-      <div
-        class="lg:hidden fixed bottom-0 left-0 right-0 flex justify-center pb-4 bg-skin-secondary"
-      >
-        <Footer />
-      </div>
     </main>
-    <!-- Footer on desktop only -->
-    <div class="hidden lg:block">
+
+    <!-- Footer - Centered at bottom on all screen sizes -->
+    <footer class="w-full flex justify-center bg-skin-secondary">
       <Footer />
-    </div>
+    </footer>
   </body>
 </html>

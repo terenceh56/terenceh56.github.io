@@ -1,0 +1,225 @@
+---
+import CommentAside from '@/components/CommentAside.astro';
+import { comment } from '@/consts';
+import { getCollectionByName } from '@/utils/getCollectionByName';
+import getUniqueTags from '@/utils/getUniqueTags';
+import { sortPostsByDate } from '@/utils/sortPostsByDate';
+import { site } from '@/consts';
+import { t } from '@/i18n/utils';
+import getUrl from '@/utils/getUrl';
+import getCountByTagName from '@/utils/getCountByTagName';
+import { dealLabel } from '@/utils/dealLabel';
+
+// Aggregate posts from ALL collections
+let allPosts = [];
+const collectionsToTry = [
+  'notes',
+  'papers',
+  'feed',
+  'thoughts-and-reflections',
+  'milestones-and-updates',
+];
+
+for (const col of collectionsToTry) {
+  try {
+    const c = await getCollectionByName(col);
+    if (c && c.length) allPosts = allPosts.concat(c);
+  } catch (err) {
+    // Ignore missing collections
+  }
+}
+
+// Separate posts by collection type for tag tracking
+const notesPosts = [];
+const btsPosts = [];
+
+for (const post of allPosts) {
+  if (
+    post.collection === 'thoughts-and-reflections' ||
+    post.collection === 'milestones-and-updates'
+  ) {
+    btsPosts.push(post);
+  } else {
+    notesPosts.push(post);
+  }
+}
+
+// Get tags from each group
+const notesTags = getUniqueTags(notesPosts);
+const btsTags = getUniqueTags(btsPosts);
+const notesTagCount = getCountByTagName(notesPosts);
+const btsTagCount = getCountByTagName(btsPosts);
+
+// Create a unified tag list with source tracking
+interface TagInfo {
+  name: string;
+  count: number;
+  source: 'notes' | 'bts' | 'both';
+  notesCount?: number;
+  btsCount?: number;
+}
+
+const tagMap = new Map<string, TagInfo>();
+
+// Add notes tags
+for (const tag of notesTags) {
+  tagMap.set(tag, {
+    name: tag,
+    count: notesTagCount[tag],
+    source: 'notes',
+    notesCount: notesTagCount[tag],
+  });
+}
+
+// Add or merge BtS tags
+for (const tag of btsTags) {
+  if (tagMap.has(tag)) {
+    const existing = tagMap.get(tag)!;
+    existing.source = 'both';
+    existing.btsCount = btsTagCount[tag];
+    existing.count = existing.notesCount! + existing.btsCount;
+  } else {
+    tagMap.set(tag, {
+      name: tag,
+      count: btsTagCount[tag],
+      source: 'bts',
+      btsCount: btsTagCount[tag],
+    });
+  }
+}
+
+// Convert to array and sort by count
+let tagArr = Array.from(tagMap.values()).sort((a, b) => b.count - a.count);
+
+// Limit tags if configured
+if (site.asideTagsMaxSize > 0) {
+  tagArr = tagArr.slice(0, site.asideTagsMaxSize);
+}
+
+// Get recent posts from all collections
+let sortPosts = await sortPostsByDate(allPosts);
+let resultPosts = sortPosts.splice(0, site.recentBlogSize);
+---
+
+<div class="glass p-4 rounded-lg mb-4">
+  {
+    tagArr.length > 0 && (
+      <div class="aside-widget">
+        <i class="ri-hashtag menu-icon" />
+        {t('sidebar.tags')}
+      </div>
+    )
+  }
+  <div class="flex flex-wrap gap-2">
+    {
+      tagArr &&
+        tagArr.map((tagInfo) => {
+          // If tag appears in both, create two separate pills
+          if (tagInfo.source === 'both') {
+            return (
+              <>
+                <a
+                  class="inline-block truncate border px-2 py-1 text-sm rounded-md hover:text-skin-active transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5 hover:border-skin-active"
+                  title={`${tagInfo.name} (Notes/Papers)`}
+                  href={getUrl('/tags/') + tagInfo.name}
+                >
+                  {tagInfo.name}{' '}
+                  <span class="opacity-60">({tagInfo.notesCount})</span>{' '}
+                  <span class="text-xs opacity-70">[Notes]</span>
+                </a>
+                <a
+                  class="inline-block truncate border px-2 py-1 text-sm rounded-md hover:text-skin-active transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5 hover:border-skin-active"
+                  title={`${tagInfo.name} (Beyond the Surface)`}
+                  href={getUrl('/beyond-surface/tags/') + tagInfo.name}
+                >
+                  {tagInfo.name}{' '}
+                  <span class="opacity-60">({tagInfo.btsCount})</span>{' '}
+                  <span class="text-xs opacity-70">[BtS]</span>
+                </a>
+              </>
+            );
+          } else if (tagInfo.source === 'notes') {
+            return (
+              <a
+                class="inline-block truncate border px-2 py-1 text-sm rounded-md hover:text-skin-active transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5 hover:border-skin-active"
+                title={tagInfo.name}
+                href={getUrl('/tags/') + tagInfo.name}
+              >
+                {tagInfo.name} <span class="opacity-60">({tagInfo.count})</span>
+              </a>
+            );
+          } else {
+            // BtS only
+            return (
+              <a
+                class="inline-block truncate border px-2 py-1 text-sm rounded-md hover:text-skin-active transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5 hover:border-skin-active"
+                title={tagInfo.name}
+                href={getUrl('/beyond-surface/tags/') + tagInfo.name}
+              >
+                {tagInfo.name} <span class="opacity-60">({tagInfo.count})</span>
+              </a>
+            );
+          }
+        })
+    }
+    {
+      tagArr && site.asideTagsMaxSize > 0 && (
+        <a
+          class="inline-block truncate border px-2 py-1 text-sm rounded-md hover:text-skin-active transition-all duration-300 hover:shadow-sm font-medium"
+          title={t('more')}
+          href={getUrl('/tags')}
+        >
+          {t('more')} »
+        </a>
+      )
+    }
+  </div>
+</div>
+
+<div class="glass p-4 rounded-lg mb-4">
+  <div class="aside-widget">
+    <i class="ri-file-line menu-icon"></i>
+    {t('sidebar.recentArticle')}
+  </div>
+  <div class="flex flex-col gap-1">
+    {
+      resultPosts.map((post) => {
+        // Use custom category from frontmatter if available, otherwise use collection-based default
+        let categoryLabel;
+        if (
+          (post.collection === 'thoughts-and-reflections' ||
+            post.collection === 'milestones-and-updates') &&
+          post.data.category
+        ) {
+          // Use custom category for BtS posts
+          categoryLabel = `[${post.data.category}]`;
+        } else {
+          // Use default collection-based label
+          categoryLabel =
+            {
+              notes: '[Notes]',
+              papers: '[Papers]',
+              feed: '[Feed]',
+              'thoughts-and-reflections': '[Reflections]',
+              'milestones-and-updates': '[Milestones]',
+            }[post.collection] || `[${post.collection}]`;
+        }
+
+        return (
+          <a
+            href={getUrl('/' + post.collection + '/') + post.slug}
+            class="flex items-center cursor-pointer hover:text-skin-active transition-all duration-300 hover:translate-x-1 py-2"
+            title={post.data.title}
+          >
+            <span class="opacity-70 mr-1 text-xs flex-shrink-0">
+              {categoryLabel}
+            </span>
+            <span class="truncate">{post.data.title}</span>
+          </a>
+        );
+      })
+    }
+  </div>
+
+  {comment.enable && comment.type === 'waline' && <CommentAside />}
+</div>

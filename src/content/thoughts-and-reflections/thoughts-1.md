@@ -2,6 +2,7 @@
 title: "Some Thoughts After the First Day of Officially Starting My Graduation Project Design"
 date: 2025-11-17
 tags: ["graduation project"]
+category: "Thoughts"
 toc: true
 ---
 

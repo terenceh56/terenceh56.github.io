@@ -5,7 +5,7 @@ import getCountByCategory from '@/utils/getCountByCategory';
 import HeaderLink from './HeaderLink.astro';
 import ThemeIcon from './ThemeIcon.astro';
 import MenuIcon from './MenuIcon.astro';
-import { site, categories, infoLinks } from '@/consts';
+import { site, categories } from '@/consts';
 import AsideIcon from './SidebarIcon.astro';
 import { t } from '@/i18n/utils';
 import getCountByTagName from '@/utils/getCountByTagName';
@@ -14,8 +14,8 @@ import getUrl from '@/utils/getUrl';
 let posts = [];
 const collectionsToTry = [
   'notes',
-  'reflections',
-  'milestones',
+  'thoughts-and-reflections',
+  'milestones-and-updates',
   'papers',
   'feed',
 ];
@@ -123,8 +123,8 @@ const { hideNav = false } = Astro.props;
                 } else if (category.name === 'Beyond the Surface') {
                   // Sum of reflections and milestones
                   count =
-                    (collectionCounts['reflections'] || 0) +
-                    (collectionCounts['milestones'] || 0);
+                    (collectionCounts['thoughts-and-reflections'] || 0) +
+                    (collectionCounts['milestones-and-updates'] || 0);
                   iconColorClass =
                     'bg-gradient-to-br from-orange-500 to-red-500 bg-clip-text text-transparent';
                 }
@@ -137,12 +137,12 @@ const { hideNav = false } = Astro.props;
                         child.name === 'Thoughts & Reflections' ||
                         child.href?.includes('reflections')
                       ) {
-                        childCount = collectionCounts['reflections'] || 0;
+                        childCount = collectionCounts['thoughts-and-reflections'] || 0;
                       } else if (
                         child.name === 'Milestones & Updates' ||
                         child.href?.includes('milestones')
                       ) {
-                        childCount = collectionCounts['milestones'] || 0;
+                        childCount = collectionCounts['milestones-and-updates'] || 0;
                       }
                       return { ...child, count: childCount };
                     })
@@ -211,8 +211,8 @@ const { hideNav = false } = Astro.props;
                 'bg-gradient-to-br from-purple-500 to-pink-500 bg-clip-text text-transparent';
             } else if (category.name === 'Beyond the Surface') {
               count =
-                (collectionCounts['reflections'] || 0) +
-                (collectionCounts['milestones'] || 0);
+                (collectionCounts['thoughts-and-reflections'] || 0) +
+                (collectionCounts['milestones-and-updates'] || 0);
               iconColorClass =
                 'bg-gradient-to-br from-orange-500 to-red-500 bg-clip-text text-transparent';
             }
@@ -237,12 +237,12 @@ const { hideNav = false } = Astro.props;
                         sub.name === 'Thoughts & Reflections' ||
                         sub.href?.includes('reflections')
                       ) {
-                        childCount = collectionCounts['reflections'] || 0;
+                        childCount = collectionCounts['thoughts-and-reflections'] || 0;
                       } else if (
                         sub.name === 'Milestones & Updates' ||
                         sub.href?.includes('milestones')
                       ) {
-                        childCount = collectionCounts['milestones'] || 0;
+                        childCount = collectionCounts['milestones-and-updates'] || 0;
                       }
 
                       return (

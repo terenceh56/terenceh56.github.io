@@ -7,7 +7,7 @@ import { sortPostsByDate } from '@/utils/sortPostsByDate';
 import getUrl from '@/utils/getUrl';
 
 export async function getStaticPaths() {
-  const entries = await getCollectionByName('milestones');
+  const entries = await getCollectionByName('thoughts-and-reflections');
   return entries.map((entry) => ({
     params: { slug: entry.slug },
     props: { entry },
@@ -20,7 +20,7 @@ const { Content, headings, remarkPluginFrontmatter } = await entry.render();
 const lastModified = remarkPluginFrontmatter.lastModified;
 const readingTime = remarkPluginFrontmatter.readingTime;
 
-const posts = await getCollectionByName('milestones');
+const posts = await getCollectionByName('thoughts-and-reflections');
 const sortPosts = sortPostsByDate(posts);
 
 const currentPostIndex = sortPosts.findIndex(
@@ -33,6 +33,13 @@ if (sortPosts[currentPostIndex - 1]) {
 if (sortPosts[currentPostIndex + 1]) {
   nextPost = sortPosts[currentPostIndex + 1];
 }
+
+const getCollectionUrl = (collection) => {
+  if (collection === 'milestones-and-updates') return 'milestones-and-updates';
+  if (collection === 'thoughts-and-reflections')
+    return 'thoughts-and-reflections';
+  return collection;
+};
 ---
 
 <ThoughtPost frontmatter={entry.data} headings={headings}>
@@ -54,7 +61,12 @@ if (sortPosts[currentPostIndex + 1]) {
         prevPost ? (
           <a
             class="truncate  w-auto max-w-[40%] float-left"
-            href={getUrl('/') + prevPost.collection + '/' + prevPost.slug}
+            href={
+              getUrl('/') +
+              getCollectionUrl(prevPost.collection) +
+              '/' +
+              prevPost.slug
+            }
             title={prevPost.data.title}
           >
             <i class="ri-arrow-left-s-fill" />
@@ -69,7 +81,12 @@ if (sortPosts[currentPostIndex + 1]) {
           <div class="flex item-center float-right w-auto max-w-[40%] text-right">
             <a
               class="truncate "
-              href={getUrl('/') + nextPost.collection + '/' + nextPost.slug}
+              href={
+                getUrl('/') +
+                getCollectionUrl(nextPost.collection) +
+                '/' +
+                nextPost.slug
+              }
               title={nextPost.data.title}
             >
               {nextPost.data.title}
@@ -81,7 +98,6 @@ if (sortPosts[currentPostIndex + 1]) {
         )
       }
     </div>
-
   </div>
 
   <style>

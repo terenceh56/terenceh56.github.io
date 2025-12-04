@@ -9,23 +9,23 @@ interface Props {
 const { class: className = '' } = Astro.props;
 
 const reflections = (
-  await getCollection('reflections', ({ data }) => !data.draft)
+  await getCollection('thoughts-and-reflections', ({ data }) => !data.draft)
 )
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 
 const milestones = (
-  await getCollection('milestones', ({ data }) => !data.draft)
+  await getCollection('milestones-and-updates', ({ data }) => !data.draft)
 )
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 
 const allReflections = await getCollection(
-  'reflections',
+  'thoughts-and-reflections',
   ({ data }) => !data.draft,
 );
 const allMilestones = await getCollection(
-  'milestones',
+  'milestones-and-updates',
   ({ data }) => !data.draft,
 );
 const reflectionCount = allReflections.length;
@@ -66,7 +66,10 @@ const customTransition = {
         class="unified-card glass-panel"
         transition:animate={customTransition}
       >
-        <a href={getUrl('/reflections/1')} class="card-header-link">
+        <a
+          href={getUrl('/thoughts-and-reflections/1')}
+          class="card-header-link"
+        >
           <div class="card-header">
             <!-- Icon with gradient background -->
             <div
@@ -81,8 +84,8 @@ const customTransition = {
             </div>
             <h2 class="text-2xl font-bold mb-2">Thoughts & Reflections</h2>
             <p class="text-skin-base opacity-70 mb-4">
-              Personal insights, book notes, and evolving perspectives on life
-              and learning.
+              Personal insights, book notes, and some perspectives on life and
+              learning.
             </p>
           </div>
         </a>
@@ -92,7 +95,7 @@ const customTransition = {
             reflections.map((post) => (
               <div class="preview-item-wrapper">
                 <a
-                  href={getUrl(`/reflections/${post.slug}`)}
+                  href={getUrl(`/thoughts-and-reflections/${post.slug}`)}
                   class="preview-item"
                   data-preview-link
                 >
@@ -116,7 +119,7 @@ const customTransition = {
         class="unified-card glass-panel"
         transition:animate={customTransition}
       >
-        <a href={getUrl('/milestones/1')} class="card-header-link">
+        <a href={getUrl('/milestones-and-updates/1')} class="card-header-link">
           <div class="card-header">
             <!-- Icon with gradient background -->
             <div
@@ -141,7 +144,7 @@ const customTransition = {
             milestones.map((post) => (
               <div class="preview-item-wrapper">
                 <a
-                  href={getUrl(`/milestones/${post.slug}`)}
+                  href={getUrl(`/milestones-and-updates/${post.slug}`)}
                   class="preview-item"
                   data-preview-link
                 >

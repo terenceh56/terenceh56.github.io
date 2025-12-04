@@ -32,10 +32,10 @@ const {
     <ClientRouter />
   </head>
 
-  <body class="bg-skin-secondary">
+  <body class="bg-skin-secondary min-h-screen flex flex-col">
     <Header />
     <main
-      class="container relative min-h-full p-4 pt-20 pb-32 text-skin-base"
+      class="container relative flex-grow p-4 pt-20 pb-8 text-skin-base"
       id="app"
     >
       <div class="grid grid-cols-4 gap-8">
@@ -60,8 +60,12 @@ const {
         </div>
         <ScrollToTop />
       </div>
-      <Footer />
     </main>
+
+    <!-- Footer - Centered at bottom on all screen sizes -->
+    <footer class="w-full flex justify-center bg-skin-secondary">
+      <Footer />
+    </footer>
   </body>
 </html>
 

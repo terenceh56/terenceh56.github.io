@@ -8,7 +8,7 @@ import { orderBySticky } from '@/utils/orderBySticky';
 import getUrl from '@/utils/getUrl';
 
 export async function getStaticPaths({ paginate }) {
-  let posts = await getCollectionByName('reflections');
+  let posts = await getCollectionByName('thoughts-and-reflections');
   let sortedPosts = orderBySticky(posts);
   return paginate(sortedPosts, { pageSize: site.postPageSize });
 }
@@ -28,6 +28,6 @@ const { page } = Astro.props;
   <Pagination
     currentPage={page.currentPage}
     totalPage={page.lastPage}
-    prefixUrl={getUrl('/reflections/')}
+    prefixUrl={getUrl('/thoughts-and-reflections/')}
   />
 </BeyondSurfacePage>
