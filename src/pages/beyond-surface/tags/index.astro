@@ -1,13 +1,13 @@
 ---
-import BeyondSurfacePage from "@/layouts/BeyondSurfacePage.astro";
-import {getCollectionByName} from "@/utils/getCollectionByName";
-import getUniqueTags from "@/utils/getUniqueTags";
-import getUrl from "@/utils/getUrl";
-import {t} from '@/i18n/utils'
+import BeyondSurfacePage from '@/layouts/BeyondSurfacePage.astro';
+import { getCollectionByName } from '@/utils/getCollectionByName';
+import getUniqueTags from '@/utils/getUniqueTags';
+import getUrl from '@/utils/getUrl';
+import { t } from '@/i18n/utils';
 
 // Aggregate tags from Beyond the Surface collections only
 let allPosts = [];
-const collectionsToTry = ['reflections', 'milestones'];
+const collectionsToTry = ['thoughts-and-reflections', 'milestones-and-updates'];
 for (const col of collectionsToTry) {
   try {
     const c = await getCollectionByName(col);
@@ -22,13 +22,16 @@ let tagArr = getUniqueTags(allPosts);
 <BeyondSurfacePage title={t('sidebar.tags') + ' [Beyond the Surface]'}>
   <div class="flex flex-wrap">
     {
-      (
-        tagArr
-        &&
-          tagArr.map((tag) =>
-            <a class="inline-block truncate m-1 border p-1 text-sm rounded hover:text-skin-active" title={tag} href={getUrl("/tags/") + tag}>{tag}</a>
-          )
-      )
+      tagArr &&
+        tagArr.map((tag) => (
+          <a
+            class="inline-block truncate m-1 border p-1 text-sm rounded hover:text-skin-active"
+            title={tag}
+            href={getUrl('/tags/') + tag}
+          >
+            {tag}
+          </a>
+        ))
     }
   </div>
 </BeyondSurfacePage>

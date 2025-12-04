@@ -3,11 +3,29 @@ import { site, categories as headerCategories } from '@/consts';
 import getUrl from '@/utils/getUrl';
 import { getCollectionByName } from '@/utils/getCollectionByName';
 
-// Get collection counts for statistics
-const notesCount = (await getCollectionByName('notes')).filter(p => !p.data.draft).length;
-const papersCount = (await getCollectionByName('papers')).filter(p => !p.data.draft).length;
-const reflectionsCount = (await getCollectionByName('reflections')).filter(p => !p.data.draft).length;
-const milestonesCount = (await getCollectionByName('milestones')).filter(p => !p.data.draft).length;
+// Get collection counts for statistics - optimized single fetch
+const collectionCounts = {
+  notes: 0,
+  papers: 0,
+  'thoughts-and-reflections': 0,
+  'milestones-and-updates': 0
+};
+
+const collectionsToFetch = ['notes', 'papers', 'thoughts-and-reflections', 'milestones-and-updates'];
+
+for (const col of collectionsToFetch) {
+  try {
+    const collection = await getCollectionByName(col);
+    collectionCounts[col] = collection.filter(p => !p.data.draft).length;
+  } catch (err) {
+    collectionCounts[col] = 0;
+  }
+}
+
+const notesCount = collectionCounts.notes;
+const papersCount = collectionCounts.papers;
+const reflectionsCount = collectionCounts['thoughts-and-reflections'];
+const milestonesCount = collectionCounts['milestones-and-updates'];
 const btsCount = reflectionsCount + milestonesCount;
 
 // Define featured categories with descriptions and stats

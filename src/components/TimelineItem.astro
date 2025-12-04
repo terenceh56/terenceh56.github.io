@@ -1,0 +1,302 @@
+---
+interface Props {
+  title: string;
+  date: Date;
+  category?: string;
+  slug: string;
+  collection: string;
+  isFirst?: boolean;
+  isLast?: boolean;
+}
+
+const {
+  title,
+  date,
+  category,
+  slug,
+  collection,
+  isFirst = false,
+  isLast = false,
+} = Astro.props;
+
+// Format date
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(date);
+
+// Determine category color based on collection or category
+const getCategoryColor = (col: string, cat?: string) => {
+  if (cat) {
+    const lower = cat.toLowerCase();
+    if (lower.includes('milestone')) return 'from-purple-500 to-pink-500';
+    if (lower.includes('update')) return 'from-blue-500 to-cyan-500';
+    if (lower.includes('reflection')) return 'from-orange-500 to-red-500';
+    if (lower.includes('thought')) return 'from-green-500 to-teal-500';
+  }
+
+  // Collection-based colors
+  if (col === 'notes') return 'from-blue-500 to-cyan-500';
+  if (col === 'papers') return 'from-purple-500 to-pink-500';
+  if (col === 'thoughts-and-reflections') return 'from-orange-500 to-red-500';
+  if (col === 'milestones-and-updates') return 'from-green-500 to-teal-500';
+
+  return 'from-gray-500 to-gray-600';
+};
+
+const categoryGradient = getCategoryColor(collection, category);
+
+// Get display category
+const displayCategory =
+  category ||
+  {
+    notes: 'Notes',
+    papers: 'Papers',
+    'thoughts-and-reflections': 'Reflections',
+    'milestones-and-updates': 'Milestones',
+  }[collection] ||
+  collection;
+---
+
+<div class="timeline-item-wrapper fade-in-up" data-timeline-item>
+  <div class="timeline-item">
+    <!-- Timeline connector line -->
+    {!isFirst && <div class="timeline-line timeline-line-top" />}
+    {!isLast && <div class="timeline-line timeline-line-bottom" />}
+
+    <!-- Timeline dot -->
+    <div class="timeline-dot-wrapper">
+      <div class={`timeline-dot bg-gradient-to-br ${categoryGradient}`}>
+        <div class="timeline-dot-inner"></div>
+      </div>
+    </div>
+
+    <!-- Content card -->
+    <a href={`/${collection}/${slug}`} class="timeline-card glass">
+      <div class="timeline-card-content">
+        <div class="timeline-header">
+          <h3 class="timeline-title">{title}</h3>
+          <span
+            class={`timeline-category bg-gradient-to-br ${categoryGradient}`}
+          >
+            {displayCategory}
+          </span>
+        </div>
+        <time class="timeline-date" datetime={date.toISOString()}>
+          <i class="ri-calendar-line mr-1"></i>
+          {formattedDate}
+        </time>
+      </div>
+    </a>
+  </div>
+</div>
+
+<style>
+  .timeline-item-wrapper {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .timeline-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  /* Timeline connector lines */
+  .timeline-line {
+    position: absolute;
+    left: 19px;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--color-border), 0.3),
+      rgba(var(--color-border), 0.1)
+    );
+    z-index: 0;
+  }
+
+  .timeline-line-top {
+    top: -2rem;
+    height: 2rem;
+  }
+
+  .timeline-line-bottom {
+    top: 40px;
+    height: calc(100% + 2rem);
+  }
+
+  /* Timeline dot */
+  .timeline-dot-wrapper {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.5rem;
+  }
+
+  .timeline-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 0 0 4px rgb(var(--color-fill)),
+      0 0 0 6px rgba(var(--color-border), 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .timeline-dot-inner {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      box-shadow:
+        0 0 0 4px rgb(var(--color-fill)),
+        0 0 0 6px rgba(var(--color-border), 0.3);
+    }
+    50% {
+      box-shadow:
+        0 0 0 4px rgb(var(--color-fill)),
+        0 0 0 8px rgba(var(--color-border), 0.2);
+    }
+  }
+
+  /* Timeline card */
+  .timeline-card {
+    display: block;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(var(--color-border), 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .timeline-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(var(--color-text-active), 0.02),
+      transparent
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .timeline-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: rgba(var(--color-border-active), 0.5);
+  }
+
+  .timeline-card:hover::before {
+    opacity: 1;
+  }
+
+  .timeline-card:hover ~ .timeline-dot-wrapper .timeline-dot {
+    transform: scale(1.1);
+    animation: none;
+  }
+
+  .timeline-card-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .timeline-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: rgb(var(--color-text));
+    margin: 0;
+    line-height: 1.4;
+    transition: color 0.2s ease;
+  }
+
+  .timeline-card:hover .timeline-title {
+    color: rgb(var(--color-text-active));
+  }
+
+  .timeline-category {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .timeline-date {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: rgb(var(--color-text-dodge));
+    font-weight: 500;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 640px) {
+    .timeline-item {
+      grid-template-columns: 32px 1fr;
+      gap: 1rem;
+    }
+
+    .timeline-line {
+      left: 15px;
+    }
+
+    .timeline-dot {
+      width: 32px;
+      height: 32px;
+    }
+
+    .timeline-dot-inner {
+      width: 10px;
+      height: 10px;
+    }
+
+    .timeline-card {
+      padding: 1rem;
+    }
+
+    .timeline-title {
+      font-size: 1.125rem;
+    }
+
+    .timeline-header {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>

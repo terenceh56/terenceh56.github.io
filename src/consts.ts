@@ -85,6 +85,12 @@ export const categories = [
   },
 
   {
+    name: "Timeline",
+    iconClass: "ri-time-line",
+    href: "/timeline",
+  },
+
+  {
     name: "Comments",
     iconClass: "ri-chat-1-line",
     href: "/comments/1",

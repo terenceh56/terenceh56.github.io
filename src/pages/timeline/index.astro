@@ -1,0 +1,309 @@
+---
+import IndexPage from '@/layouts/IndexPage.astro';
+import TimelineItem from '@/components/TimelineItem.astro';
+import { getCollectionByName } from '@/utils/getCollectionByName';
+
+// Fetch all posts from all collections
+const collectionsToInclude = [
+  'notes',
+  'papers',
+  'thoughts-and-reflections',
+  'milestones-and-updates',
+];
+
+let allEntries = [];
+
+for (const col of collectionsToInclude) {
+  try {
+    const collection = await getCollectionByName(col);
+    if (collection && collection.length) {
+      allEntries = allEntries.concat(collection);
+    }
+  } catch (err) {
+    // Ignore missing collections
+  }
+}
+
+// Filter out drafts in production
+const entries = allEntries.filter(({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+
+// Sort by date (newest first)
+const sortedEntries = entries.sort((a, b) => {
+  return b.data.date.valueOf() - a.data.date.valueOf();
+});
+
+const title = 'Timeline';
+---
+
+<IndexPage title={title}>
+  <div class="timeline-page">
+    <!-- Header section -->
+    <div class="timeline-header-section glass fade-in-up">
+      <h1 class="timeline-page-title">
+        <i class="ri-time-line mr-3"></i>
+        Timeline
+      </h1>
+      <p class="timeline-description">
+        A chronological journey through all my posts. Follow along as I document
+        my learning, research, daily, and achievements.
+      </p>
+      <div class="timeline-stats">
+        <div class="stat-item">
+          <span class="stat-number">{sortedEntries.length}</span>
+          <span class="stat-label">Entries</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">
+            {
+              new Date(
+                sortedEntries[sortedEntries.length - 1]?.data.date,
+              ).getFullYear()
+            }
+          </span>
+          <span class="stat-label">Started</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline container -->
+    <div class="timeline-container">
+      {
+        sortedEntries.length === 0 ? (
+          <div class="timeline-empty glass fade-in-up">
+            <i class="ri-calendar-line text-4xl mb-4 text-skin-dodge" />
+            <p class="text-skin-dodge">
+              No timeline entries yet. Check back soon!
+            </p>
+          </div>
+        ) : (
+          sortedEntries.map((entry, index) => (
+            <TimelineItem
+              title={entry.data.title}
+              date={entry.data.date}
+              category={entry.data.category || entry.collection}
+              slug={entry.slug}
+              collection={entry.collection}
+              isFirst={index === 0}
+              isLast={index === sortedEntries.length - 1}
+            />
+          ))
+        )
+      }
+    </div>
+  </div>
+</IndexPage>
+
+<style>
+  .timeline-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  /* Header section */
+  .timeline-header-section {
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 3rem;
+    text-align: center;
+    border: 1px solid rgba(var(--color-border), 0.3);
+  }
+
+  /* Silver gradient title like homepage */
+  .timeline-page-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+      110deg,
+      #90a0b0 0%,
+      #a8b8c8 10%,
+      #c0d0e0 20%,
+      #d8e4f0 30%,
+      #c0d0e0 40%,
+      #a8b8c8 50%,
+      #90a0b0 60%,
+      #7888a0 70%,
+      #90a0b0 80%,
+      #a8b8c8 90%,
+      #c0d0e0 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: silverShimmer 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 4px rgba(168, 184, 200, 0.15));
+  }
+
+  @keyframes silverShimmer {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .timeline-description {
+    font-size: 1.125rem;
+    color: rgb(var(--color-text-dodge));
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Stats section */
+  .timeline-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: rgb(var(--color-text-active));
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: rgb(var(--color-text-dodge));
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(var(--color-border), 0.3);
+  }
+
+  /* Timeline container */
+  .timeline-container {
+    position: relative;
+    padding-bottom: 2rem;
+  }
+
+  /* Empty state */
+  .timeline-empty {
+    padding: 4rem 2rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid rgba(var(--color-border), 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 640px) {
+    .timeline-page {
+      padding: 0 0.5rem;
+    }
+
+    .timeline-header-section {
+      padding: 1.5rem 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .timeline-page-title {
+      font-size: 1.875rem;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .timeline-page-title i {
+      margin-right: 0 !important;
+    }
+
+    .timeline-description {
+      font-size: 1rem;
+    }
+
+    .timeline-stats {
+      gap: 1rem;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+    }
+  }
+
+  /* Stagger animation delays */
+  .timeline-header-section {
+    animation-delay: 0ms;
+  }
+
+  :global(.timeline-item-wrapper:nth-child(1)) {
+    animation-delay: 100ms;
+  }
+
+  :global(.timeline-item-wrapper:nth-child(2)) {
+    animation-delay: 150ms;
+  }
+
+  :global(.timeline-item-wrapper:nth-child(3)) {
+    animation-delay: 200ms;
+  }
+
+  :global(.timeline-item-wrapper:nth-child(4)) {
+    animation-delay: 250ms;
+  }
+
+  :global(.timeline-item-wrapper:nth-child(5)) {
+    animation-delay: 300ms;
+  }
+
+  :global(.timeline-item-wrapper:nth-child(n + 6)) {
+    animation-delay: 350ms;
+  }
+</style>
+
+<script>
+  // Intersection Observer for scroll animations
+  if (typeof window !== 'undefined') {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px',
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all timeline items
+    document.querySelectorAll('[data-timeline-item]').forEach((item) => {
+      observer.observe(item);
+    });
+  }
+</script>

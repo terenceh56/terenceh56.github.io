@@ -652,4 +652,22 @@ menu {
     transform: translate(0, 0) rotate(0deg) scale(1);
     pointer-events: auto;
   }
+
+  /* Timeline-specific animations */
+  .timeline-item-wrapper {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .timeline-item-wrapper.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Enhanced fade-in for timeline elements */
+  .timeline-page .fade-in-up {
+    animation-duration: 0.7s;
+  }
 }

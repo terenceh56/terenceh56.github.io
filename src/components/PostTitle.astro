@@ -39,7 +39,7 @@ const currentDate = dayjs();
     <!-- tag -->
     {
       tags && dealLabel(tags).map((tagName) => {
-        const tagUrl = ['reflections', 'milestones'].includes(collection) 
+        const tagUrl = ['thoughts-and-reflections', 'milestones-and-updates'].includes(collection) 
           ? getUrl("/beyond-surface/tags/") + tagName 
           : getUrl("/tags/") + tagName;
         return (

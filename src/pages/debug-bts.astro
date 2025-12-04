@@ -4,7 +4,7 @@ import getUniqueTags from '@/utils/getUniqueTags';
 import getCountByTagName from '@/utils/getCountByTagName';
 
 let allPosts = [];
-const collectionsToTry = ['reflections', 'milestones'];
+const collectionsToTry = ['thoughts-and-reflections', 'milestones-and-updates'];
 for (const col of collectionsToTry) {
   try {
     const c = await getCollectionByName(col);
@@ -18,10 +18,10 @@ let tagArr = getUniqueTags(allPosts);
 ---
 
 <html>
-<body>
-  <h1>Debug BtS</h1>
-  <pre id="tag-count">{JSON.stringify(tagCount, null, 2)}</pre>
-  <pre id="tag-arr">{JSON.stringify(tagArr, null, 2)}</pre>
-  <pre id="all-posts-length">{allPosts.length}</pre>
-</body>
+  <body>
+    <h1>Debug BtS</h1>
+    <pre id="tag-count">{JSON.stringify(tagCount, null, 2)}</pre>
+    <pre id="tag-arr">{JSON.stringify(tagArr, null, 2)}</pre>
+    <pre id="all-posts-length">{allPosts.length}</pre>
+  </body>
 </html>

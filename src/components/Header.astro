@@ -10,8 +10,7 @@ import AsideIcon from './SidebarIcon.astro';
 import { t } from '@/i18n/utils';
 import getCountByTagName from '@/utils/getCountByTagName';
 import getUrl from '@/utils/getUrl';
-// aggregate posts from multiple collections so counts still work after removing the "blog" category
-let posts = [];
+// Fetch collections once and calculate all needed data
 const collectionsToTry = [
   'notes',
   'thoughts-and-reflections',
@@ -19,20 +18,11 @@ const collectionsToTry = [
   'papers',
   'feed',
 ];
-for (const col of collectionsToTry) {
-  try {
-    const c = await getCollectionByName(col);
-    if (c && c.length) posts = posts.concat(c);
-  } catch (err) {
-    // ignore missing collections
-  }
-}
-let tagArr = getUniqueTags(posts);
-let categoryCount = getCountByCategory(posts);
-let tagCount = getCountByTagName(posts);
 
-// Calculate article counts for each collection
+let posts = [];
 const collectionCounts = {};
+
+// Single loop to fetch collections and calculate counts
 for (const col of collectionsToTry) {
   try {
     const c = await getCollectionByName(col);
@@ -41,6 +31,8 @@ for (const col of collectionsToTry) {
       const filteredPosts = c.filter(({ data }) => {
         return import.meta.env.PROD ? !data.draft : true;
       });
+      
+      posts = posts.concat(filteredPosts);
       collectionCounts[col] = filteredPosts.length;
     } else {
       collectionCounts[col] = 0;
@@ -49,6 +41,10 @@ for (const col of collectionsToTry) {
     collectionCounts[col] = 0;
   }
 }
+
+let tagArr = getUniqueTags(posts);
+let categoryCount = getCountByCategory(posts);
+let tagCount = getCountByTagName(posts);
 
 const notesAndPapersCount =
   (collectionCounts['notes'] || 0) + (collectionCounts['papers'] || 0);

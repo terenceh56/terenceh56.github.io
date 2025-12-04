@@ -9,8 +9,8 @@ import { getCollectionByName } from '@/utils/getCollectionByName';
 import getUrl from '@/utils/getUrl';
 
 export async function getStaticPaths() {
-  const reflections = await getCollectionByName('reflections');
-  const milestones = await getCollectionByName('milestones');
+  const reflections = await getCollectionByName('thoughts-and-reflections');
+  const milestones = await getCollectionByName('milestones-and-updates');
   const allPosts = [...reflections, ...milestones];
   return getUniqueTags(allPosts).map((tag) => ({
     params: { tag },
@@ -18,8 +18,8 @@ export async function getStaticPaths() {
 }
 
 const { tag } = Astro.params;
-const reflections = await getCollectionByName('reflections');
-const milestones = await getCollectionByName('milestones');
+const reflections = await getCollectionByName('thoughts-and-reflections');
+const milestones = await getCollectionByName('milestones-and-updates');
 const allPosts = [...reflections, ...milestones];
 const tagPosts = getPostsByTag(allPosts, tag);
 const resultPosts = sortPostsByDate(tagPosts);
