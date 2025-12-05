@@ -10,7 +10,11 @@ import Comment from '@/components/Comment.astro';
 import VisitorCounter from '@/components/VisitorCounter.astro';
 import { comment, config } from '@/consts';
 
-const { frontmatter = { comment: false }, hideAside = false } = Astro.props;
+const {
+  frontmatter = { comment: false },
+  hideAside = false,
+  hideNav = false,
+} = Astro.props;
 const gridClass = hideAside
   ? 'grid grid-cols-1'
   : 'grid grid-cols-1 lg:grid-cols-4 gap-8';
@@ -23,7 +27,7 @@ const gridClass = hideAside
   </head>
 
   <body class="bg-skin-secondary relative min-h-screen flex flex-col">
-    <Header hideNav={hideAside} />
+    <Header hideNav={hideNav} />
     <main
       class:list={[
         hideAside ? '' : 'container',

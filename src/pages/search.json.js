@@ -1,7 +1,7 @@
 import { getCollectionByName } from "../utils/getCollectionByName.js";
 
 async function getAllPosts() {
-  const collections = ['notes', 'reflections', 'milestones', 'papers'];
+  const collections = ['notes', 'papers', 'thoughts-and-reflections', 'milestones-and-updates'];
   let posts = [];
   for (const name of collections) {
     const items = await getCollectionByName(name);

@@ -37,7 +37,7 @@ const sortedEntries = entries.sort((a, b) => {
 const title = 'Timeline';
 ---
 
-<IndexPage title={title}>
+<IndexPage title={title} hideAside={true}>
   <div class="timeline-page">
     <!-- Header section -->
     <div class="timeline-header-section glass fade-in-up">
@@ -100,7 +100,7 @@ const title = 'Timeline';
   .timeline-page {
     max-width: 800px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 5rem 1rem 0 1rem;
   }
 
   /* Header section */
