@@ -1,9 +1,9 @@
 ---
-title: "Some Thoughts After the First Day of Officially Starting My Graduation Project Design"
+title: "The column is experiencing production difficulties"
 date: 2025-11-17
-tags: ["graduation project"]
+tags: [""]
 category: "Thoughts"
 toc: true
 ---
 
-It'll be a hard one, man, the weather today is so fucking cold and I'm going to be going to Yuquan Campus five days a week through the whole winter.
+The column is experiencing production difficulties. Struggling for content.
