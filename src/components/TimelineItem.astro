@@ -30,17 +30,17 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
 const getCategoryColor = (col: string, cat?: string) => {
   if (cat) {
     const lower = cat.toLowerCase();
-    if (lower.includes('milestone')) return 'from-purple-500 to-pink-500';
-    if (lower.includes('update')) return 'from-blue-500 to-cyan-500';
-    if (lower.includes('reflection')) return 'from-orange-500 to-red-500';
-    if (lower.includes('thought')) return 'from-green-500 to-teal-500';
+    if (lower.includes('milestone')) return 'from-indigo-500 to-purple-500';
+    if (lower.includes('update')) return 'from-indigo-500 to-purple-500';
+    if (lower.includes('reflection')) return 'from-orange-500 to-amber-500';
+    if (lower.includes('thought')) return 'from-orange-500 to-amber-500';
   }
 
   // Collection-based colors
   if (col === 'notes') return 'from-blue-500 to-cyan-500';
   if (col === 'papers') return 'from-purple-500 to-pink-500';
-  if (col === 'thoughts-and-reflections') return 'from-orange-500 to-red-500';
-  if (col === 'milestones-and-updates') return 'from-green-500 to-teal-500';
+  if (col === 'thoughts-and-reflections') return 'from-orange-500 to-amber-500';
+  if (col === 'milestones-and-updates') return 'from-indigo-500 to-purple-500';
 
   return 'from-gray-500 to-gray-600';
 };
